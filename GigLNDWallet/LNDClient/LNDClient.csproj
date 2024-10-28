@@ -1,0 +1,43 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <WarningLevel>4</WarningLevel>
+    <NoWarn>1701;1702;1998;8600;8601;8602;8603;8604;8618;8625</NoWarn>
+  </PropertyGroup>
+  <ItemGroup>
+    <PackageReference Include="GigGossip.Frames" Version="2.0.13" />
+    <PackageReference Include="Grpc.Tools" Version="2.67.0">
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+      <PrivateAssets>all</PrivateAssets>
+    </PackageReference>
+    <PackageReference Include="Grpc.Net.Client" Version="2.66.0" />
+    <PackageReference Include="Google.Protobuf" Version="3.28.2" />
+    <PackageReference Include="NBitcoin" Version="7.0.40" />
+  </ItemGroup>
+  <ItemGroup>
+<Protobuf Include="invoices.proto">
+  <GrpcService>Client</GrpcService>
+</Protobuf>
+<Protobuf Include="lightning.proto">
+  <GrpcService>Client</GrpcService>
+</Protobuf>
+<Protobuf Include="router.proto">
+  <GrpcService>Client</GrpcService>
+</Protobuf>
+<Protobuf Include="walletkit.proto">
+  <GrpcService>Client</GrpcService>
+</Protobuf>
+<Protobuf Include="signrpc\signer.proto">
+  <GrpcService>Client</GrpcService>
+</Protobuf>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="signrpc\" />
+  </ItemGroup>
+</Project>

@@ -1,0 +1,13 @@
+{
+  "dependencies": {
+    "assert": "^2.1.0",
+    "axios": "^1.7.7",
+    "bip-schnorr": "^0.6.7",
+    "crypto": "^1.0.1",
+    "mocha": "^10.7.3",
+    "protobufjs": "^7.4.0"
+  },
+  "scripts": {
+    "test": "mocha wallet_test.js"
+  }
+}

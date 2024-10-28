@@ -1,0 +1,60 @@
+version: "3"
+
+services:
+
+  bitcoin:
+    image: awazcognitum/bitcoin:latest
+
+    container_name: bitcoin
+    restart: on-failure
+    ports:
+      - 18332:18332
+      - 28332:28332
+      - 28333:28333
+    volumes:
+      - ./data/btc:/app_data:Z
+      - ./conf/bitcoin.conf:/app_data/bitcoin.conf:ro
+    logging:
+      driver: local
+      options:
+        max-size: "100m"
+
+  lightning_node:
+    image: lightninglabs/lnd:v0.18.3-beta
+
+    container_name: lightning_node
+    restart: on-failure
+    entrypoint: lnd --lnddir=/app_data --wallet-unlock-password-file=/secret/password.txt
+    ports:
+      - 9734:9734
+      - 11009:11009
+      - 8180:8180
+    volumes:
+      - ./data/lnd:/app_data:Z
+      - ./lnd/lnd.conf:/app_data/lnd.conf:ro
+      - ./lnd/password.txt:/secret/password.txt:ro
+    logging:
+      driver: local
+      options:
+        max-size: "100m"
+
+  wallet_api:
+    image: awazcognitum/wallet_api:latest
+
+    container_name: wallet_api
+    restart: on-failure
+    ports:
+      - "8080:80"
+    volumes:
+      - ./data/wallet/:/app/data/:Z
+      - ./wallet/wallet.conf:/app/data/wallet.conf:ro
+      - ./data/lnd/:/lnd/:Z
+    logging:
+      driver: local
+      options:
+        max-size: "100m"
+
+networks:
+  default:
+    name: giggossip
+    driver: bridge
