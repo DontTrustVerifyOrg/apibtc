@@ -4,6 +4,7 @@
     "axios": "^1.7.7",
     "bip-schnorr": "^0.6.7",
     "crypto": "^1.0.1",
+    "elliptic": "^6.6.0",
     "mocha": "^10.7.3",
     "protobufjs": "^7.4.0"
   },

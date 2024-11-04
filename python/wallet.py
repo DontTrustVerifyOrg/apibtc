@@ -2,17 +2,17 @@ import requests
 from random import randbytes
 import frames_pb2 as frames_pb2
 import hashlib
-from schnorr_lib import schnorr_sign
+from schnorr_lib import pubkey_gen, schnorr_sign
 from datetime import datetime
 import uuid
 import base64
 
 class Wallet:
-    def __init__(self, base_url, privkey,pubkey):
+    def __init__(self,  base_url, privkey):
         self.base_url = base_url
         self.privkey = privkey
-        self.pubkey = pubkey
-
+        self.pubkey = pubkey_gen(bytes.fromhex(privkey)).hex()
+        
     def get_token(self):
         api_url = f"{self.base_url}/gettoken?pubkey="+self.pubkey
         response = requests.get(api_url)
@@ -31,19 +31,19 @@ class Wallet:
             randbytes(32))
         return base64.b64encode(authTok.SerializeToString())
     
-    def topupandmine6blocks(self,bitcoinAddr,satoshis):
+    def topupandmine6blocks(self, bitcoinAddr, satoshis):
         api_url = f"{self.base_url}/topupandmine6blocks"
-        response = requests.get(url=api_url, params={"authToken":self.create_authtoken(), "bitcoinAddr":bitcoinAddr,"satoshis":satoshis})
+        response = requests.get(url=api_url, params={"authToken":self.create_authtoken(), "bitcoinAddr":bitcoinAddr, "satoshis":satoshis})
         response.raise_for_status()
         return response.json()
 
-    def sendtoaddress(self,bitcoinAddr,satoshis):
+    def sendtoaddress(self, bitcoinAddr,satoshis):
         api_url = f"{self.base_url}/sendtoaddress"
-        response = requests.get(url=api_url, params={"authToken":self.create_authtoken(), "bitcoinAddr":bitcoinAddr,"satoshis":satoshis})
+        response = requests.get(url=api_url, params={"authToken":self.create_authtoken(), "bitcoinAddr":bitcoinAddr, "satoshis":satoshis})
         response.raise_for_status()
         return response.json()
 
-    def generateblocks(self,blocknum):
+    def generateblocks(self, blocknum):
         api_url = f"{self.base_url}/generateblocks"
         response = requests.get(url=api_url, params={"authToken":self.create_authtoken(), "blocknum":blocknum})
         response.raise_for_status()
@@ -55,7 +55,7 @@ class Wallet:
         response.raise_for_status()
         return response.json()
 
-    def getbitcoinwalletballance(self,minConf):
+    def getbitcoinwalletballance(self, minConf):
         api_url = f"{self.base_url}/getbitcoinwalletballance"
         response = requests.get(url=api_url, params={"authToken":self.create_authtoken(), "minConf":minConf})
         response.raise_for_status()
@@ -67,21 +67,21 @@ class Wallet:
         response.raise_for_status()
         return response.json()
 
-    def openreserve(self, satoshis):
+    def openreserve(self,  satoshis):
         api_url = f"{self.base_url}/openreserve"
-        response = requests.get(url=api_url, params={"authToken":self.create_authtoken() ,"satoshis":satoshis})
+        response = requests.get(url=api_url, params={"authToken":self.create_authtoken(), "satoshis":satoshis})
         response.raise_for_status()
         return response.json()
 
-    def closereserve(self, reserveId):
+    def closereserve(self,  reserveId):
         api_url = f"{self.base_url}/closereserve"
-        response = requests.get(url=api_url, params={"authToken":self.create_authtoken() ,"reserveId":reserveId})
+        response = requests.get(url=api_url, params={"authToken":self.create_authtoken(), "reserveId":reserveId})
         response.raise_for_status()
         return response.json()
 
-    def estimatefee(self,address,satoshis):
+    def estimatefee(self, address, satoshis):
         api_url = f"{self.base_url}/estimatefee"
-        response = requests.get(url=api_url, params={"authToken":self.create_authtoken(), "address":address,"satoshis":satoshis})
+        response = requests.get(url=api_url, params={"authToken":self.create_authtoken(), "address":address, "satoshis":satoshis})
         response.raise_for_status()
         return response.json()
     
@@ -97,58 +97,70 @@ class Wallet:
         response.raise_for_status()
         return response.json()
     
-    def registerpayout(self,satoshis,btcAddress,txfee):
+    def listtransactions(self):
+        api_url = f"{self.base_url}/listtransactions"
+        response = requests.get(url=api_url, params={"authToken":self.create_authtoken()})
+        response.raise_for_status()
+        return response.json()
+    
+    def registerpayout(self, satoshis, btcAddress):
         api_url = f"{self.base_url}/registerpayout"
-        response = requests.get(url=api_url, params={"authToken":self.create_authtoken(),"satoshis":satoshis,"btcAddress":btcAddress,"txfee":txfee})
+        response = requests.get(url=api_url, params={"authToken":self.create_authtoken(), "satoshis":satoshis, "btcAddress":btcAddress})
+        response.raise_for_status()
+        return response.json()
+    
+    def listpayouts(self):
+        api_url = f"{self.base_url}/listpayouts"
+        response = requests.get(url=api_url, params={"authToken":self.create_authtoken()})
         response.raise_for_status()
         return response.json()
 
-    def addinvoice(self,satoshis,memo,expiry):
+    def addinvoice(self, satoshis, memo, expiry):
         api_url = f"{self.base_url}/addinvoice"
-        response = requests.get(url=api_url, params={"authToken":self.create_authtoken(),"satoshis":satoshis,"memo":memo,"expiry":expiry})
+        response = requests.get(url=api_url, params={"authToken":self.create_authtoken(), "satoshis":satoshis, "memo":memo, "expiry":expiry})
         response.raise_for_status()
         return response.json()
 
-    def addhodlinvoice(self,satoshis,hashc,memo,expiry):
+    def addhodlinvoice(self, satoshis, hash, memo, expiry):
         api_url = f"{self.base_url}/addhodlinvoice"
-        response = requests.get(url=api_url, params={"authToken":self.create_authtoken(),"satoshis":satoshis,"hash":hashc, "memo":memo,"expiry":expiry})
+        response = requests.get(url=api_url, params={"authToken":self.create_authtoken(), "satoshis":satoshis, "hash":hash, "memo":memo, "expiry":expiry})
         response.raise_for_status()
         print(response.json())
         return response.json()
 
-    def decodeinvoice(self,paymentRequest):
+    def decodeinvoice(self, paymentrequest):
         api_url = f"{self.base_url}/addhodlinvoice"
-        response = requests.get(url=api_url, params={"authToken":self.create_authtoken(),"paymentRequest":paymentRequest})
+        response = requests.get(url=api_url, params={"authToken":self.create_authtoken(), "paymentrequest":paymentrequest})
         response.raise_for_status()
         return response.json()
 
-    def sendpayment(self,paymentRequest,timeout,feelimit):
+    def sendpayment(self, paymentrequest, timeout, feelimit):
         api_url = f"{self.base_url}/sendpayment"
-        response = requests.get(url=api_url, params={"authToken":self.create_authtoken(),"paymentRequest":paymentRequest,"timeout":timeout,"feelimit":feelimit})
+        response = requests.get(url=api_url, params={"authToken":self.create_authtoken(), "paymentrequest":paymentrequest, "timeout":timeout, "feelimit":feelimit})
         response.raise_for_status()
         return response.json()
 
-    def estimateroutefee(self,paymentRequest):
+    def estimateroutefee(self, paymentrequest, timeout):
         api_url = f"{self.base_url}/estimateroutefee"
-        response = requests.get(url=api_url, params={"authToken":self.create_authtoken(),"paymentRequest":paymentRequest})
+        response = requests.get(url=api_url, params={"authToken":self.create_authtoken(), "paymentrequest":paymentrequest, "timeout":timeout})
         response.raise_for_status()
         return response.json()
 
-    def settleinvoice(self,preimage):
+    def settleinvoice(self, preimage):
         api_url = f"{self.base_url}/settleinvoice"
-        response = requests.get(url=api_url, params={"authToken":self.create_authtoken(),"preimage":preimage})
+        response = requests.get(url=api_url, params={"authToken":self.create_authtoken(), "preimage":preimage})
         response.raise_for_status()
         return response.json()
 
-    def cancelinvoice(self,paymenthash):
+    def cancelinvoice(self, paymenthash):
         api_url = f"{self.base_url}/cancelinvoice"
-        response = requests.get(url=api_url, params={"authToken":self.create_authtoken(),"paymenthash":paymenthash})
+        response = requests.get(url=api_url, params={"authToken":self.create_authtoken(), "paymenthash":paymenthash})
         response.raise_for_status()
         return response.json()
 
-    def getinvoice(self,paymenthash):
+    def getinvoice(self, paymenthash):
         api_url = f"{self.base_url}/getinvoice"
-        response = requests.get(url=api_url, params={"authToken":self.create_authtoken(),"paymenthash":paymenthash})
+        response = requests.get(url=api_url, params={"authToken":self.create_authtoken(), "paymenthash":paymenthash})
         response.raise_for_status()
         return response.json()
 
@@ -164,10 +176,8 @@ class Wallet:
         response.raise_for_status()
         return response.json()
 
-    def getpayment(self,paymenthash):
+    def getpayment(self, paymenthash):
         api_url = f"{self.base_url}/getpayment"
-        response = requests.get(url=api_url, params={"authToken":self.create_authtoken(),"paymenthash":paymenthash})
+        response = requests.get(url=api_url, params={"authToken":self.create_authtoken(), "paymenthash":paymenthash})
         response.raise_for_status()
-        return response.json()
-    
-    
+        return response.json()  

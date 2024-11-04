@@ -5,12 +5,11 @@ const assert = require("assert");
 describe("Wallet", () => {
     const base_url = "http://localhost:80";
     const privkey = "b6afb2f946c9451f484948df67425325f3f11dfb52f4f5c531a2530246786cbe";
-    const pubkey = "c7dd4213641cbf8daaad5ab89f6f1735ed8a0cc682be89f83a9d18680850a07d";
     let w1, address, invoice;
 
     before(() => {
-        w1 = new Wallet(base_url, privkey, pubkey);
-        w2 = new Wallet(base_url, privkey, pubkey);
+        w1 = new Wallet(base_url, privkey);
+        w2 = new Wallet(base_url, privkey);
     });
 
     it("Create new wallet address", async () => {

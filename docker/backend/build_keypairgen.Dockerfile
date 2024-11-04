@@ -1,7 +1,7 @@
 # Build
 FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 WORKDIR /app
-COPY ./NGigGossip4Nostr/ .
+COPY ./GigLNDWallet/ .
 RUN dotnet restore
 RUN dotnet publish -c Release -o out ./KeyPairGen/KeyPairGen.csproj
 
