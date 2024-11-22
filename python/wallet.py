@@ -79,6 +79,24 @@ class Wallet:
         response.raise_for_status()
         return response.json()
 
+    def listorphanedreserves(self):
+        api_url = f"{self.base_url}/listorphanedreserves"
+        response = requests.get(url=api_url, params={"authToken":self.create_authtoken()})
+        response.raise_for_status()
+        return response.json()
+    
+    def listchannels(self,activeOnly):
+        api_url = f"{self.base_url}/listchannels"
+        response = requests.get(url=api_url, params={"authToken":self.create_authtoken(),"activeOnly":activeOnly})
+        response.raise_for_status()
+        return response.json()
+
+    def listclosedchannels(self):
+        api_url = f"{self.base_url}/listclosedchannels"
+        response = requests.get(url=api_url, params={"authToken":self.create_authtoken()})
+        response.raise_for_status()
+        return response.json()
+        
     def estimatefee(self, address, satoshis):
         api_url = f"{self.base_url}/estimatefee"
         response = requests.get(url=api_url, params={"authToken":self.create_authtoken(), "address":address, "satoshis":satoshis})
@@ -114,7 +132,13 @@ class Wallet:
         response = requests.get(url=api_url, params={"authToken":self.create_authtoken()})
         response.raise_for_status()
         return response.json()
-
+    
+    def getpayout(self,payoutId):
+        api_url = f"{self.base_url}/getpayout"
+        response = requests.get(url=api_url, params={"authToken":self.create_authtoken(),"payoutId":payoutId})
+        response.raise_for_status()
+        return response.json()
+    
     def addinvoice(self, satoshis, memo, expiry):
         api_url = f"{self.base_url}/addinvoice"
         response = requests.get(url=api_url, params={"authToken":self.create_authtoken(), "satoshis":satoshis, "memo":memo, "expiry":expiry})
