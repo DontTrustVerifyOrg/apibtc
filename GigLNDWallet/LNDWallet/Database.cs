@@ -8,6 +8,9 @@ public enum DBProvider
 {
     Sqlite=1,
     SQLServer,
+    PostgreSQL,
+    MySQL,
+    Oracle,
 }
 
 public enum InternalPaymentStatus
@@ -119,6 +122,8 @@ public class InternalPayment
     /// Fee charged for this payment. 
     /// </summary>
     public required long PaymentFee { get; set; }
+
+	public required DateTime CreationTime { get; set; }
 }
 
 /// <summary>
@@ -210,6 +215,8 @@ public class Payout
     /// Bitcoin transaction identifier for the payout.
     /// </summary>
     public string? Tx { get; set; }
+
+    public required DateTime CreationTime { get; set; }
 }
 
 
@@ -322,6 +329,12 @@ public class WaletContext : DbContext
             optionsBuilder.UseSqlite(connectionString);
         else if (provider == DBProvider.SQLServer)
             optionsBuilder.UseSqlServer(connectionString);
+        else if (provider == DBProvider.PostgreSQL)
+            optionsBuilder.UseNpgsql(connectionString);
+        else if (provider == DBProvider.MySQL)
+            optionsBuilder.UseMySql(connectionString,ServerVersion.AutoDetect(connectionString));
+        else if (provider == DBProvider.Oracle)
+            optionsBuilder.UseOracle(connectionString);
         else
             throw new NotImplementedException();
 
@@ -331,7 +344,6 @@ public class WaletContext : DbContext
     public WaletContext UPDATE<T>(T obj) where T : class
     {
         var set = this.Set<T>();
-        QueryCacheExtensions.ClearCache<T>(set);
         set.Update(obj);
         return this;
     }
@@ -350,7 +362,6 @@ public class WaletContext : DbContext
     public WaletContext INSERT<T>(T obj) where T:class
     {
         var set = this.Set<T>();
-        QueryCacheExtensions.ClearCache<T>(set);
         set.Add(obj);
         return this;
     }
@@ -358,7 +369,6 @@ public class WaletContext : DbContext
     public WaletContext DELETE<T>(T obj) where T : class
     {
         var set = this.Set<T>();
-        QueryCacheExtensions.ClearCache<T>(set);
         set.Remove(obj);
         return this;
     }
