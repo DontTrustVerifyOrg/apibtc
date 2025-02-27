@@ -3,6 +3,7 @@ name: Build Backend Docker Images
 on:
   push:
     branches: [ "main" ]
+  workflow_dispatch:
 
 
 defaults:
