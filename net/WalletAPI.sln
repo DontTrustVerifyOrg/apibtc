@@ -3,13 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.11.35327.3
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GigLNDWalletAPI", "GigLNDWalletAPI\GigLNDWalletAPI.csproj", "{12A09756-571F-459B-91B0-70116D35C925}"
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GigLNDWalletAPIClient", "GigLNDWalletAPIClient\GigLNDWalletAPIClient.csproj", "{7D63B553-7C59-4831-9F05-9CB239CA95F1}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LNDClient", "LNDClient\LNDClient.csproj", "{D8A17648-6164-4C21-BB32-54DB9BE17EF2}"
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NetworkToolkit", "NetworkToolkit\NetworkToolkit.csproj", "{F63FEB3B-E151-466E-B3D7-160EF6A1C3D9}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TraceEx", "Tracer\TraceEx.csproj", "{E182C2BF-5473-4712-8891-BCA9F52F04D6}"
 EndProject
@@ -17,28 +11,20 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LNDWallet", "LNDWallet\LNDW
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "KeyPairGen", "KeyPairGen\KeyPairGen.csproj", "{A63F326F-A7CE-498E-94DE-A173ADE88E5F}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WalletAPIClient", "WalletAPIClient\WalletAPIClient.csproj", "{184DB2AF-A52B-4819-88FE-03C586101FA3}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WalletAPI", "WalletAPI\WalletAPI.csproj", "{964FB364-C7C3-4368-9A73-62D8FAADE06B}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{12A09756-571F-459B-91B0-70116D35C925}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{12A09756-571F-459B-91B0-70116D35C925}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{12A09756-571F-459B-91B0-70116D35C925}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{12A09756-571F-459B-91B0-70116D35C925}.Release|Any CPU.Build.0 = Release|Any CPU
-		{7D63B553-7C59-4831-9F05-9CB239CA95F1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{7D63B553-7C59-4831-9F05-9CB239CA95F1}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{7D63B553-7C59-4831-9F05-9CB239CA95F1}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{7D63B553-7C59-4831-9F05-9CB239CA95F1}.Release|Any CPU.Build.0 = Release|Any CPU
 		{D8A17648-6164-4C21-BB32-54DB9BE17EF2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{D8A17648-6164-4C21-BB32-54DB9BE17EF2}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D8A17648-6164-4C21-BB32-54DB9BE17EF2}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D8A17648-6164-4C21-BB32-54DB9BE17EF2}.Release|Any CPU.Build.0 = Release|Any CPU
-		{F63FEB3B-E151-466E-B3D7-160EF6A1C3D9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{F63FEB3B-E151-466E-B3D7-160EF6A1C3D9}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{F63FEB3B-E151-466E-B3D7-160EF6A1C3D9}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{F63FEB3B-E151-466E-B3D7-160EF6A1C3D9}.Release|Any CPU.Build.0 = Release|Any CPU
 		{E182C2BF-5473-4712-8891-BCA9F52F04D6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{E182C2BF-5473-4712-8891-BCA9F52F04D6}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{E182C2BF-5473-4712-8891-BCA9F52F04D6}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -51,6 +37,14 @@ Global
 		{A63F326F-A7CE-498E-94DE-A173ADE88E5F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A63F326F-A7CE-498E-94DE-A173ADE88E5F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A63F326F-A7CE-498E-94DE-A173ADE88E5F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{184DB2AF-A52B-4819-88FE-03C586101FA3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{184DB2AF-A52B-4819-88FE-03C586101FA3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{184DB2AF-A52B-4819-88FE-03C586101FA3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{184DB2AF-A52B-4819-88FE-03C586101FA3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{964FB364-C7C3-4368-9A73-62D8FAADE06B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{964FB364-C7C3-4368-9A73-62D8FAADE06B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{964FB364-C7C3-4368-9A73-62D8FAADE06B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{964FB364-C7C3-4368-9A73-62D8FAADE06B}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -1,70 +1,43 @@
 syntax = "proto3";
 
-package frames;
-option csharp_namespace = "GigGossip";
+package btcpy;
+option csharp_namespace = "BtcPy";
 
+// Represents a universally unique identifier (UUID)
 message UUID
 {
-  bytes Value = 1;
+    bytes Value = 1; // The value of the UUID
 }
 
+// Represents a timestamp
 message Timestamp
 {
-  int64 Value = 1;
+    int64 Value = 1; // The value of the timestamp in Unix epoch format
 }
 
-message URI
-{
-    string Value = 1;
-}
-
+// Represents a digital signature
 message Signature
 {
-    bytes Value = 1;
+        bytes Value = 1; // The value of the signature
 }
 
+// Represents a public key
 message PublicKey
 {
-    bytes Value = 1;
+        bytes Value = 1; // The value of the public key
 }
 
-message PaymentRequest
-{
-    string Value = 1;
-}
-
-message PaymentHash
-{
-    bytes Value = 1;
-}
-
-message Satoshis
-{
-    int64 Value = 1;
-}
-
-message EncryptedData
-{
-    bytes Value = 1;
-}
-
-message CryptographicHash
-{
-    bytes Value = 1;
-}
-
+// Represents the header of an authentication token
 message AuthTokenHeader
 {
-  UUID TokenId = 1;
-  PublicKey PublicKey = 2;
-  Timestamp Timestamp = 3;
+    UUID TokenId = 1; // The unique identifier of the token
+    PublicKey PublicKey = 2; // The public key associated with the token
+    Timestamp Timestamp = 3; // The timestamp when the token was created
 }
 
-/// <summary>
-/// A struct to represent a timed GUID token with its signature. Used in API calls.
-/// </summary>
+// A struct to represent a signed timed token. Used in API calls for authentication.
 message AuthToken
 {
-    AuthTokenHeader Header = 1;
-    Signature Signature = 2;
+        AuthTokenHeader Header = 1; // The header of the authentication token
+        Signature Signature = 2; // The signature of the authentication token
 }
