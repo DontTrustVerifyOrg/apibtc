@@ -11,13 +11,13 @@
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="GigGossip.Frames" Version="2.2.2" />
-    <PackageReference Include="Grpc.Tools" Version="2.69.0">
+    <PackageReference Include="Grpc.Tools" Version="2.70.0">
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
       <PrivateAssets>all</PrivateAssets>
     </PackageReference>
     <PackageReference Include="Grpc.Net.Client" Version="2.67.0" />
     <PackageReference Include="Google.Protobuf" Version="3.29.3" />
-    <PackageReference Include="NBitcoin" Version="7.0.50" />
+    <PackageReference Include="NBitcoin" Version="8.0.0" />
   </ItemGroup>
   <ItemGroup>
 <Protobuf Include="invoices.proto">
