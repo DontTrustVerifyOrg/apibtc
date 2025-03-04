@@ -3,7 +3,7 @@ FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 WORKDIR /app
 COPY ./net/ .
 RUN dotnet restore
-RUN dotnet publish -c Release -o out ./net/WalletAPI/WalletAPI.csproj
+RUN dotnet publish -c Release -o out ./WalletAPI/WalletAPI.csproj
 
 # Run
 FROM mcr.microsoft.com/dotnet/aspnet:8.0
@@ -17,4 +17,4 @@ RUN chmod +x /app/entrypoint.sh
 
 ENV ListenHost=http://0.0.0.0:80/
 EXPOSE 80
-ENTRYPOINT ["/app/entrypoint.sh", "WalletAPI.dll", "wallet.conf"]
+ENTRYPOINT ["/app/entrypoint.sh", "GigLNDWalletAPI.dll", "wallet.conf"]
