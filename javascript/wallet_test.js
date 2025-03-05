@@ -3,8 +3,8 @@ const Wallet = require("./wallet");
 const assert = require("assert");
 
 describe("Wallet", () => {
-    const base_url = "http://localhost:80";
-    const privkey = "b6afb2f946c9451f484948df67425325f3f11dfb52f4f5c531a2530246786cbe";
+    const base_url = "http://localhost:7101";
+    const privkey = "6229bc23590555d392cc4d030bb4f099f38d687a4164baa01e8f2818cd8efd0b";
     let w1, address, invoice;
 
     before(() => {
