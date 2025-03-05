@@ -1,7 +1,7 @@
 ﻿using Invoicesrpc;
 using Lnrpc;
 using Routerrpc;
-using GigGossip;
+using ApiBtc;
 using Grpc.Net.Client;
 using Grpc.Core;
 using System.Security.Cryptography.X509Certificates;

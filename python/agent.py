@@ -9,7 +9,7 @@ from rich.console import Console
 from rich.markdown import Markdown
 from rich.table import Table
 
-exec(open(('./regtest.secret')).read())
+exec(open(('./local.secret')).read())
 
 os.environ["OPENAI_API_KEY"] = openai_api_key
 os.environ["BASE_URL"] = wallet_api

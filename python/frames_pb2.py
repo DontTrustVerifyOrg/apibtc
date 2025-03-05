@@ -13,36 +13,24 @@ _sym_db = _symbol_database.Default()
 
 
 
-DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\x0c\x66rames.proto\x12\x06\x66rames\"\x15\n\x04UUID\x12\r\n\x05Value\x18\x01 \x01(\x0c\"\x1a\n\tTimestamp\x12\r\n\x05Value\x18\x01 \x01(\x03\"\x14\n\x03URI\x12\r\n\x05Value\x18\x01 \x01(\t\"\x1a\n\tSignature\x12\r\n\x05Value\x18\x01 \x01(\x0c\"\x1a\n\tPublicKey\x12\r\n\x05Value\x18\x01 \x01(\x0c\"\x1f\n\x0ePaymentRequest\x12\r\n\x05Value\x18\x01 \x01(\t\"\x1c\n\x0bPaymentHash\x12\r\n\x05Value\x18\x01 \x01(\x0c\"\x19\n\x08Satoshis\x12\r\n\x05Value\x18\x01 \x01(\x03\"\x1e\n\rEncryptedData\x12\r\n\x05Value\x18\x01 \x01(\x0c\"\"\n\x11\x43ryptographicHash\x12\r\n\x05Value\x18\x01 \x01(\x0c\"|\n\x0f\x41uthTokenHeader\x12\x1d\n\x07TokenId\x18\x01 \x01(\x0b\x32\x0c.frames.UUID\x12$\n\tPublicKey\x18\x02 \x01(\x0b\x32\x11.frames.PublicKey\x12$\n\tTimestamp\x18\x03 \x01(\x0b\x32\x11.frames.Timestamp\"Z\n\tAuthToken\x12\'\n\x06Header\x18\x01 \x01(\x0b\x32\x17.frames.AuthTokenHeader\x12$\n\tSignature\x18\x02 \x01(\x0b\x32\x11.frames.SignatureB\x0c\xaa\x02\tGigGossipb\x06proto3')
+DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\x0c\x66rames.proto\x12\x06\x61pibtc\"\x15\n\x04UUID\x12\r\n\x05Value\x18\x01 \x01(\x0c\"\x1a\n\tTimestamp\x12\r\n\x05Value\x18\x01 \x01(\x03\"\x1a\n\tSignature\x12\r\n\x05Value\x18\x01 \x01(\x0c\"\x1a\n\tPublicKey\x12\r\n\x05Value\x18\x01 \x01(\x0c\"|\n\x0f\x41uthTokenHeader\x12\x1d\n\x07TokenId\x18\x01 \x01(\x0b\x32\x0c.apibtc.UUID\x12$\n\tPublicKey\x18\x02 \x01(\x0b\x32\x11.apibtc.PublicKey\x12$\n\tTimestamp\x18\x03 \x01(\x0b\x32\x11.apibtc.Timestamp\"Z\n\tAuthToken\x12\'\n\x06Header\x18\x01 \x01(\x0b\x32\x17.apibtc.AuthTokenHeader\x12$\n\tSignature\x18\x02 \x01(\x0b\x32\x11.apibtc.SignatureB\t\xaa\x02\x06\x41piBtcb\x06proto3')
 
 _builder.BuildMessageAndEnumDescriptors(DESCRIPTOR, globals())
 _builder.BuildTopDescriptorsAndMessages(DESCRIPTOR, 'frames_pb2', globals())
 if _descriptor._USE_C_DESCRIPTORS == False:
 
   DESCRIPTOR._options = None
-  DESCRIPTOR._serialized_options = b'\252\002\tGigGossip'
+  DESCRIPTOR._serialized_options = b'\252\002\006ApiBtc'
   _UUID._serialized_start=24
   _UUID._serialized_end=45
   _TIMESTAMP._serialized_start=47
   _TIMESTAMP._serialized_end=73
-  _URI._serialized_start=75
-  _URI._serialized_end=95
-  _SIGNATURE._serialized_start=97
-  _SIGNATURE._serialized_end=123
-  _PUBLICKEY._serialized_start=125
-  _PUBLICKEY._serialized_end=151
-  _PAYMENTREQUEST._serialized_start=153
-  _PAYMENTREQUEST._serialized_end=184
-  _PAYMENTHASH._serialized_start=186
-  _PAYMENTHASH._serialized_end=214
-  _SATOSHIS._serialized_start=216
-  _SATOSHIS._serialized_end=241
-  _ENCRYPTEDDATA._serialized_start=243
-  _ENCRYPTEDDATA._serialized_end=273
-  _CRYPTOGRAPHICHASH._serialized_start=275
-  _CRYPTOGRAPHICHASH._serialized_end=309
-  _AUTHTOKENHEADER._serialized_start=311
-  _AUTHTOKENHEADER._serialized_end=435
-  _AUTHTOKEN._serialized_start=437
-  _AUTHTOKEN._serialized_end=527
+  _SIGNATURE._serialized_start=75
+  _SIGNATURE._serialized_end=101
+  _PUBLICKEY._serialized_start=103
+  _PUBLICKEY._serialized_end=129
+  _AUTHTOKENHEADER._serialized_start=131
+  _AUTHTOKENHEADER._serialized_end=255
+  _AUTHTOKEN._serialized_start=257
+  _AUTHTOKEN._serialized_end=347
 # @@protoc_insertion_point(module_scope)

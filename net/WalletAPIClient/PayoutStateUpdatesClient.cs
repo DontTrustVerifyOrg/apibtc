@@ -1,5 +1,5 @@
 ﻿using Microsoft.AspNetCore.SignalR.Client;
-namespace GigLNDWalletAPIClient
+namespace ApiBtc.Client
 {
     public interface IPayoutStateUpdatesClient
     {

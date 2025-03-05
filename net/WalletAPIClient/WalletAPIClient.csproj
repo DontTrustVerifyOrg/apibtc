@@ -35,7 +35,7 @@
     <Folder Include="OpenAPIs\" />
   </ItemGroup>
   <ItemGroup>
-    <OpenApiReference Include="OpenAPIs\swagger.json" Namespace="GigLNDWalletAPIClient">
+    <OpenApiReference Include="OpenAPIs\swagger.json" Namespace="ApiBtc.Client">
       <SourceUri>http://localhost:7101/swagger/v1/swagger.json</SourceUri>
     </OpenApiReference>
   </ItemGroup>

@@ -12,7 +12,6 @@
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="GigGossip.DebugLogApi.Client" Version="2.2.2" />
-    <PackageReference Include="GigGossip.Frames" Version="2.2.2" />
     <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="8.0.13" />
     <PackageReference Include="Nito.AsyncEx" Version="5.1.2" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="7.3.1" />
@@ -31,6 +30,9 @@
 	<ItemGroup>
 		<ProjectReference Include="..\LNDWallet\LNDWallet.csproj" />
 		<ProjectReference Include="..\Tracer\TraceEx.csproj" />
+		<ProjectReference Include="..\Frames\Frames.csproj">
+		  <GlobalPropertiesToRemove></GlobalPropertiesToRemove>
+		</ProjectReference>
 	</ItemGroup>
 	<ItemGroup>
     <Content Update="Properties\launchSettings.json">

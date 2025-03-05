@@ -2,7 +2,7 @@
 using LNDWallet;
 using NetworkToolkit;
 
-namespace GigLNDWalletAPI;
+namespace ApiBtc;
 
 public static class Singlethon
 {

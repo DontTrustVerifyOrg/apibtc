@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.SignalR.Client;
 using NetworkClientToolkit;
 
-namespace GigLNDWalletAPIClient;
+namespace ApiBtc.Client;
 
 public interface IWalletAPI
 {

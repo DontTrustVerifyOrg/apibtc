@@ -4,7 +4,7 @@ using System.Runtime.CompilerServices;
 using System.Diagnostics;
 using NetworkToolkit;
 
-namespace GigLNDWalletAPI;
+namespace ApiBtc;
 
 public class InvoiceStateUpdatesHub : Hub
 {

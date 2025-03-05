@@ -4,7 +4,7 @@ using CommandLine;
 using CommandLine.Text;
 using Spectre.Console;
 using System.Reflection;
-using GigGossip;
+using ApiBtc;
 
 namespace KeyPairGen;
 
@@ -34,13 +34,13 @@ class Program
                     {
                         if(options.Mnemonic==null)
                         {
-                            mnemonic = GigGossip.Crypto.GenerateMnemonic();
+                            mnemonic = ApiBtc.Crypto.GenerateMnemonic();
                             AnsiConsole.WriteLine(mnemonic);
                         }
                         else
                             mnemonic = options.Mnemonic;
 
-                        privKey = GigGossip.Crypto.DeriveECPrivKeyFromMnemonic(mnemonic);
+                        privKey = ApiBtc.Crypto.DeriveECPrivKeyFromMnemonic(mnemonic);
                         AnsiConsole.WriteLine(privKey.AsHex());
                     }
                     else

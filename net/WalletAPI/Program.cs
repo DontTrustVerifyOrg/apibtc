@@ -1,8 +1,8 @@
 ﻿using System.Text.Json;
 using System.Text.Json.Nodes;
 using GigDebugLoggerAPIClient;
-using GigGossip;
-using GigLNDWalletAPI;
+using ApiBtc;
+using ApiBtc;
 using LNDClient;
 using LNDWallet;
 using Microsoft.OpenApi;

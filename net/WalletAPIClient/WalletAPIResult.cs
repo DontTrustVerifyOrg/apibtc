@@ -1,8 +1,8 @@
-﻿namespace GigLNDWalletAPIClient;
+﻿namespace ApiBtc.Client;
 
 
 [Serializable]
-public class GigLNDWalletAPIException : Exception
+public class ApiBtcException : Exception
 {
     /// <summary>Represents the error code of the exception.</summary>
     public LNDWalletErrorCode ErrorCode { get; set; }
@@ -12,7 +12,7 @@ public class GigLNDWalletAPIException : Exception
     /// </summary>
     /// <param name="lndWalletErrorCode">The error code for exception.</param>
     /// <param name="message">The detail message that describes the current exception.</param>
-    public GigLNDWalletAPIException(LNDWalletErrorCode lndWalletErrorCode, string message) : base(message)
+    public ApiBtcException(LNDWalletErrorCode lndWalletErrorCode, string message) : base(message)
     {
         ErrorCode = lndWalletErrorCode;
     }
@@ -28,7 +28,7 @@ public static class WalletAPIResult
     public static void Check(dynamic t)
     {
         if (t.ErrorCode != LNDWalletErrorCode.Ok)
-            throw new GigLNDWalletAPIException(t.ErrorCode, t.ErrorMessage);
+            throw new ApiBtcException(t.ErrorCode, t.ErrorMessage);
     }
 
     public static T Get<T>(dynamic t)
