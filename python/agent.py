@@ -14,9 +14,14 @@ exec(open(('./local.secret')).read())
 os.environ["OPENAI_API_KEY"] = openai_api_key
 os.environ["BASE_URL"] = wallet_api
 
+if len(wallet_priv_keys) > 0:
+    privkey = wallet_priv_keys[0]
+else:
+    privkey = None
+
 class ChatAgent:
     client = OpenAI()
-    GPT_MODEL = "gpt-4o"
+    GPT_MODEL = "o3-mini"
     messages = [
         {"role": "system", "content": (
             "You are a Lightning Network wallet management agent. Your task is to assist users in managing their Lightning Network wallet and performing various operations. "
@@ -672,14 +677,14 @@ class ChatAgent:
                 else:
                     function_result = 'Unknown function.'
 
-            print(">", function_result)
+                print(">", function_result)
 
-            self.messages.append({
-                "role": "tool", 
-                "tool_call_id": tool_call_id, 
-                "name": tool_function_name, 
-                "content": str(function_result)
-            })
+                self.messages.append({
+                    "role": "tool", 
+                    "tool_call_id": tool_call_id, 
+                    "name": tool_function_name, 
+                    "content": str(function_result)
+                })
             
             response_with_function_call = self.client.chat.completions.create(
                 model = self.GPT_MODEL,
@@ -743,8 +748,11 @@ def main():
         healthcheck = requests.get(url=f"{os.environ['BASE_URL']}/health")
         healthcheck.raise_for_status()
 
-        print(colored(f"\nWelcome to the Cryptocurrency Wallet Management Console!\n", "cyan"))
-        privkey = input(colored("Enter your private key: ", "cyan"))
+        global privkey
+        if privkey is None:
+            print(colored(f"\nWelcome to the Cryptocurrency Wallet Management Console!\n", "cyan"))
+            privkey = input(colored("Enter your private key: ", "cyan"))
+
         chat_agent = ChatAgent(privkey)
 
         while True:
