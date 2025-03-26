@@ -83,7 +83,7 @@ public class GigLNDWalletCLI
 
         sfx = (string.IsNullOrWhiteSpace(sfx)) ? "" : "_" + sfx;
 
-        IConfigurationRoot config = GetConfigurationRoot(baseDir, args, ".giggossip", "walletcli" + sfx + ".conf");
+        IConfigurationRoot config = GetConfigurationRoot(baseDir, args, ".conf", "walletcli" + sfx + ".conf");
 
         this.userSettings = config.GetSection("user").Get<UserSettings>();
 

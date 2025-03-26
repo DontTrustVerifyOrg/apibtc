@@ -10,13 +10,13 @@
     <NoWarn>1701;1702;1998;8600;8601;8602;8603;8604;8618;8625</NoWarn>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="Grpc.Tools" Version="2.70.0">
+    <PackageReference Include="Grpc.Tools" Version="2.71.0">
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
       <PrivateAssets>all</PrivateAssets>
     </PackageReference>
-    <PackageReference Include="Grpc.Net.Client" Version="2.67.0" />
-    <PackageReference Include="Google.Protobuf" Version="3.30.0" />
-    <PackageReference Include="NBitcoin" Version="8.0.3" />
+    <PackageReference Include="Grpc.Net.Client" Version="2.70.0" />
+    <PackageReference Include="Google.Protobuf" Version="3.30.1" />
+    <PackageReference Include="NBitcoin" Version="8.0.4" />
   </ItemGroup>
   <ItemGroup>
 <Protobuf Include="invoices.proto">

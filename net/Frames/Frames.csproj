@@ -16,12 +16,12 @@
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="NBitcoin.Secp256k1" Version="3.1.6" />
-    <PackageReference Include="Google.Protobuf" Version="3.30.0" />
-    <PackageReference Include="Grpc.Tools" Version="2.70.0">
+    <PackageReference Include="Google.Protobuf" Version="3.30.1" />
+    <PackageReference Include="Grpc.Tools" Version="2.71.0">
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
       <PrivateAssets>all</PrivateAssets>
     </PackageReference>
-    <PackageReference Include="NBitcoin" Version="8.0.3" />
+    <PackageReference Include="NBitcoin" Version="8.0.4" />
   </ItemGroup>
   <ItemGroup>
     <Protobuf Include="../../frames.proto" GrpcServices="Client" />

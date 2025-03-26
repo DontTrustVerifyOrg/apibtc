@@ -1414,88 +1414,88 @@
               }
             ],
             "x-enumNames": [
-  "Ok",
-  "InvalidToken",
-  "NotEnoughFunds",
-  "UnknownPayment",
-  "UnknownInvoice",
-  "InvoiceAlreadyCancelled",
-  "InvoiceAlreadyAccepted",
-  "InvoiceAlreadySettled",
-  "InvoiceNotAccepted",
-  "AlreadyPayed",
-  "PayoutNotOpened",
-  "PayoutAlreadySent",
-  "OperationFailed",
-  "AccessDenied",
-  "FeeLimitTooSmall"
-],
+              "Ok",
+              "InvalidToken",
+              "NotEnoughFunds",
+              "UnknownPayment",
+              "UnknownInvoice",
+              "InvoiceAlreadyCancelled",
+              "InvoiceAlreadyAccepted",
+              "InvoiceAlreadySettled",
+              "InvoiceNotAccepted",
+              "AlreadyPayed",
+              "PayoutNotOpened",
+              "PayoutAlreadySent",
+              "OperationFailed",
+              "AccessDenied",
+              "FeeLimitTooSmall"
+            ],
             "x-ms-enum": {
-  "name": "LNDWalletErrorCode",
-  "modelAsString": false,
-  "values": [
-    {
-      "value": 0,
-      "name": "Ok"
-    },
-    {
-      "value": 1,
-      "name": "InvalidToken"
-    },
-    {
-      "value": 2,
-      "name": "NotEnoughFunds"
-    },
-    {
-      "value": 3,
-      "name": "UnknownPayment"
-    },
-    {
-      "value": 4,
-      "name": "UnknownInvoice"
-    },
-    {
-      "value": 5,
-      "name": "InvoiceAlreadyCancelled"
-    },
-    {
-      "value": 6,
-      "name": "InvoiceAlreadyAccepted"
-    },
-    {
-      "value": 7,
-      "name": "InvoiceAlreadySettled"
-    },
-    {
-      "value": 8,
-      "name": "InvoiceNotAccepted"
-    },
-    {
-      "value": 9,
-      "name": "AlreadyPayed"
-    },
-    {
-      "value": 10,
-      "name": "PayoutNotOpened"
-    },
-    {
-      "value": 11,
-      "name": "PayoutAlreadySent"
-    },
-    {
-      "value": 12,
-      "name": "OperationFailed"
-    },
-    {
-      "value": 13,
-      "name": "AccessDenied"
-    },
-    {
-      "value": 14,
-      "name": "FeeLimitTooSmall"
-    }
-  ]
-}
+              "name": "LNDWalletErrorCode",
+              "modelAsString": false,
+              "values": [
+                {
+                  "value": 0,
+                  "name": "Ok"
+                },
+                {
+                  "value": 1,
+                  "name": "InvalidToken"
+                },
+                {
+                  "value": 2,
+                  "name": "NotEnoughFunds"
+                },
+                {
+                  "value": 3,
+                  "name": "UnknownPayment"
+                },
+                {
+                  "value": 4,
+                  "name": "UnknownInvoice"
+                },
+                {
+                  "value": 5,
+                  "name": "InvoiceAlreadyCancelled"
+                },
+                {
+                  "value": 6,
+                  "name": "InvoiceAlreadyAccepted"
+                },
+                {
+                  "value": 7,
+                  "name": "InvoiceAlreadySettled"
+                },
+                {
+                  "value": 8,
+                  "name": "InvoiceNotAccepted"
+                },
+                {
+                  "value": 9,
+                  "name": "AlreadyPayed"
+                },
+                {
+                  "value": 10,
+                  "name": "PayoutNotOpened"
+                },
+                {
+                  "value": 11,
+                  "name": "PayoutAlreadySent"
+                },
+                {
+                  "value": 12,
+                  "name": "OperationFailed"
+                },
+                {
+                  "value": 13,
+                  "name": "AccessDenied"
+                },
+                {
+                  "value": 14,
+                  "name": "FeeLimitTooSmall"
+                }
+              ]
+            }
           },
           "errorMessage": {
             "type": "string",
@@ -1606,43 +1606,43 @@
               }
             ],
             "x-enumNames": [
-  "UnknownCommitmentType",
-  "Legacy",
-  "StaticRemoteKey",
-  "Anchors",
-  "ScriptEnforcedLease",
-  "SimpleTaproot"
-],
+              "UnknownCommitmentType",
+              "Legacy",
+              "StaticRemoteKey",
+              "Anchors",
+              "ScriptEnforcedLease",
+              "SimpleTaproot"
+            ],
             "x-ms-enum": {
-  "name": "CommitmentType",
-  "modelAsString": false,
-  "values": [
-    {
-      "value": 0,
-      "name": "UnknownCommitmentType"
-    },
-    {
-      "value": 1,
-      "name": "Legacy"
-    },
-    {
-      "value": 2,
-      "name": "StaticRemoteKey"
-    },
-    {
-      "value": 3,
-      "name": "Anchors"
-    },
-    {
-      "value": 4,
-      "name": "ScriptEnforcedLease"
-    },
-    {
-      "value": 5,
-      "name": "SimpleTaproot"
-    }
-  ]
-}
+              "name": "CommitmentType",
+              "modelAsString": false,
+              "values": [
+                {
+                  "value": 0,
+                  "name": "UnknownCommitmentType"
+                },
+                {
+                  "value": 1,
+                  "name": "Legacy"
+                },
+                {
+                  "value": 2,
+                  "name": "StaticRemoteKey"
+                },
+                {
+                  "value": 3,
+                  "name": "Anchors"
+                },
+                {
+                  "value": 4,
+                  "name": "ScriptEnforcedLease"
+                },
+                {
+                  "value": 5,
+                  "name": "SimpleTaproot"
+                }
+              ]
+            }
           },
           "lifetime": {
             "type": "integer",
@@ -1728,88 +1728,88 @@
               }
             ],
             "x-enumNames": [
-  "Ok",
-  "InvalidToken",
-  "NotEnoughFunds",
-  "UnknownPayment",
-  "UnknownInvoice",
-  "InvoiceAlreadyCancelled",
-  "InvoiceAlreadyAccepted",
-  "InvoiceAlreadySettled",
-  "InvoiceNotAccepted",
-  "AlreadyPayed",
-  "PayoutNotOpened",
-  "PayoutAlreadySent",
-  "OperationFailed",
-  "AccessDenied",
-  "FeeLimitTooSmall"
-],
+              "Ok",
+              "InvalidToken",
+              "NotEnoughFunds",
+              "UnknownPayment",
+              "UnknownInvoice",
+              "InvoiceAlreadyCancelled",
+              "InvoiceAlreadyAccepted",
+              "InvoiceAlreadySettled",
+              "InvoiceNotAccepted",
+              "AlreadyPayed",
+              "PayoutNotOpened",
+              "PayoutAlreadySent",
+              "OperationFailed",
+              "AccessDenied",
+              "FeeLimitTooSmall"
+            ],
             "x-ms-enum": {
-  "name": "LNDWalletErrorCode",
-  "modelAsString": false,
-  "values": [
-    {
-      "value": 0,
-      "name": "Ok"
-    },
-    {
-      "value": 1,
-      "name": "InvalidToken"
-    },
-    {
-      "value": 2,
-      "name": "NotEnoughFunds"
-    },
-    {
-      "value": 3,
-      "name": "UnknownPayment"
-    },
-    {
-      "value": 4,
-      "name": "UnknownInvoice"
-    },
-    {
-      "value": 5,
-      "name": "InvoiceAlreadyCancelled"
-    },
-    {
-      "value": 6,
-      "name": "InvoiceAlreadyAccepted"
-    },
-    {
-      "value": 7,
-      "name": "InvoiceAlreadySettled"
-    },
-    {
-      "value": 8,
-      "name": "InvoiceNotAccepted"
-    },
-    {
-      "value": 9,
-      "name": "AlreadyPayed"
-    },
-    {
-      "value": 10,
-      "name": "PayoutNotOpened"
-    },
-    {
-      "value": 11,
-      "name": "PayoutAlreadySent"
-    },
-    {
-      "value": 12,
-      "name": "OperationFailed"
-    },
-    {
-      "value": 13,
-      "name": "AccessDenied"
-    },
-    {
-      "value": 14,
-      "name": "FeeLimitTooSmall"
-    }
-  ]
-}
+              "name": "LNDWalletErrorCode",
+              "modelAsString": false,
+              "values": [
+                {
+                  "value": 0,
+                  "name": "Ok"
+                },
+                {
+                  "value": 1,
+                  "name": "InvalidToken"
+                },
+                {
+                  "value": 2,
+                  "name": "NotEnoughFunds"
+                },
+                {
+                  "value": 3,
+                  "name": "UnknownPayment"
+                },
+                {
+                  "value": 4,
+                  "name": "UnknownInvoice"
+                },
+                {
+                  "value": 5,
+                  "name": "InvoiceAlreadyCancelled"
+                },
+                {
+                  "value": 6,
+                  "name": "InvoiceAlreadyAccepted"
+                },
+                {
+                  "value": 7,
+                  "name": "InvoiceAlreadySettled"
+                },
+                {
+                  "value": 8,
+                  "name": "InvoiceNotAccepted"
+                },
+                {
+                  "value": 9,
+                  "name": "AlreadyPayed"
+                },
+                {
+                  "value": 10,
+                  "name": "PayoutNotOpened"
+                },
+                {
+                  "value": 11,
+                  "name": "PayoutAlreadySent"
+                },
+                {
+                  "value": 12,
+                  "name": "OperationFailed"
+                },
+                {
+                  "value": 13,
+                  "name": "AccessDenied"
+                },
+                {
+                  "value": 14,
+                  "name": "FeeLimitTooSmall"
+                }
+              ]
+            }
           },
           "errorMessage": {
             "type": "string",
@@ -1864,43 +1864,43 @@
               }
             ],
             "x-enumNames": [
-  "CooperativeClose",
-  "LocalForceClose",
-  "RemoteForceClose",
-  "BreachClose",
-  "FundingCanceled",
-  "Abandoned"
-],
+              "CooperativeClose",
+              "LocalForceClose",
+              "RemoteForceClose",
+              "BreachClose",
+              "FundingCanceled",
+              "Abandoned"
+            ],
             "x-ms-enum": {
-  "name": "ClosureType",
-  "modelAsString": false,
-  "values": [
-    {
-      "value": 0,
-      "name": "CooperativeClose"
-    },
-    {
-      "value": 1,
-      "name": "LocalForceClose"
-    },
-    {
-      "value": 2,
-      "name": "RemoteForceClose"
-    },
-    {
-      "value": 3,
-      "name": "BreachClose"
-    },
-    {
-      "value": 4,
-      "name": "FundingCanceled"
-    },
-    {
-      "value": 5,
-      "name": "Abandoned"
-    }
-  ]
-}
+              "name": "ClosureType",
+              "modelAsString": false,
+              "values": [
+                {
+                  "value": 0,
+                  "name": "CooperativeClose"
+                },
+                {
+                  "value": 1,
+                  "name": "LocalForceClose"
+                },
+                {
+                  "value": 2,
+                  "name": "RemoteForceClose"
+                },
+                {
+                  "value": 3,
+                  "name": "BreachClose"
+                },
+                {
+                  "value": 4,
+                  "name": "FundingCanceled"
+                },
+                {
+                  "value": 5,
+                  "name": "Abandoned"
+                }
+              ]
+            }
           },
           "openInitiator": {
             "allOf": [
@@ -1909,33 +1909,33 @@
               }
             ],
             "x-enumNames": [
-  "Unknown",
-  "Local",
-  "Remote",
-  "Both"
-],
+              "Unknown",
+              "Local",
+              "Remote",
+              "Both"
+            ],
             "x-ms-enum": {
-  "name": "Initiator",
-  "modelAsString": false,
-  "values": [
-    {
-      "value": 0,
-      "name": "Unknown"
-    },
-    {
-      "value": 1,
-      "name": "Local"
-    },
-    {
-      "value": 2,
-      "name": "Remote"
-    },
-    {
-      "value": 3,
-      "name": "Both"
-    }
-  ]
-}
+              "name": "Initiator",
+              "modelAsString": false,
+              "values": [
+                {
+                  "value": 0,
+                  "name": "Unknown"
+                },
+                {
+                  "value": 1,
+                  "name": "Local"
+                },
+                {
+                  "value": 2,
+                  "name": "Remote"
+                },
+                {
+                  "value": 3,
+                  "name": "Both"
+                }
+              ]
+            }
           },
           "closeInitiator": {
             "allOf": [
@@ -1944,33 +1944,33 @@
               }
             ],
             "x-enumNames": [
-  "Unknown",
-  "Local",
-  "Remote",
-  "Both"
-],
+              "Unknown",
+              "Local",
+              "Remote",
+              "Both"
+            ],
             "x-ms-enum": {
-  "name": "Initiator",
-  "modelAsString": false,
-  "values": [
-    {
-      "value": 0,
-      "name": "Unknown"
-    },
-    {
-      "value": 1,
-      "name": "Local"
-    },
-    {
-      "value": 2,
-      "name": "Remote"
-    },
-    {
-      "value": 3,
-      "name": "Both"
-    }
-  ]
-}
+              "name": "Initiator",
+              "modelAsString": false,
+              "values": [
+                {
+                  "value": 0,
+                  "name": "Unknown"
+                },
+                {
+                  "value": 1,
+                  "name": "Local"
+                },
+                {
+                  "value": 2,
+                  "name": "Remote"
+                },
+                {
+                  "value": 3,
+                  "name": "Both"
+                }
+              ]
+            }
           },
           "resolutions": {
             "type": "array",
@@ -2013,88 +2013,88 @@
               }
             ],
             "x-enumNames": [
-  "Ok",
-  "InvalidToken",
-  "NotEnoughFunds",
-  "UnknownPayment",
-  "UnknownInvoice",
-  "InvoiceAlreadyCancelled",
-  "InvoiceAlreadyAccepted",
-  "InvoiceAlreadySettled",
-  "InvoiceNotAccepted",
-  "AlreadyPayed",
-  "PayoutNotOpened",
-  "PayoutAlreadySent",
-  "OperationFailed",
-  "AccessDenied",
-  "FeeLimitTooSmall"
-],
+              "Ok",
+              "InvalidToken",
+              "NotEnoughFunds",
+              "UnknownPayment",
+              "UnknownInvoice",
+              "InvoiceAlreadyCancelled",
+              "InvoiceAlreadyAccepted",
+              "InvoiceAlreadySettled",
+              "InvoiceNotAccepted",
+              "AlreadyPayed",
+              "PayoutNotOpened",
+              "PayoutAlreadySent",
+              "OperationFailed",
+              "AccessDenied",
+              "FeeLimitTooSmall"
+            ],
             "x-ms-enum": {
-  "name": "LNDWalletErrorCode",
-  "modelAsString": false,
-  "values": [
-    {
-      "value": 0,
-      "name": "Ok"
-    },
-    {
-      "value": 1,
-      "name": "InvalidToken"
-    },
-    {
-      "value": 2,
-      "name": "NotEnoughFunds"
-    },
-    {
-      "value": 3,
-      "name": "UnknownPayment"
-    },
-    {
-      "value": 4,
-      "name": "UnknownInvoice"
-    },
-    {
-      "value": 5,
-      "name": "InvoiceAlreadyCancelled"
-    },
-    {
-      "value": 6,
-      "name": "InvoiceAlreadyAccepted"
-    },
-    {
-      "value": 7,
-      "name": "InvoiceAlreadySettled"
-    },
-    {
-      "value": 8,
-      "name": "InvoiceNotAccepted"
-    },
-    {
-      "value": 9,
-      "name": "AlreadyPayed"
-    },
-    {
-      "value": 10,
-      "name": "PayoutNotOpened"
-    },
-    {
-      "value": 11,
-      "name": "PayoutAlreadySent"
-    },
-    {
-      "value": 12,
-      "name": "OperationFailed"
-    },
-    {
-      "value": 13,
-      "name": "AccessDenied"
-    },
-    {
-      "value": 14,
-      "name": "FeeLimitTooSmall"
-    }
-  ]
-}
+              "name": "LNDWalletErrorCode",
+              "modelAsString": false,
+              "values": [
+                {
+                  "value": 0,
+                  "name": "Ok"
+                },
+                {
+                  "value": 1,
+                  "name": "InvalidToken"
+                },
+                {
+                  "value": 2,
+                  "name": "NotEnoughFunds"
+                },
+                {
+                  "value": 3,
+                  "name": "UnknownPayment"
+                },
+                {
+                  "value": 4,
+                  "name": "UnknownInvoice"
+                },
+                {
+                  "value": 5,
+                  "name": "InvoiceAlreadyCancelled"
+                },
+                {
+                  "value": 6,
+                  "name": "InvoiceAlreadyAccepted"
+                },
+                {
+                  "value": 7,
+                  "name": "InvoiceAlreadySettled"
+                },
+                {
+                  "value": 8,
+                  "name": "InvoiceNotAccepted"
+                },
+                {
+                  "value": 9,
+                  "name": "AlreadyPayed"
+                },
+                {
+                  "value": 10,
+                  "name": "PayoutNotOpened"
+                },
+                {
+                  "value": 11,
+                  "name": "PayoutAlreadySent"
+                },
+                {
+                  "value": 12,
+                  "name": "OperationFailed"
+                },
+                {
+                  "value": 13,
+                  "name": "AccessDenied"
+                },
+                {
+                  "value": 14,
+                  "name": "FeeLimitTooSmall"
+                }
+              ]
+            }
           },
           "errorMessage": {
             "type": "string",
@@ -2145,43 +2145,43 @@
         "type": "integer",
         "format": "int32",
         "x-enumNames": [
-  "CooperativeClose",
-  "LocalForceClose",
-  "RemoteForceClose",
-  "BreachClose",
-  "FundingCanceled",
-  "Abandoned"
-],
+          "CooperativeClose",
+          "LocalForceClose",
+          "RemoteForceClose",
+          "BreachClose",
+          "FundingCanceled",
+          "Abandoned"
+        ],
         "x-ms-enum": {
-  "name": "ClosureType",
-  "modelAsString": false,
-  "values": [
-    {
-      "value": 0,
-      "name": "CooperativeClose"
-    },
-    {
-      "value": 1,
-      "name": "LocalForceClose"
-    },
-    {
-      "value": 2,
-      "name": "RemoteForceClose"
-    },
-    {
-      "value": 3,
-      "name": "BreachClose"
-    },
-    {
-      "value": 4,
-      "name": "FundingCanceled"
-    },
-    {
-      "value": 5,
-      "name": "Abandoned"
-    }
-  ]
-}
+          "name": "ClosureType",
+          "modelAsString": false,
+          "values": [
+            {
+              "value": 0,
+              "name": "CooperativeClose"
+            },
+            {
+              "value": 1,
+              "name": "LocalForceClose"
+            },
+            {
+              "value": 2,
+              "name": "RemoteForceClose"
+            },
+            {
+              "value": 3,
+              "name": "BreachClose"
+            },
+            {
+              "value": 4,
+              "name": "FundingCanceled"
+            },
+            {
+              "value": 5,
+              "name": "Abandoned"
+            }
+          ]
+        }
       },
       "CommitmentType": {
         "enum": [
@@ -2195,43 +2195,43 @@
         "type": "integer",
         "format": "int32",
         "x-enumNames": [
-  "UnknownCommitmentType",
-  "Legacy",
-  "StaticRemoteKey",
-  "Anchors",
-  "ScriptEnforcedLease",
-  "SimpleTaproot"
-],
+          "UnknownCommitmentType",
+          "Legacy",
+          "StaticRemoteKey",
+          "Anchors",
+          "ScriptEnforcedLease",
+          "SimpleTaproot"
+        ],
         "x-ms-enum": {
-  "name": "CommitmentType",
-  "modelAsString": false,
-  "values": [
-    {
-      "value": 0,
-      "name": "UnknownCommitmentType"
-    },
-    {
-      "value": 1,
-      "name": "Legacy"
-    },
-    {
-      "value": 2,
-      "name": "StaticRemoteKey"
-    },
-    {
-      "value": 3,
-      "name": "Anchors"
-    },
-    {
-      "value": 4,
-      "name": "ScriptEnforcedLease"
-    },
-    {
-      "value": 5,
-      "name": "SimpleTaproot"
-    }
-  ]
-}
+          "name": "CommitmentType",
+          "modelAsString": false,
+          "values": [
+            {
+              "value": 0,
+              "name": "UnknownCommitmentType"
+            },
+            {
+              "value": 1,
+              "name": "Legacy"
+            },
+            {
+              "value": 2,
+              "name": "StaticRemoteKey"
+            },
+            {
+              "value": 3,
+              "name": "Anchors"
+            },
+            {
+              "value": 4,
+              "name": "ScriptEnforcedLease"
+            },
+            {
+              "value": 5,
+              "name": "SimpleTaproot"
+            }
+          ]
+        }
       },
       "FeeEstimateRet": {
         "type": "object",
@@ -2268,88 +2268,88 @@
               }
             ],
             "x-enumNames": [
-  "Ok",
-  "InvalidToken",
-  "NotEnoughFunds",
-  "UnknownPayment",
-  "UnknownInvoice",
-  "InvoiceAlreadyCancelled",
-  "InvoiceAlreadyAccepted",
-  "InvoiceAlreadySettled",
-  "InvoiceNotAccepted",
-  "AlreadyPayed",
-  "PayoutNotOpened",
-  "PayoutAlreadySent",
-  "OperationFailed",
-  "AccessDenied",
-  "FeeLimitTooSmall"
-],
+              "Ok",
+              "InvalidToken",
+              "NotEnoughFunds",
+              "UnknownPayment",
+              "UnknownInvoice",
+              "InvoiceAlreadyCancelled",
+              "InvoiceAlreadyAccepted",
+              "InvoiceAlreadySettled",
+              "InvoiceNotAccepted",
+              "AlreadyPayed",
+              "PayoutNotOpened",
+              "PayoutAlreadySent",
+              "OperationFailed",
+              "AccessDenied",
+              "FeeLimitTooSmall"
+            ],
             "x-ms-enum": {
-  "name": "LNDWalletErrorCode",
-  "modelAsString": false,
-  "values": [
-    {
-      "value": 0,
-      "name": "Ok"
-    },
-    {
-      "value": 1,
-      "name": "InvalidToken"
-    },
-    {
-      "value": 2,
-      "name": "NotEnoughFunds"
-    },
-    {
-      "value": 3,
-      "name": "UnknownPayment"
-    },
-    {
-      "value": 4,
-      "name": "UnknownInvoice"
-    },
-    {
-      "value": 5,
-      "name": "InvoiceAlreadyCancelled"
-    },
-    {
-      "value": 6,
-      "name": "InvoiceAlreadyAccepted"
-    },
-    {
-      "value": 7,
-      "name": "InvoiceAlreadySettled"
-    },
-    {
-      "value": 8,
-      "name": "InvoiceNotAccepted"
-    },
-    {
-      "value": 9,
-      "name": "AlreadyPayed"
-    },
-    {
-      "value": 10,
-      "name": "PayoutNotOpened"
-    },
-    {
-      "value": 11,
-      "name": "PayoutAlreadySent"
-    },
-    {
-      "value": 12,
-      "name": "OperationFailed"
-    },
-    {
-      "value": 13,
-      "name": "AccessDenied"
-    },
-    {
-      "value": 14,
-      "name": "FeeLimitTooSmall"
-    }
-  ]
-}
+              "name": "LNDWalletErrorCode",
+              "modelAsString": false,
+              "values": [
+                {
+                  "value": 0,
+                  "name": "Ok"
+                },
+                {
+                  "value": 1,
+                  "name": "InvalidToken"
+                },
+                {
+                  "value": 2,
+                  "name": "NotEnoughFunds"
+                },
+                {
+                  "value": 3,
+                  "name": "UnknownPayment"
+                },
+                {
+                  "value": 4,
+                  "name": "UnknownInvoice"
+                },
+                {
+                  "value": 5,
+                  "name": "InvoiceAlreadyCancelled"
+                },
+                {
+                  "value": 6,
+                  "name": "InvoiceAlreadyAccepted"
+                },
+                {
+                  "value": 7,
+                  "name": "InvoiceAlreadySettled"
+                },
+                {
+                  "value": 8,
+                  "name": "InvoiceNotAccepted"
+                },
+                {
+                  "value": 9,
+                  "name": "AlreadyPayed"
+                },
+                {
+                  "value": 10,
+                  "name": "PayoutNotOpened"
+                },
+                {
+                  "value": 11,
+                  "name": "PayoutAlreadySent"
+                },
+                {
+                  "value": 12,
+                  "name": "OperationFailed"
+                },
+                {
+                  "value": 13,
+                  "name": "AccessDenied"
+                },
+                {
+                  "value": 14,
+                  "name": "FeeLimitTooSmall"
+                }
+              ]
+            }
           },
           "errorMessage": {
             "type": "string",
@@ -2376,88 +2376,88 @@
               }
             ],
             "x-enumNames": [
-  "Ok",
-  "InvalidToken",
-  "NotEnoughFunds",
-  "UnknownPayment",
-  "UnknownInvoice",
-  "InvoiceAlreadyCancelled",
-  "InvoiceAlreadyAccepted",
-  "InvoiceAlreadySettled",
-  "InvoiceNotAccepted",
-  "AlreadyPayed",
-  "PayoutNotOpened",
-  "PayoutAlreadySent",
-  "OperationFailed",
-  "AccessDenied",
-  "FeeLimitTooSmall"
-],
+              "Ok",
+              "InvalidToken",
+              "NotEnoughFunds",
+              "UnknownPayment",
+              "UnknownInvoice",
+              "InvoiceAlreadyCancelled",
+              "InvoiceAlreadyAccepted",
+              "InvoiceAlreadySettled",
+              "InvoiceNotAccepted",
+              "AlreadyPayed",
+              "PayoutNotOpened",
+              "PayoutAlreadySent",
+              "OperationFailed",
+              "AccessDenied",
+              "FeeLimitTooSmall"
+            ],
             "x-ms-enum": {
-  "name": "LNDWalletErrorCode",
-  "modelAsString": false,
-  "values": [
-    {
-      "value": 0,
-      "name": "Ok"
-    },
-    {
-      "value": 1,
-      "name": "InvalidToken"
-    },
-    {
-      "value": 2,
-      "name": "NotEnoughFunds"
-    },
-    {
-      "value": 3,
-      "name": "UnknownPayment"
-    },
-    {
-      "value": 4,
-      "name": "UnknownInvoice"
-    },
-    {
-      "value": 5,
-      "name": "InvoiceAlreadyCancelled"
-    },
-    {
-      "value": 6,
-      "name": "InvoiceAlreadyAccepted"
-    },
-    {
-      "value": 7,
-      "name": "InvoiceAlreadySettled"
-    },
-    {
-      "value": 8,
-      "name": "InvoiceNotAccepted"
-    },
-    {
-      "value": 9,
-      "name": "AlreadyPayed"
-    },
-    {
-      "value": 10,
-      "name": "PayoutNotOpened"
-    },
-    {
-      "value": 11,
-      "name": "PayoutAlreadySent"
-    },
-    {
-      "value": 12,
-      "name": "OperationFailed"
-    },
-    {
-      "value": 13,
-      "name": "AccessDenied"
-    },
-    {
-      "value": 14,
-      "name": "FeeLimitTooSmall"
-    }
-  ]
-}
+              "name": "LNDWalletErrorCode",
+              "modelAsString": false,
+              "values": [
+                {
+                  "value": 0,
+                  "name": "Ok"
+                },
+                {
+                  "value": 1,
+                  "name": "InvalidToken"
+                },
+                {
+                  "value": 2,
+                  "name": "NotEnoughFunds"
+                },
+                {
+                  "value": 3,
+                  "name": "UnknownPayment"
+                },
+                {
+                  "value": 4,
+                  "name": "UnknownInvoice"
+                },
+                {
+                  "value": 5,
+                  "name": "InvoiceAlreadyCancelled"
+                },
+                {
+                  "value": 6,
+                  "name": "InvoiceAlreadyAccepted"
+                },
+                {
+                  "value": 7,
+                  "name": "InvoiceAlreadySettled"
+                },
+                {
+                  "value": 8,
+                  "name": "InvoiceNotAccepted"
+                },
+                {
+                  "value": 9,
+                  "name": "AlreadyPayed"
+                },
+                {
+                  "value": 10,
+                  "name": "PayoutNotOpened"
+                },
+                {
+                  "value": 11,
+                  "name": "PayoutAlreadySent"
+                },
+                {
+                  "value": 12,
+                  "name": "OperationFailed"
+                },
+                {
+                  "value": 13,
+                  "name": "AccessDenied"
+                },
+                {
+                  "value": 14,
+                  "name": "FeeLimitTooSmall"
+                }
+              ]
+            }
           },
           "errorMessage": {
             "type": "string",
@@ -2480,88 +2480,88 @@
               }
             ],
             "x-enumNames": [
-  "Ok",
-  "InvalidToken",
-  "NotEnoughFunds",
-  "UnknownPayment",
-  "UnknownInvoice",
-  "InvoiceAlreadyCancelled",
-  "InvoiceAlreadyAccepted",
-  "InvoiceAlreadySettled",
-  "InvoiceNotAccepted",
-  "AlreadyPayed",
-  "PayoutNotOpened",
-  "PayoutAlreadySent",
-  "OperationFailed",
-  "AccessDenied",
-  "FeeLimitTooSmall"
-],
+              "Ok",
+              "InvalidToken",
+              "NotEnoughFunds",
+              "UnknownPayment",
+              "UnknownInvoice",
+              "InvoiceAlreadyCancelled",
+              "InvoiceAlreadyAccepted",
+              "InvoiceAlreadySettled",
+              "InvoiceNotAccepted",
+              "AlreadyPayed",
+              "PayoutNotOpened",
+              "PayoutAlreadySent",
+              "OperationFailed",
+              "AccessDenied",
+              "FeeLimitTooSmall"
+            ],
             "x-ms-enum": {
-  "name": "LNDWalletErrorCode",
-  "modelAsString": false,
-  "values": [
-    {
-      "value": 0,
-      "name": "Ok"
-    },
-    {
-      "value": 1,
-      "name": "InvalidToken"
-    },
-    {
-      "value": 2,
-      "name": "NotEnoughFunds"
-    },
-    {
-      "value": 3,
-      "name": "UnknownPayment"
-    },
-    {
-      "value": 4,
-      "name": "UnknownInvoice"
-    },
-    {
-      "value": 5,
-      "name": "InvoiceAlreadyCancelled"
-    },
-    {
-      "value": 6,
-      "name": "InvoiceAlreadyAccepted"
-    },
-    {
-      "value": 7,
-      "name": "InvoiceAlreadySettled"
-    },
-    {
-      "value": 8,
-      "name": "InvoiceNotAccepted"
-    },
-    {
-      "value": 9,
-      "name": "AlreadyPayed"
-    },
-    {
-      "value": 10,
-      "name": "PayoutNotOpened"
-    },
-    {
-      "value": 11,
-      "name": "PayoutAlreadySent"
-    },
-    {
-      "value": 12,
-      "name": "OperationFailed"
-    },
-    {
-      "value": 13,
-      "name": "AccessDenied"
-    },
-    {
-      "value": 14,
-      "name": "FeeLimitTooSmall"
-    }
-  ]
-}
+              "name": "LNDWalletErrorCode",
+              "modelAsString": false,
+              "values": [
+                {
+                  "value": 0,
+                  "name": "Ok"
+                },
+                {
+                  "value": 1,
+                  "name": "InvalidToken"
+                },
+                {
+                  "value": 2,
+                  "name": "NotEnoughFunds"
+                },
+                {
+                  "value": 3,
+                  "name": "UnknownPayment"
+                },
+                {
+                  "value": 4,
+                  "name": "UnknownInvoice"
+                },
+                {
+                  "value": 5,
+                  "name": "InvoiceAlreadyCancelled"
+                },
+                {
+                  "value": 6,
+                  "name": "InvoiceAlreadyAccepted"
+                },
+                {
+                  "value": 7,
+                  "name": "InvoiceAlreadySettled"
+                },
+                {
+                  "value": 8,
+                  "name": "InvoiceNotAccepted"
+                },
+                {
+                  "value": 9,
+                  "name": "AlreadyPayed"
+                },
+                {
+                  "value": 10,
+                  "name": "PayoutNotOpened"
+                },
+                {
+                  "value": 11,
+                  "name": "PayoutAlreadySent"
+                },
+                {
+                  "value": 12,
+                  "name": "OperationFailed"
+                },
+                {
+                  "value": 13,
+                  "name": "AccessDenied"
+                },
+                {
+                  "value": 14,
+                  "name": "FeeLimitTooSmall"
+                }
+              ]
+            }
           },
           "errorMessage": {
             "type": "string",
@@ -2617,33 +2617,33 @@
         "type": "integer",
         "format": "int32",
         "x-enumNames": [
-  "Unknown",
-  "Local",
-  "Remote",
-  "Both"
-],
+          "Unknown",
+          "Local",
+          "Remote",
+          "Both"
+        ],
         "x-ms-enum": {
-  "name": "Initiator",
-  "modelAsString": false,
-  "values": [
-    {
-      "value": 0,
-      "name": "Unknown"
-    },
-    {
-      "value": 1,
-      "name": "Local"
-    },
-    {
-      "value": 2,
-      "name": "Remote"
-    },
-    {
-      "value": 3,
-      "name": "Both"
-    }
-  ]
-}
+          "name": "Initiator",
+          "modelAsString": false,
+          "values": [
+            {
+              "value": 0,
+              "name": "Unknown"
+            },
+            {
+              "value": 1,
+              "name": "Local"
+            },
+            {
+              "value": 2,
+              "name": "Remote"
+            },
+            {
+              "value": 3,
+              "name": "Both"
+            }
+          ]
+        }
       },
       "Int64Result": {
         "type": "object",
@@ -2659,88 +2659,88 @@
               }
             ],
             "x-enumNames": [
-  "Ok",
-  "InvalidToken",
-  "NotEnoughFunds",
-  "UnknownPayment",
-  "UnknownInvoice",
-  "InvoiceAlreadyCancelled",
-  "InvoiceAlreadyAccepted",
-  "InvoiceAlreadySettled",
-  "InvoiceNotAccepted",
-  "AlreadyPayed",
-  "PayoutNotOpened",
-  "PayoutAlreadySent",
-  "OperationFailed",
-  "AccessDenied",
-  "FeeLimitTooSmall"
-],
+              "Ok",
+              "InvalidToken",
+              "NotEnoughFunds",
+              "UnknownPayment",
+              "UnknownInvoice",
+              "InvoiceAlreadyCancelled",
+              "InvoiceAlreadyAccepted",
+              "InvoiceAlreadySettled",
+              "InvoiceNotAccepted",
+              "AlreadyPayed",
+              "PayoutNotOpened",
+              "PayoutAlreadySent",
+              "OperationFailed",
+              "AccessDenied",
+              "FeeLimitTooSmall"
+            ],
             "x-ms-enum": {
-  "name": "LNDWalletErrorCode",
-  "modelAsString": false,
-  "values": [
-    {
-      "value": 0,
-      "name": "Ok"
-    },
-    {
-      "value": 1,
-      "name": "InvalidToken"
-    },
-    {
-      "value": 2,
-      "name": "NotEnoughFunds"
-    },
-    {
-      "value": 3,
-      "name": "UnknownPayment"
-    },
-    {
-      "value": 4,
-      "name": "UnknownInvoice"
-    },
-    {
-      "value": 5,
-      "name": "InvoiceAlreadyCancelled"
-    },
-    {
-      "value": 6,
-      "name": "InvoiceAlreadyAccepted"
-    },
-    {
-      "value": 7,
-      "name": "InvoiceAlreadySettled"
-    },
-    {
-      "value": 8,
-      "name": "InvoiceNotAccepted"
-    },
-    {
-      "value": 9,
-      "name": "AlreadyPayed"
-    },
-    {
-      "value": 10,
-      "name": "PayoutNotOpened"
-    },
-    {
-      "value": 11,
-      "name": "PayoutAlreadySent"
-    },
-    {
-      "value": 12,
-      "name": "OperationFailed"
-    },
-    {
-      "value": 13,
-      "name": "AccessDenied"
-    },
-    {
-      "value": 14,
-      "name": "FeeLimitTooSmall"
-    }
-  ]
-}
+              "name": "LNDWalletErrorCode",
+              "modelAsString": false,
+              "values": [
+                {
+                  "value": 0,
+                  "name": "Ok"
+                },
+                {
+                  "value": 1,
+                  "name": "InvalidToken"
+                },
+                {
+                  "value": 2,
+                  "name": "NotEnoughFunds"
+                },
+                {
+                  "value": 3,
+                  "name": "UnknownPayment"
+                },
+                {
+                  "value": 4,
+                  "name": "UnknownInvoice"
+                },
+                {
+                  "value": 5,
+                  "name": "InvoiceAlreadyCancelled"
+                },
+                {
+                  "value": 6,
+                  "name": "InvoiceAlreadyAccepted"
+                },
+                {
+                  "value": 7,
+                  "name": "InvoiceAlreadySettled"
+                },
+                {
+                  "value": 8,
+                  "name": "InvoiceNotAccepted"
+                },
+                {
+                  "value": 9,
+                  "name": "AlreadyPayed"
+                },
+                {
+                  "value": 10,
+                  "name": "PayoutNotOpened"
+                },
+                {
+                  "value": 11,
+                  "name": "PayoutAlreadySent"
+                },
+                {
+                  "value": 12,
+                  "name": "OperationFailed"
+                },
+                {
+                  "value": 13,
+                  "name": "AccessDenied"
+                },
+                {
+                  "value": 14,
+                  "name": "FeeLimitTooSmall"
+                }
+              ]
+            }
           },
           "errorMessage": {
             "type": "string",
@@ -2798,33 +2798,33 @@
               }
             ],
             "x-enumNames": [
-  "Open",
-  "Settled",
-  "Cancelled",
-  "Accepted"
-],
+              "Open",
+              "Settled",
+              "Cancelled",
+              "Accepted"
+            ],
             "x-ms-enum": {
-  "name": "InvoiceState",
-  "modelAsString": false,
-  "values": [
-    {
-      "value": 0,
-      "name": "Open"
-    },
-    {
-      "value": 1,
-      "name": "Settled"
-    },
-    {
-      "value": 2,
-      "name": "Cancelled"
-    },
-    {
-      "value": 3,
-      "name": "Accepted"
-    }
-  ]
-}
+              "name": "InvoiceState",
+              "modelAsString": false,
+              "values": [
+                {
+                  "value": 0,
+                  "name": "Open"
+                },
+                {
+                  "value": 1,
+                  "name": "Settled"
+                },
+                {
+                  "value": 2,
+                  "name": "Cancelled"
+                },
+                {
+                  "value": 3,
+                  "name": "Accepted"
+                }
+              ]
+            }
           },
           "isHodl": {
             "type": "boolean"
@@ -2854,88 +2854,88 @@
               }
             ],
             "x-enumNames": [
-  "Ok",
-  "InvalidToken",
-  "NotEnoughFunds",
-  "UnknownPayment",
-  "UnknownInvoice",
-  "InvoiceAlreadyCancelled",
-  "InvoiceAlreadyAccepted",
-  "InvoiceAlreadySettled",
-  "InvoiceNotAccepted",
-  "AlreadyPayed",
-  "PayoutNotOpened",
-  "PayoutAlreadySent",
-  "OperationFailed",
-  "AccessDenied",
-  "FeeLimitTooSmall"
-],
+              "Ok",
+              "InvalidToken",
+              "NotEnoughFunds",
+              "UnknownPayment",
+              "UnknownInvoice",
+              "InvoiceAlreadyCancelled",
+              "InvoiceAlreadyAccepted",
+              "InvoiceAlreadySettled",
+              "InvoiceNotAccepted",
+              "AlreadyPayed",
+              "PayoutNotOpened",
+              "PayoutAlreadySent",
+              "OperationFailed",
+              "AccessDenied",
+              "FeeLimitTooSmall"
+            ],
             "x-ms-enum": {
-  "name": "LNDWalletErrorCode",
-  "modelAsString": false,
-  "values": [
-    {
-      "value": 0,
-      "name": "Ok"
-    },
-    {
-      "value": 1,
-      "name": "InvalidToken"
-    },
-    {
-      "value": 2,
-      "name": "NotEnoughFunds"
-    },
-    {
-      "value": 3,
-      "name": "UnknownPayment"
-    },
-    {
-      "value": 4,
-      "name": "UnknownInvoice"
-    },
-    {
-      "value": 5,
-      "name": "InvoiceAlreadyCancelled"
-    },
-    {
-      "value": 6,
-      "name": "InvoiceAlreadyAccepted"
-    },
-    {
-      "value": 7,
-      "name": "InvoiceAlreadySettled"
-    },
-    {
-      "value": 8,
-      "name": "InvoiceNotAccepted"
-    },
-    {
-      "value": 9,
-      "name": "AlreadyPayed"
-    },
-    {
-      "value": 10,
-      "name": "PayoutNotOpened"
-    },
-    {
-      "value": 11,
-      "name": "PayoutAlreadySent"
-    },
-    {
-      "value": 12,
-      "name": "OperationFailed"
-    },
-    {
-      "value": 13,
-      "name": "AccessDenied"
-    },
-    {
-      "value": 14,
-      "name": "FeeLimitTooSmall"
-    }
-  ]
-}
+              "name": "LNDWalletErrorCode",
+              "modelAsString": false,
+              "values": [
+                {
+                  "value": 0,
+                  "name": "Ok"
+                },
+                {
+                  "value": 1,
+                  "name": "InvalidToken"
+                },
+                {
+                  "value": 2,
+                  "name": "NotEnoughFunds"
+                },
+                {
+                  "value": 3,
+                  "name": "UnknownPayment"
+                },
+                {
+                  "value": 4,
+                  "name": "UnknownInvoice"
+                },
+                {
+                  "value": 5,
+                  "name": "InvoiceAlreadyCancelled"
+                },
+                {
+                  "value": 6,
+                  "name": "InvoiceAlreadyAccepted"
+                },
+                {
+                  "value": 7,
+                  "name": "InvoiceAlreadySettled"
+                },
+                {
+                  "value": 8,
+                  "name": "InvoiceNotAccepted"
+                },
+                {
+                  "value": 9,
+                  "name": "AlreadyPayed"
+                },
+                {
+                  "value": 10,
+                  "name": "PayoutNotOpened"
+                },
+                {
+                  "value": 11,
+                  "name": "PayoutAlreadySent"
+                },
+                {
+                  "value": 12,
+                  "name": "OperationFailed"
+                },
+                {
+                  "value": 13,
+                  "name": "AccessDenied"
+                },
+                {
+                  "value": 14,
+                  "name": "FeeLimitTooSmall"
+                }
+              ]
+            }
           },
           "errorMessage": {
             "type": "string",
@@ -2962,88 +2962,88 @@
               }
             ],
             "x-enumNames": [
-  "Ok",
-  "InvalidToken",
-  "NotEnoughFunds",
-  "UnknownPayment",
-  "UnknownInvoice",
-  "InvoiceAlreadyCancelled",
-  "InvoiceAlreadyAccepted",
-  "InvoiceAlreadySettled",
-  "InvoiceNotAccepted",
-  "AlreadyPayed",
-  "PayoutNotOpened",
-  "PayoutAlreadySent",
-  "OperationFailed",
-  "AccessDenied",
-  "FeeLimitTooSmall"
-],
+              "Ok",
+              "InvalidToken",
+              "NotEnoughFunds",
+              "UnknownPayment",
+              "UnknownInvoice",
+              "InvoiceAlreadyCancelled",
+              "InvoiceAlreadyAccepted",
+              "InvoiceAlreadySettled",
+              "InvoiceNotAccepted",
+              "AlreadyPayed",
+              "PayoutNotOpened",
+              "PayoutAlreadySent",
+              "OperationFailed",
+              "AccessDenied",
+              "FeeLimitTooSmall"
+            ],
             "x-ms-enum": {
-  "name": "LNDWalletErrorCode",
-  "modelAsString": false,
-  "values": [
-    {
-      "value": 0,
-      "name": "Ok"
-    },
-    {
-      "value": 1,
-      "name": "InvalidToken"
-    },
-    {
-      "value": 2,
-      "name": "NotEnoughFunds"
-    },
-    {
-      "value": 3,
-      "name": "UnknownPayment"
-    },
-    {
-      "value": 4,
-      "name": "UnknownInvoice"
-    },
-    {
-      "value": 5,
-      "name": "InvoiceAlreadyCancelled"
-    },
-    {
-      "value": 6,
-      "name": "InvoiceAlreadyAccepted"
-    },
-    {
-      "value": 7,
-      "name": "InvoiceAlreadySettled"
-    },
-    {
-      "value": 8,
-      "name": "InvoiceNotAccepted"
-    },
-    {
-      "value": 9,
-      "name": "AlreadyPayed"
-    },
-    {
-      "value": 10,
-      "name": "PayoutNotOpened"
-    },
-    {
-      "value": 11,
-      "name": "PayoutAlreadySent"
-    },
-    {
-      "value": 12,
-      "name": "OperationFailed"
-    },
-    {
-      "value": 13,
-      "name": "AccessDenied"
-    },
-    {
-      "value": 14,
-      "name": "FeeLimitTooSmall"
-    }
-  ]
-}
+              "name": "LNDWalletErrorCode",
+              "modelAsString": false,
+              "values": [
+                {
+                  "value": 0,
+                  "name": "Ok"
+                },
+                {
+                  "value": 1,
+                  "name": "InvalidToken"
+                },
+                {
+                  "value": 2,
+                  "name": "NotEnoughFunds"
+                },
+                {
+                  "value": 3,
+                  "name": "UnknownPayment"
+                },
+                {
+                  "value": 4,
+                  "name": "UnknownInvoice"
+                },
+                {
+                  "value": 5,
+                  "name": "InvoiceAlreadyCancelled"
+                },
+                {
+                  "value": 6,
+                  "name": "InvoiceAlreadyAccepted"
+                },
+                {
+                  "value": 7,
+                  "name": "InvoiceAlreadySettled"
+                },
+                {
+                  "value": 8,
+                  "name": "InvoiceNotAccepted"
+                },
+                {
+                  "value": 9,
+                  "name": "AlreadyPayed"
+                },
+                {
+                  "value": 10,
+                  "name": "PayoutNotOpened"
+                },
+                {
+                  "value": 11,
+                  "name": "PayoutAlreadySent"
+                },
+                {
+                  "value": 12,
+                  "name": "OperationFailed"
+                },
+                {
+                  "value": 13,
+                  "name": "AccessDenied"
+                },
+                {
+                  "value": 14,
+                  "name": "FeeLimitTooSmall"
+                }
+              ]
+            }
           },
           "errorMessage": {
             "type": "string",
@@ -3062,33 +3062,33 @@
         "type": "integer",
         "format": "int32",
         "x-enumNames": [
-  "Open",
-  "Settled",
-  "Cancelled",
-  "Accepted"
-],
+          "Open",
+          "Settled",
+          "Cancelled",
+          "Accepted"
+        ],
         "x-ms-enum": {
-  "name": "InvoiceState",
-  "modelAsString": false,
-  "values": [
-    {
-      "value": 0,
-      "name": "Open"
-    },
-    {
-      "value": 1,
-      "name": "Settled"
-    },
-    {
-      "value": 2,
-      "name": "Cancelled"
-    },
-    {
-      "value": 3,
-      "name": "Accepted"
-    }
-  ]
-}
+          "name": "InvoiceState",
+          "modelAsString": false,
+          "values": [
+            {
+              "value": 0,
+              "name": "Open"
+            },
+            {
+              "value": 1,
+              "name": "Settled"
+            },
+            {
+              "value": 2,
+              "name": "Cancelled"
+            },
+            {
+              "value": 3,
+              "name": "Accepted"
+            }
+          ]
+        }
       },
       "InvoiceStateChange": {
         "required": [
@@ -3108,33 +3108,33 @@
               }
             ],
             "x-enumNames": [
-  "Open",
-  "Settled",
-  "Cancelled",
-  "Accepted"
-],
+              "Open",
+              "Settled",
+              "Cancelled",
+              "Accepted"
+            ],
             "x-ms-enum": {
-  "name": "InvoiceState",
-  "modelAsString": false,
-  "values": [
-    {
-      "value": 0,
-      "name": "Open"
-    },
-    {
-      "value": 1,
-      "name": "Settled"
-    },
-    {
-      "value": 2,
-      "name": "Cancelled"
-    },
-    {
-      "value": 3,
-      "name": "Accepted"
-    }
-  ]
-}
+              "name": "InvoiceState",
+              "modelAsString": false,
+              "values": [
+                {
+                  "value": 0,
+                  "name": "Open"
+                },
+                {
+                  "value": 1,
+                  "name": "Settled"
+                },
+                {
+                  "value": 2,
+                  "name": "Cancelled"
+                },
+                {
+                  "value": 3,
+                  "name": "Accepted"
+                }
+              ]
+            }
           }
         },
         "additionalProperties": false
@@ -3160,88 +3160,88 @@
         "type": "integer",
         "format": "int32",
         "x-enumNames": [
-  "Ok",
-  "InvalidToken",
-  "NotEnoughFunds",
-  "UnknownPayment",
-  "UnknownInvoice",
-  "InvoiceAlreadyCancelled",
-  "InvoiceAlreadyAccepted",
-  "InvoiceAlreadySettled",
-  "InvoiceNotAccepted",
-  "AlreadyPayed",
-  "PayoutNotOpened",
-  "PayoutAlreadySent",
-  "OperationFailed",
-  "AccessDenied",
-  "FeeLimitTooSmall"
-],
+          "Ok",
+          "InvalidToken",
+          "NotEnoughFunds",
+          "UnknownPayment",
+          "UnknownInvoice",
+          "InvoiceAlreadyCancelled",
+          "InvoiceAlreadyAccepted",
+          "InvoiceAlreadySettled",
+          "InvoiceNotAccepted",
+          "AlreadyPayed",
+          "PayoutNotOpened",
+          "PayoutAlreadySent",
+          "OperationFailed",
+          "AccessDenied",
+          "FeeLimitTooSmall"
+        ],
         "x-ms-enum": {
-  "name": "LNDWalletErrorCode",
-  "modelAsString": false,
-  "values": [
-    {
-      "value": 0,
-      "name": "Ok"
-    },
-    {
-      "value": 1,
-      "name": "InvalidToken"
-    },
-    {
-      "value": 2,
-      "name": "NotEnoughFunds"
-    },
-    {
-      "value": 3,
-      "name": "UnknownPayment"
-    },
-    {
-      "value": 4,
-      "name": "UnknownInvoice"
-    },
-    {
-      "value": 5,
-      "name": "InvoiceAlreadyCancelled"
-    },
-    {
-      "value": 6,
-      "name": "InvoiceAlreadyAccepted"
-    },
-    {
-      "value": 7,
-      "name": "InvoiceAlreadySettled"
-    },
-    {
-      "value": 8,
-      "name": "InvoiceNotAccepted"
-    },
-    {
-      "value": 9,
-      "name": "AlreadyPayed"
-    },
-    {
-      "value": 10,
-      "name": "PayoutNotOpened"
-    },
-    {
-      "value": 11,
-      "name": "PayoutAlreadySent"
-    },
-    {
-      "value": 12,
-      "name": "OperationFailed"
-    },
-    {
-      "value": 13,
-      "name": "AccessDenied"
-    },
-    {
-      "value": 14,
-      "name": "FeeLimitTooSmall"
-    }
-  ]
-}
+          "name": "LNDWalletErrorCode",
+          "modelAsString": false,
+          "values": [
+            {
+              "value": 0,
+              "name": "Ok"
+            },
+            {
+              "value": 1,
+              "name": "InvalidToken"
+            },
+            {
+              "value": 2,
+              "name": "NotEnoughFunds"
+            },
+            {
+              "value": 3,
+              "name": "UnknownPayment"
+            },
+            {
+              "value": 4,
+              "name": "UnknownInvoice"
+            },
+            {
+              "value": 5,
+              "name": "InvoiceAlreadyCancelled"
+            },
+            {
+              "value": 6,
+              "name": "InvoiceAlreadyAccepted"
+            },
+            {
+              "value": 7,
+              "name": "InvoiceAlreadySettled"
+            },
+            {
+              "value": 8,
+              "name": "InvoiceNotAccepted"
+            },
+            {
+              "value": 9,
+              "name": "AlreadyPayed"
+            },
+            {
+              "value": 10,
+              "name": "PayoutNotOpened"
+            },
+            {
+              "value": 11,
+              "name": "PayoutAlreadySent"
+            },
+            {
+              "value": 12,
+              "name": "OperationFailed"
+            },
+            {
+              "value": 13,
+              "name": "AccessDenied"
+            },
+            {
+              "value": 14,
+              "name": "FeeLimitTooSmall"
+            }
+          ]
+        }
       },
       "LndWalletBalanceRet": {
         "type": "object",
@@ -3286,88 +3286,88 @@
               }
             ],
             "x-enumNames": [
-  "Ok",
-  "InvalidToken",
-  "NotEnoughFunds",
-  "UnknownPayment",
-  "UnknownInvoice",
-  "InvoiceAlreadyCancelled",
-  "InvoiceAlreadyAccepted",
-  "InvoiceAlreadySettled",
-  "InvoiceNotAccepted",
-  "AlreadyPayed",
-  "PayoutNotOpened",
-  "PayoutAlreadySent",
-  "OperationFailed",
-  "AccessDenied",
-  "FeeLimitTooSmall"
-],
+              "Ok",
+              "InvalidToken",
+              "NotEnoughFunds",
+              "UnknownPayment",
+              "UnknownInvoice",
+              "InvoiceAlreadyCancelled",
+              "InvoiceAlreadyAccepted",
+              "InvoiceAlreadySettled",
+              "InvoiceNotAccepted",
+              "AlreadyPayed",
+              "PayoutNotOpened",
+              "PayoutAlreadySent",
+              "OperationFailed",
+              "AccessDenied",
+              "FeeLimitTooSmall"
+            ],
             "x-ms-enum": {
-  "name": "LNDWalletErrorCode",
-  "modelAsString": false,
-  "values": [
-    {
-      "value": 0,
-      "name": "Ok"
-    },
-    {
-      "value": 1,
-      "name": "InvalidToken"
-    },
-    {
-      "value": 2,
-      "name": "NotEnoughFunds"
-    },
-    {
-      "value": 3,
-      "name": "UnknownPayment"
-    },
-    {
-      "value": 4,
-      "name": "UnknownInvoice"
-    },
-    {
-      "value": 5,
-      "name": "InvoiceAlreadyCancelled"
-    },
-    {
-      "value": 6,
-      "name": "InvoiceAlreadyAccepted"
-    },
-    {
-      "value": 7,
-      "name": "InvoiceAlreadySettled"
-    },
-    {
-      "value": 8,
-      "name": "InvoiceNotAccepted"
-    },
-    {
-      "value": 9,
-      "name": "AlreadyPayed"
-    },
-    {
-      "value": 10,
-      "name": "PayoutNotOpened"
-    },
-    {
-      "value": 11,
-      "name": "PayoutAlreadySent"
-    },
-    {
-      "value": 12,
-      "name": "OperationFailed"
-    },
-    {
-      "value": 13,
-      "name": "AccessDenied"
-    },
-    {
-      "value": 14,
-      "name": "FeeLimitTooSmall"
-    }
-  ]
-}
+              "name": "LNDWalletErrorCode",
+              "modelAsString": false,
+              "values": [
+                {
+                  "value": 0,
+                  "name": "Ok"
+                },
+                {
+                  "value": 1,
+                  "name": "InvalidToken"
+                },
+                {
+                  "value": 2,
+                  "name": "NotEnoughFunds"
+                },
+                {
+                  "value": 3,
+                  "name": "UnknownPayment"
+                },
+                {
+                  "value": 4,
+                  "name": "UnknownInvoice"
+                },
+                {
+                  "value": 5,
+                  "name": "InvoiceAlreadyCancelled"
+                },
+                {
+                  "value": 6,
+                  "name": "InvoiceAlreadyAccepted"
+                },
+                {
+                  "value": 7,
+                  "name": "InvoiceAlreadySettled"
+                },
+                {
+                  "value": 8,
+                  "name": "InvoiceNotAccepted"
+                },
+                {
+                  "value": 9,
+                  "name": "AlreadyPayed"
+                },
+                {
+                  "value": 10,
+                  "name": "PayoutNotOpened"
+                },
+                {
+                  "value": 11,
+                  "name": "PayoutAlreadySent"
+                },
+                {
+                  "value": 12,
+                  "name": "OperationFailed"
+                },
+                {
+                  "value": 13,
+                  "name": "AccessDenied"
+                },
+                {
+                  "value": 14,
+                  "name": "FeeLimitTooSmall"
+                }
+              ]
+            }
           },
           "errorMessage": {
             "type": "string",
@@ -3444,73 +3444,73 @@
         "type": "integer",
         "format": "int32",
         "x-enumNames": [
-  "None",
-  "Timeout",
-  "NoRoute",
-  "Error",
-  "IncorrectPaymentDetails",
-  "InsufficientBalance",
-  "Canceled",
-  "EmptyReturnStream",
-  "InvoiceAlreadySettled",
-  "InvoiceAlreadyCancelled",
-  "InvoiceAlreadyAccepted",
-  "FeeLimitTooSmall"
-],
+          "None",
+          "Timeout",
+          "NoRoute",
+          "Error",
+          "IncorrectPaymentDetails",
+          "InsufficientBalance",
+          "Canceled",
+          "EmptyReturnStream",
+          "InvoiceAlreadySettled",
+          "InvoiceAlreadyCancelled",
+          "InvoiceAlreadyAccepted",
+          "FeeLimitTooSmall"
+        ],
         "x-ms-enum": {
-  "name": "PaymentFailureReason",
-  "modelAsString": false,
-  "values": [
-    {
-      "value": 0,
-      "name": "None"
-    },
-    {
-      "value": 1,
-      "name": "Timeout"
-    },
-    {
-      "value": 2,
-      "name": "NoRoute"
-    },
-    {
-      "value": 3,
-      "name": "Error"
-    },
-    {
-      "value": 4,
-      "name": "IncorrectPaymentDetails"
-    },
-    {
-      "value": 5,
-      "name": "InsufficientBalance"
-    },
-    {
-      "value": 6,
-      "name": "Canceled"
-    },
-    {
-      "value": 101,
-      "name": "EmptyReturnStream"
-    },
-    {
-      "value": 102,
-      "name": "InvoiceAlreadySettled"
-    },
-    {
-      "value": 103,
-      "name": "InvoiceAlreadyCancelled"
-    },
-    {
-      "value": 104,
-      "name": "InvoiceAlreadyAccepted"
-    },
-    {
-      "value": 105,
-      "name": "FeeLimitTooSmall"
-    }
-  ]
-}
+          "name": "PaymentFailureReason",
+          "modelAsString": false,
+          "values": [
+            {
+              "value": 0,
+              "name": "None"
+            },
+            {
+              "value": 1,
+              "name": "Timeout"
+            },
+            {
+              "value": 2,
+              "name": "NoRoute"
+            },
+            {
+              "value": 3,
+              "name": "Error"
+            },
+            {
+              "value": 4,
+              "name": "IncorrectPaymentDetails"
+            },
+            {
+              "value": 5,
+              "name": "InsufficientBalance"
+            },
+            {
+              "value": 6,
+              "name": "Canceled"
+            },
+            {
+              "value": 101,
+              "name": "EmptyReturnStream"
+            },
+            {
+              "value": 102,
+              "name": "InvoiceAlreadySettled"
+            },
+            {
+              "value": 103,
+              "name": "InvoiceAlreadyCancelled"
+            },
+            {
+              "value": 104,
+              "name": "InvoiceAlreadyAccepted"
+            },
+            {
+              "value": 105,
+              "name": "FeeLimitTooSmall"
+            }
+          ]
+        }
       },
       "PaymentRecord": {
         "required": [
@@ -3534,33 +3534,33 @@
               }
             ],
             "x-enumNames": [
-  "InFlight",
-  "Succeeded",
-  "Failed",
-  "Initiated"
-],
+              "InFlight",
+              "Succeeded",
+              "Failed",
+              "Initiated"
+            ],
             "x-ms-enum": {
-  "name": "PaymentStatus",
-  "modelAsString": false,
-  "values": [
-    {
-      "value": 1,
-      "name": "InFlight"
-    },
-    {
-      "value": 2,
-      "name": "Succeeded"
-    },
-    {
-      "value": 3,
-      "name": "Failed"
-    },
-    {
-      "value": 4,
-      "name": "Initiated"
-    }
-  ]
-}
+              "name": "PaymentStatus",
+              "modelAsString": false,
+              "values": [
+                {
+                  "value": 1,
+                  "name": "InFlight"
+                },
+                {
+                  "value": 2,
+                  "name": "Succeeded"
+                },
+                {
+                  "value": 3,
+                  "name": "Failed"
+                },
+                {
+                  "value": 4,
+                  "name": "Initiated"
+                }
+              ]
+            }
           },
           "failureReason": {
             "allOf": [
@@ -3569,73 +3569,73 @@
               }
             ],
             "x-enumNames": [
-  "None",
-  "Timeout",
-  "NoRoute",
-  "Error",
-  "IncorrectPaymentDetails",
-  "InsufficientBalance",
-  "Canceled",
-  "EmptyReturnStream",
-  "InvoiceAlreadySettled",
-  "InvoiceAlreadyCancelled",
-  "InvoiceAlreadyAccepted",
-  "FeeLimitTooSmall"
-],
+              "None",
+              "Timeout",
+              "NoRoute",
+              "Error",
+              "IncorrectPaymentDetails",
+              "InsufficientBalance",
+              "Canceled",
+              "EmptyReturnStream",
+              "InvoiceAlreadySettled",
+              "InvoiceAlreadyCancelled",
+              "InvoiceAlreadyAccepted",
+              "FeeLimitTooSmall"
+            ],
             "x-ms-enum": {
-  "name": "PaymentFailureReason",
-  "modelAsString": false,
-  "values": [
-    {
-      "value": 0,
-      "name": "None"
-    },
-    {
-      "value": 1,
-      "name": "Timeout"
-    },
-    {
-      "value": 2,
-      "name": "NoRoute"
-    },
-    {
-      "value": 3,
-      "name": "Error"
-    },
-    {
-      "value": 4,
-      "name": "IncorrectPaymentDetails"
-    },
-    {
-      "value": 5,
-      "name": "InsufficientBalance"
-    },
-    {
-      "value": 6,
-      "name": "Canceled"
-    },
-    {
-      "value": 101,
-      "name": "EmptyReturnStream"
-    },
-    {
-      "value": 102,
-      "name": "InvoiceAlreadySettled"
-    },
-    {
-      "value": 103,
-      "name": "InvoiceAlreadyCancelled"
-    },
-    {
-      "value": 104,
-      "name": "InvoiceAlreadyAccepted"
-    },
-    {
-      "value": 105,
-      "name": "FeeLimitTooSmall"
-    }
-  ]
-}
+              "name": "PaymentFailureReason",
+              "modelAsString": false,
+              "values": [
+                {
+                  "value": 0,
+                  "name": "None"
+                },
+                {
+                  "value": 1,
+                  "name": "Timeout"
+                },
+                {
+                  "value": 2,
+                  "name": "NoRoute"
+                },
+                {
+                  "value": 3,
+                  "name": "Error"
+                },
+                {
+                  "value": 4,
+                  "name": "IncorrectPaymentDetails"
+                },
+                {
+                  "value": 5,
+                  "name": "InsufficientBalance"
+                },
+                {
+                  "value": 6,
+                  "name": "Canceled"
+                },
+                {
+                  "value": 101,
+                  "name": "EmptyReturnStream"
+                },
+                {
+                  "value": 102,
+                  "name": "InvoiceAlreadySettled"
+                },
+                {
+                  "value": 103,
+                  "name": "InvoiceAlreadyCancelled"
+                },
+                {
+                  "value": 104,
+                  "name": "InvoiceAlreadyAccepted"
+                },
+                {
+                  "value": 105,
+                  "name": "FeeLimitTooSmall"
+                }
+              ]
+            }
           },
           "satoshis": {
             "type": "integer",
@@ -3669,88 +3669,88 @@
               }
             ],
             "x-enumNames": [
-  "Ok",
-  "InvalidToken",
-  "NotEnoughFunds",
-  "UnknownPayment",
-  "UnknownInvoice",
-  "InvoiceAlreadyCancelled",
-  "InvoiceAlreadyAccepted",
-  "InvoiceAlreadySettled",
-  "InvoiceNotAccepted",
-  "AlreadyPayed",
-  "PayoutNotOpened",
-  "PayoutAlreadySent",
-  "OperationFailed",
-  "AccessDenied",
-  "FeeLimitTooSmall"
-],
+              "Ok",
+              "InvalidToken",
+              "NotEnoughFunds",
+              "UnknownPayment",
+              "UnknownInvoice",
+              "InvoiceAlreadyCancelled",
+              "InvoiceAlreadyAccepted",
+              "InvoiceAlreadySettled",
+              "InvoiceNotAccepted",
+              "AlreadyPayed",
+              "PayoutNotOpened",
+              "PayoutAlreadySent",
+              "OperationFailed",
+              "AccessDenied",
+              "FeeLimitTooSmall"
+            ],
             "x-ms-enum": {
-  "name": "LNDWalletErrorCode",
-  "modelAsString": false,
-  "values": [
-    {
-      "value": 0,
-      "name": "Ok"
-    },
-    {
-      "value": 1,
-      "name": "InvalidToken"
-    },
-    {
-      "value": 2,
-      "name": "NotEnoughFunds"
-    },
-    {
-      "value": 3,
-      "name": "UnknownPayment"
-    },
-    {
-      "value": 4,
-      "name": "UnknownInvoice"
-    },
-    {
-      "value": 5,
-      "name": "InvoiceAlreadyCancelled"
-    },
-    {
-      "value": 6,
-      "name": "InvoiceAlreadyAccepted"
-    },
-    {
-      "value": 7,
-      "name": "InvoiceAlreadySettled"
-    },
-    {
-      "value": 8,
-      "name": "InvoiceNotAccepted"
-    },
-    {
-      "value": 9,
-      "name": "AlreadyPayed"
-    },
-    {
-      "value": 10,
-      "name": "PayoutNotOpened"
-    },
-    {
-      "value": 11,
-      "name": "PayoutAlreadySent"
-    },
-    {
-      "value": 12,
-      "name": "OperationFailed"
-    },
-    {
-      "value": 13,
-      "name": "AccessDenied"
-    },
-    {
-      "value": 14,
-      "name": "FeeLimitTooSmall"
-    }
-  ]
-}
+              "name": "LNDWalletErrorCode",
+              "modelAsString": false,
+              "values": [
+                {
+                  "value": 0,
+                  "name": "Ok"
+                },
+                {
+                  "value": 1,
+                  "name": "InvalidToken"
+                },
+                {
+                  "value": 2,
+                  "name": "NotEnoughFunds"
+                },
+                {
+                  "value": 3,
+                  "name": "UnknownPayment"
+                },
+                {
+                  "value": 4,
+                  "name": "UnknownInvoice"
+                },
+                {
+                  "value": 5,
+                  "name": "InvoiceAlreadyCancelled"
+                },
+                {
+                  "value": 6,
+                  "name": "InvoiceAlreadyAccepted"
+                },
+                {
+                  "value": 7,
+                  "name": "InvoiceAlreadySettled"
+                },
+                {
+                  "value": 8,
+                  "name": "InvoiceNotAccepted"
+                },
+                {
+                  "value": 9,
+                  "name": "AlreadyPayed"
+                },
+                {
+                  "value": 10,
+                  "name": "PayoutNotOpened"
+                },
+                {
+                  "value": 11,
+                  "name": "PayoutAlreadySent"
+                },
+                {
+                  "value": 12,
+                  "name": "OperationFailed"
+                },
+                {
+                  "value": 13,
+                  "name": "AccessDenied"
+                },
+                {
+                  "value": 14,
+                  "name": "FeeLimitTooSmall"
+                }
+              ]
+            }
           },
           "errorMessage": {
             "type": "string",
@@ -3777,88 +3777,88 @@
               }
             ],
             "x-enumNames": [
-  "Ok",
-  "InvalidToken",
-  "NotEnoughFunds",
-  "UnknownPayment",
-  "UnknownInvoice",
-  "InvoiceAlreadyCancelled",
-  "InvoiceAlreadyAccepted",
-  "InvoiceAlreadySettled",
-  "InvoiceNotAccepted",
-  "AlreadyPayed",
-  "PayoutNotOpened",
-  "PayoutAlreadySent",
-  "OperationFailed",
-  "AccessDenied",
-  "FeeLimitTooSmall"
-],
+              "Ok",
+              "InvalidToken",
+              "NotEnoughFunds",
+              "UnknownPayment",
+              "UnknownInvoice",
+              "InvoiceAlreadyCancelled",
+              "InvoiceAlreadyAccepted",
+              "InvoiceAlreadySettled",
+              "InvoiceNotAccepted",
+              "AlreadyPayed",
+              "PayoutNotOpened",
+              "PayoutAlreadySent",
+              "OperationFailed",
+              "AccessDenied",
+              "FeeLimitTooSmall"
+            ],
             "x-ms-enum": {
-  "name": "LNDWalletErrorCode",
-  "modelAsString": false,
-  "values": [
-    {
-      "value": 0,
-      "name": "Ok"
-    },
-    {
-      "value": 1,
-      "name": "InvalidToken"
-    },
-    {
-      "value": 2,
-      "name": "NotEnoughFunds"
-    },
-    {
-      "value": 3,
-      "name": "UnknownPayment"
-    },
-    {
-      "value": 4,
-      "name": "UnknownInvoice"
-    },
-    {
-      "value": 5,
-      "name": "InvoiceAlreadyCancelled"
-    },
-    {
-      "value": 6,
-      "name": "InvoiceAlreadyAccepted"
-    },
-    {
-      "value": 7,
-      "name": "InvoiceAlreadySettled"
-    },
-    {
-      "value": 8,
-      "name": "InvoiceNotAccepted"
-    },
-    {
-      "value": 9,
-      "name": "AlreadyPayed"
-    },
-    {
-      "value": 10,
-      "name": "PayoutNotOpened"
-    },
-    {
-      "value": 11,
-      "name": "PayoutAlreadySent"
-    },
-    {
-      "value": 12,
-      "name": "OperationFailed"
-    },
-    {
-      "value": 13,
-      "name": "AccessDenied"
-    },
-    {
-      "value": 14,
-      "name": "FeeLimitTooSmall"
-    }
-  ]
-}
+              "name": "LNDWalletErrorCode",
+              "modelAsString": false,
+              "values": [
+                {
+                  "value": 0,
+                  "name": "Ok"
+                },
+                {
+                  "value": 1,
+                  "name": "InvalidToken"
+                },
+                {
+                  "value": 2,
+                  "name": "NotEnoughFunds"
+                },
+                {
+                  "value": 3,
+                  "name": "UnknownPayment"
+                },
+                {
+                  "value": 4,
+                  "name": "UnknownInvoice"
+                },
+                {
+                  "value": 5,
+                  "name": "InvoiceAlreadyCancelled"
+                },
+                {
+                  "value": 6,
+                  "name": "InvoiceAlreadyAccepted"
+                },
+                {
+                  "value": 7,
+                  "name": "InvoiceAlreadySettled"
+                },
+                {
+                  "value": 8,
+                  "name": "InvoiceNotAccepted"
+                },
+                {
+                  "value": 9,
+                  "name": "AlreadyPayed"
+                },
+                {
+                  "value": 10,
+                  "name": "PayoutNotOpened"
+                },
+                {
+                  "value": 11,
+                  "name": "PayoutAlreadySent"
+                },
+                {
+                  "value": 12,
+                  "name": "OperationFailed"
+                },
+                {
+                  "value": 13,
+                  "name": "AccessDenied"
+                },
+                {
+                  "value": 14,
+                  "name": "FeeLimitTooSmall"
+                }
+              ]
+            }
           },
           "errorMessage": {
             "type": "string",
@@ -3923,88 +3923,88 @@
               }
             ],
             "x-enumNames": [
-  "Ok",
-  "InvalidToken",
-  "NotEnoughFunds",
-  "UnknownPayment",
-  "UnknownInvoice",
-  "InvoiceAlreadyCancelled",
-  "InvoiceAlreadyAccepted",
-  "InvoiceAlreadySettled",
-  "InvoiceNotAccepted",
-  "AlreadyPayed",
-  "PayoutNotOpened",
-  "PayoutAlreadySent",
-  "OperationFailed",
-  "AccessDenied",
-  "FeeLimitTooSmall"
-],
+              "Ok",
+              "InvalidToken",
+              "NotEnoughFunds",
+              "UnknownPayment",
+              "UnknownInvoice",
+              "InvoiceAlreadyCancelled",
+              "InvoiceAlreadyAccepted",
+              "InvoiceAlreadySettled",
+              "InvoiceNotAccepted",
+              "AlreadyPayed",
+              "PayoutNotOpened",
+              "PayoutAlreadySent",
+              "OperationFailed",
+              "AccessDenied",
+              "FeeLimitTooSmall"
+            ],
             "x-ms-enum": {
-  "name": "LNDWalletErrorCode",
-  "modelAsString": false,
-  "values": [
-    {
-      "value": 0,
-      "name": "Ok"
-    },
-    {
-      "value": 1,
-      "name": "InvalidToken"
-    },
-    {
-      "value": 2,
-      "name": "NotEnoughFunds"
-    },
-    {
-      "value": 3,
-      "name": "UnknownPayment"
-    },
-    {
-      "value": 4,
-      "name": "UnknownInvoice"
-    },
-    {
-      "value": 5,
-      "name": "InvoiceAlreadyCancelled"
-    },
-    {
-      "value": 6,
-      "name": "InvoiceAlreadyAccepted"
-    },
-    {
-      "value": 7,
-      "name": "InvoiceAlreadySettled"
-    },
-    {
-      "value": 8,
-      "name": "InvoiceNotAccepted"
-    },
-    {
-      "value": 9,
-      "name": "AlreadyPayed"
-    },
-    {
-      "value": 10,
-      "name": "PayoutNotOpened"
-    },
-    {
-      "value": 11,
-      "name": "PayoutAlreadySent"
-    },
-    {
-      "value": 12,
-      "name": "OperationFailed"
-    },
-    {
-      "value": 13,
-      "name": "AccessDenied"
-    },
-    {
-      "value": 14,
-      "name": "FeeLimitTooSmall"
-    }
-  ]
-}
+              "name": "LNDWalletErrorCode",
+              "modelAsString": false,
+              "values": [
+                {
+                  "value": 0,
+                  "name": "Ok"
+                },
+                {
+                  "value": 1,
+                  "name": "InvalidToken"
+                },
+                {
+                  "value": 2,
+                  "name": "NotEnoughFunds"
+                },
+                {
+                  "value": 3,
+                  "name": "UnknownPayment"
+                },
+                {
+                  "value": 4,
+                  "name": "UnknownInvoice"
+                },
+                {
+                  "value": 5,
+                  "name": "InvoiceAlreadyCancelled"
+                },
+                {
+                  "value": 6,
+                  "name": "InvoiceAlreadyAccepted"
+                },
+                {
+                  "value": 7,
+                  "name": "InvoiceAlreadySettled"
+                },
+                {
+                  "value": 8,
+                  "name": "InvoiceNotAccepted"
+                },
+                {
+                  "value": 9,
+                  "name": "AlreadyPayed"
+                },
+                {
+                  "value": 10,
+                  "name": "PayoutNotOpened"
+                },
+                {
+                  "value": 11,
+                  "name": "PayoutAlreadySent"
+                },
+                {
+                  "value": 12,
+                  "name": "OperationFailed"
+                },
+                {
+                  "value": 13,
+                  "name": "AccessDenied"
+                },
+                {
+                  "value": 14,
+                  "name": "FeeLimitTooSmall"
+                }
+              ]
+            }
           },
           "errorMessage": {
             "type": "string",
@@ -4023,33 +4023,33 @@
         "type": "integer",
         "format": "int32",
         "x-enumNames": [
-  "InFlight",
-  "Succeeded",
-  "Failed",
-  "Initiated"
-],
+          "InFlight",
+          "Succeeded",
+          "Failed",
+          "Initiated"
+        ],
         "x-ms-enum": {
-  "name": "PaymentStatus",
-  "modelAsString": false,
-  "values": [
-    {
-      "value": 1,
-      "name": "InFlight"
-    },
-    {
-      "value": 2,
-      "name": "Succeeded"
-    },
-    {
-      "value": 3,
-      "name": "Failed"
-    },
-    {
-      "value": 4,
-      "name": "Initiated"
-    }
-  ]
-}
+          "name": "PaymentStatus",
+          "modelAsString": false,
+          "values": [
+            {
+              "value": 1,
+              "name": "InFlight"
+            },
+            {
+              "value": 2,
+              "name": "Succeeded"
+            },
+            {
+              "value": 3,
+              "name": "Failed"
+            },
+            {
+              "value": 4,
+              "name": "Initiated"
+            }
+          ]
+        }
       },
       "PaymentStatusChanged": {
         "required": [
@@ -4070,33 +4070,33 @@
               }
             ],
             "x-enumNames": [
-  "InFlight",
-  "Succeeded",
-  "Failed",
-  "Initiated"
-],
+              "InFlight",
+              "Succeeded",
+              "Failed",
+              "Initiated"
+            ],
             "x-ms-enum": {
-  "name": "PaymentStatus",
-  "modelAsString": false,
-  "values": [
-    {
-      "value": 1,
-      "name": "InFlight"
-    },
-    {
-      "value": 2,
-      "name": "Succeeded"
-    },
-    {
-      "value": 3,
-      "name": "Failed"
-    },
-    {
-      "value": 4,
-      "name": "Initiated"
-    }
-  ]
-}
+              "name": "PaymentStatus",
+              "modelAsString": false,
+              "values": [
+                {
+                  "value": 1,
+                  "name": "InFlight"
+                },
+                {
+                  "value": 2,
+                  "name": "Succeeded"
+                },
+                {
+                  "value": 3,
+                  "name": "Failed"
+                },
+                {
+                  "value": 4,
+                  "name": "Initiated"
+                }
+              ]
+            }
           },
           "failureReason": {
             "allOf": [
@@ -4105,73 +4105,73 @@
               }
             ],
             "x-enumNames": [
-  "None",
-  "Timeout",
-  "NoRoute",
-  "Error",
-  "IncorrectPaymentDetails",
-  "InsufficientBalance",
-  "Canceled",
-  "EmptyReturnStream",
-  "InvoiceAlreadySettled",
-  "InvoiceAlreadyCancelled",
-  "InvoiceAlreadyAccepted",
-  "FeeLimitTooSmall"
-],
+              "None",
+              "Timeout",
+              "NoRoute",
+              "Error",
+              "IncorrectPaymentDetails",
+              "InsufficientBalance",
+              "Canceled",
+              "EmptyReturnStream",
+              "InvoiceAlreadySettled",
+              "InvoiceAlreadyCancelled",
+              "InvoiceAlreadyAccepted",
+              "FeeLimitTooSmall"
+            ],
             "x-ms-enum": {
-  "name": "PaymentFailureReason",
-  "modelAsString": false,
-  "values": [
-    {
-      "value": 0,
-      "name": "None"
-    },
-    {
-      "value": 1,
-      "name": "Timeout"
-    },
-    {
-      "value": 2,
-      "name": "NoRoute"
-    },
-    {
-      "value": 3,
-      "name": "Error"
-    },
-    {
-      "value": 4,
-      "name": "IncorrectPaymentDetails"
-    },
-    {
-      "value": 5,
-      "name": "InsufficientBalance"
-    },
-    {
-      "value": 6,
-      "name": "Canceled"
-    },
-    {
-      "value": 101,
-      "name": "EmptyReturnStream"
-    },
-    {
-      "value": 102,
-      "name": "InvoiceAlreadySettled"
-    },
-    {
-      "value": 103,
-      "name": "InvoiceAlreadyCancelled"
-    },
-    {
-      "value": 104,
-      "name": "InvoiceAlreadyAccepted"
-    },
-    {
-      "value": 105,
-      "name": "FeeLimitTooSmall"
-    }
-  ]
-}
+              "name": "PaymentFailureReason",
+              "modelAsString": false,
+              "values": [
+                {
+                  "value": 0,
+                  "name": "None"
+                },
+                {
+                  "value": 1,
+                  "name": "Timeout"
+                },
+                {
+                  "value": 2,
+                  "name": "NoRoute"
+                },
+                {
+                  "value": 3,
+                  "name": "Error"
+                },
+                {
+                  "value": 4,
+                  "name": "IncorrectPaymentDetails"
+                },
+                {
+                  "value": 5,
+                  "name": "InsufficientBalance"
+                },
+                {
+                  "value": 6,
+                  "name": "Canceled"
+                },
+                {
+                  "value": 101,
+                  "name": "EmptyReturnStream"
+                },
+                {
+                  "value": 102,
+                  "name": "InvoiceAlreadySettled"
+                },
+                {
+                  "value": 103,
+                  "name": "InvoiceAlreadyCancelled"
+                },
+                {
+                  "value": 104,
+                  "name": "InvoiceAlreadyAccepted"
+                },
+                {
+                  "value": 105,
+                  "name": "FeeLimitTooSmall"
+                }
+              ]
+            }
           }
         },
         "additionalProperties": false
@@ -4204,33 +4204,33 @@
               }
             ],
             "x-enumNames": [
-  "Open",
-  "Sending",
-  "Sent",
-  "Failure"
-],
+              "Open",
+              "Sending",
+              "Sent",
+              "Failure"
+            ],
             "x-ms-enum": {
-  "name": "PayoutState",
-  "modelAsString": false,
-  "values": [
-    {
-      "value": 0,
-      "name": "Open"
-    },
-    {
-      "value": 1,
-      "name": "Sending"
-    },
-    {
-      "value": 2,
-      "name": "Sent"
-    },
-    {
-      "value": 3,
-      "name": "Failure"
-    }
-  ]
-}
+              "name": "PayoutState",
+              "modelAsString": false,
+              "values": [
+                {
+                  "value": 0,
+                  "name": "Open"
+                },
+                {
+                  "value": 1,
+                  "name": "Sending"
+                },
+                {
+                  "value": 2,
+                  "name": "Sent"
+                },
+                {
+                  "value": 3,
+                  "name": "Failure"
+                }
+              ]
+            }
           },
           "satoshis": {
             "type": "integer",
@@ -4272,88 +4272,88 @@
               }
             ],
             "x-enumNames": [
-  "Ok",
-  "InvalidToken",
-  "NotEnoughFunds",
-  "UnknownPayment",
-  "UnknownInvoice",
-  "InvoiceAlreadyCancelled",
-  "InvoiceAlreadyAccepted",
-  "InvoiceAlreadySettled",
-  "InvoiceNotAccepted",
-  "AlreadyPayed",
-  "PayoutNotOpened",
-  "PayoutAlreadySent",
-  "OperationFailed",
-  "AccessDenied",
-  "FeeLimitTooSmall"
-],
+              "Ok",
+              "InvalidToken",
+              "NotEnoughFunds",
+              "UnknownPayment",
+              "UnknownInvoice",
+              "InvoiceAlreadyCancelled",
+              "InvoiceAlreadyAccepted",
+              "InvoiceAlreadySettled",
+              "InvoiceNotAccepted",
+              "AlreadyPayed",
+              "PayoutNotOpened",
+              "PayoutAlreadySent",
+              "OperationFailed",
+              "AccessDenied",
+              "FeeLimitTooSmall"
+            ],
             "x-ms-enum": {
-  "name": "LNDWalletErrorCode",
-  "modelAsString": false,
-  "values": [
-    {
-      "value": 0,
-      "name": "Ok"
-    },
-    {
-      "value": 1,
-      "name": "InvalidToken"
-    },
-    {
-      "value": 2,
-      "name": "NotEnoughFunds"
-    },
-    {
-      "value": 3,
-      "name": "UnknownPayment"
-    },
-    {
-      "value": 4,
-      "name": "UnknownInvoice"
-    },
-    {
-      "value": 5,
-      "name": "InvoiceAlreadyCancelled"
-    },
-    {
-      "value": 6,
-      "name": "InvoiceAlreadyAccepted"
-    },
-    {
-      "value": 7,
-      "name": "InvoiceAlreadySettled"
-    },
-    {
-      "value": 8,
-      "name": "InvoiceNotAccepted"
-    },
-    {
-      "value": 9,
-      "name": "AlreadyPayed"
-    },
-    {
-      "value": 10,
-      "name": "PayoutNotOpened"
-    },
-    {
-      "value": 11,
-      "name": "PayoutAlreadySent"
-    },
-    {
-      "value": 12,
-      "name": "OperationFailed"
-    },
-    {
-      "value": 13,
-      "name": "AccessDenied"
-    },
-    {
-      "value": 14,
-      "name": "FeeLimitTooSmall"
-    }
-  ]
-}
+              "name": "LNDWalletErrorCode",
+              "modelAsString": false,
+              "values": [
+                {
+                  "value": 0,
+                  "name": "Ok"
+                },
+                {
+                  "value": 1,
+                  "name": "InvalidToken"
+                },
+                {
+                  "value": 2,
+                  "name": "NotEnoughFunds"
+                },
+                {
+                  "value": 3,
+                  "name": "UnknownPayment"
+                },
+                {
+                  "value": 4,
+                  "name": "UnknownInvoice"
+                },
+                {
+                  "value": 5,
+                  "name": "InvoiceAlreadyCancelled"
+                },
+                {
+                  "value": 6,
+                  "name": "InvoiceAlreadyAccepted"
+                },
+                {
+                  "value": 7,
+                  "name": "InvoiceAlreadySettled"
+                },
+                {
+                  "value": 8,
+                  "name": "InvoiceNotAccepted"
+                },
+                {
+                  "value": 9,
+                  "name": "AlreadyPayed"
+                },
+                {
+                  "value": 10,
+                  "name": "PayoutNotOpened"
+                },
+                {
+                  "value": 11,
+                  "name": "PayoutAlreadySent"
+                },
+                {
+                  "value": 12,
+                  "name": "OperationFailed"
+                },
+                {
+                  "value": 13,
+                  "name": "AccessDenied"
+                },
+                {
+                  "value": 14,
+                  "name": "FeeLimitTooSmall"
+                }
+              ]
+            }
           },
           "errorMessage": {
             "type": "string",
@@ -4380,88 +4380,88 @@
               }
             ],
             "x-enumNames": [
-  "Ok",
-  "InvalidToken",
-  "NotEnoughFunds",
-  "UnknownPayment",
-  "UnknownInvoice",
-  "InvoiceAlreadyCancelled",
-  "InvoiceAlreadyAccepted",
-  "InvoiceAlreadySettled",
-  "InvoiceNotAccepted",
-  "AlreadyPayed",
-  "PayoutNotOpened",
-  "PayoutAlreadySent",
-  "OperationFailed",
-  "AccessDenied",
-  "FeeLimitTooSmall"
-],
+              "Ok",
+              "InvalidToken",
+              "NotEnoughFunds",
+              "UnknownPayment",
+              "UnknownInvoice",
+              "InvoiceAlreadyCancelled",
+              "InvoiceAlreadyAccepted",
+              "InvoiceAlreadySettled",
+              "InvoiceNotAccepted",
+              "AlreadyPayed",
+              "PayoutNotOpened",
+              "PayoutAlreadySent",
+              "OperationFailed",
+              "AccessDenied",
+              "FeeLimitTooSmall"
+            ],
             "x-ms-enum": {
-  "name": "LNDWalletErrorCode",
-  "modelAsString": false,
-  "values": [
-    {
-      "value": 0,
-      "name": "Ok"
-    },
-    {
-      "value": 1,
-      "name": "InvalidToken"
-    },
-    {
-      "value": 2,
-      "name": "NotEnoughFunds"
-    },
-    {
-      "value": 3,
-      "name": "UnknownPayment"
-    },
-    {
-      "value": 4,
-      "name": "UnknownInvoice"
-    },
-    {
-      "value": 5,
-      "name": "InvoiceAlreadyCancelled"
-    },
-    {
-      "value": 6,
-      "name": "InvoiceAlreadyAccepted"
-    },
-    {
-      "value": 7,
-      "name": "InvoiceAlreadySettled"
-    },
-    {
-      "value": 8,
-      "name": "InvoiceNotAccepted"
-    },
-    {
-      "value": 9,
-      "name": "AlreadyPayed"
-    },
-    {
-      "value": 10,
-      "name": "PayoutNotOpened"
-    },
-    {
-      "value": 11,
-      "name": "PayoutAlreadySent"
-    },
-    {
-      "value": 12,
-      "name": "OperationFailed"
-    },
-    {
-      "value": 13,
-      "name": "AccessDenied"
-    },
-    {
-      "value": 14,
-      "name": "FeeLimitTooSmall"
-    }
-  ]
-}
+              "name": "LNDWalletErrorCode",
+              "modelAsString": false,
+              "values": [
+                {
+                  "value": 0,
+                  "name": "Ok"
+                },
+                {
+                  "value": 1,
+                  "name": "InvalidToken"
+                },
+                {
+                  "value": 2,
+                  "name": "NotEnoughFunds"
+                },
+                {
+                  "value": 3,
+                  "name": "UnknownPayment"
+                },
+                {
+                  "value": 4,
+                  "name": "UnknownInvoice"
+                },
+                {
+                  "value": 5,
+                  "name": "InvoiceAlreadyCancelled"
+                },
+                {
+                  "value": 6,
+                  "name": "InvoiceAlreadyAccepted"
+                },
+                {
+                  "value": 7,
+                  "name": "InvoiceAlreadySettled"
+                },
+                {
+                  "value": 8,
+                  "name": "InvoiceNotAccepted"
+                },
+                {
+                  "value": 9,
+                  "name": "AlreadyPayed"
+                },
+                {
+                  "value": 10,
+                  "name": "PayoutNotOpened"
+                },
+                {
+                  "value": 11,
+                  "name": "PayoutAlreadySent"
+                },
+                {
+                  "value": 12,
+                  "name": "OperationFailed"
+                },
+                {
+                  "value": 13,
+                  "name": "AccessDenied"
+                },
+                {
+                  "value": 14,
+                  "name": "FeeLimitTooSmall"
+                }
+              ]
+            }
           },
           "errorMessage": {
             "type": "string",
@@ -4480,33 +4480,33 @@
         "type": "integer",
         "format": "int32",
         "x-enumNames": [
-  "Open",
-  "Sending",
-  "Sent",
-  "Failure"
-],
+          "Open",
+          "Sending",
+          "Sent",
+          "Failure"
+        ],
         "x-ms-enum": {
-  "name": "PayoutState",
-  "modelAsString": false,
-  "values": [
-    {
-      "value": 0,
-      "name": "Open"
-    },
-    {
-      "value": 1,
-      "name": "Sending"
-    },
-    {
-      "value": 2,
-      "name": "Sent"
-    },
-    {
-      "value": 3,
-      "name": "Failure"
-    }
-  ]
-}
+          "name": "PayoutState",
+          "modelAsString": false,
+          "values": [
+            {
+              "value": 0,
+              "name": "Open"
+            },
+            {
+              "value": 1,
+              "name": "Sending"
+            },
+            {
+              "value": 2,
+              "name": "Sent"
+            },
+            {
+              "value": 3,
+              "name": "Failure"
+            }
+          ]
+        }
       },
       "PayoutStateChanged": {
         "required": [
@@ -4527,33 +4527,33 @@
               }
             ],
             "x-enumNames": [
-  "Open",
-  "Sending",
-  "Sent",
-  "Failure"
-],
+              "Open",
+              "Sending",
+              "Sent",
+              "Failure"
+            ],
             "x-ms-enum": {
-  "name": "PayoutState",
-  "modelAsString": false,
-  "values": [
-    {
-      "value": 0,
-      "name": "Open"
-    },
-    {
-      "value": 1,
-      "name": "Sending"
-    },
-    {
-      "value": 2,
-      "name": "Sent"
-    },
-    {
-      "value": 3,
-      "name": "Failure"
-    }
-  ]
-}
+              "name": "PayoutState",
+              "modelAsString": false,
+              "values": [
+                {
+                  "value": 0,
+                  "name": "Open"
+                },
+                {
+                  "value": 1,
+                  "name": "Sending"
+                },
+                {
+                  "value": 2,
+                  "name": "Sent"
+                },
+                {
+                  "value": 3,
+                  "name": "Failure"
+                }
+              ]
+            }
           },
           "payoutFee": {
             "type": "integer",
@@ -4576,38 +4576,38 @@
               }
             ],
             "x-enumNames": [
-  "TypeUnknown",
-  "Anchor",
-  "IncomingHtlc",
-  "OutgoingHtlc",
-  "Commit"
-],
+              "TypeUnknown",
+              "Anchor",
+              "IncomingHtlc",
+              "OutgoingHtlc",
+              "Commit"
+            ],
             "x-ms-enum": {
-  "name": "ResolutionType",
-  "modelAsString": false,
-  "values": [
-    {
-      "value": 0,
-      "name": "TypeUnknown"
-    },
-    {
-      "value": 1,
-      "name": "Anchor"
-    },
-    {
-      "value": 2,
-      "name": "IncomingHtlc"
-    },
-    {
-      "value": 3,
-      "name": "OutgoingHtlc"
-    },
-    {
-      "value": 4,
-      "name": "Commit"
-    }
-  ]
-}
+              "name": "ResolutionType",
+              "modelAsString": false,
+              "values": [
+                {
+                  "value": 0,
+                  "name": "TypeUnknown"
+                },
+                {
+                  "value": 1,
+                  "name": "Anchor"
+                },
+                {
+                  "value": 2,
+                  "name": "IncomingHtlc"
+                },
+                {
+                  "value": 3,
+                  "name": "OutgoingHtlc"
+                },
+                {
+                  "value": 4,
+                  "name": "Commit"
+                }
+              ]
+            }
           },
           "outcome": {
             "allOf": [
@@ -4616,43 +4616,43 @@
               }
             ],
             "x-enumNames": [
-  "OutcomeUnknown",
-  "Claimed",
-  "Unclaimed",
-  "Abandoned",
-  "FirstStage",
-  "Timeout"
-],
+              "OutcomeUnknown",
+              "Claimed",
+              "Unclaimed",
+              "Abandoned",
+              "FirstStage",
+              "Timeout"
+            ],
             "x-ms-enum": {
-  "name": "ResolutionOutcome",
-  "modelAsString": false,
-  "values": [
-    {
-      "value": 0,
-      "name": "OutcomeUnknown"
-    },
-    {
-      "value": 1,
-      "name": "Claimed"
-    },
-    {
-      "value": 2,
-      "name": "Unclaimed"
-    },
-    {
-      "value": 3,
-      "name": "Abandoned"
-    },
-    {
-      "value": 4,
-      "name": "FirstStage"
-    },
-    {
-      "value": 5,
-      "name": "Timeout"
-    }
-  ]
-}
+              "name": "ResolutionOutcome",
+              "modelAsString": false,
+              "values": [
+                {
+                  "value": 0,
+                  "name": "OutcomeUnknown"
+                },
+                {
+                  "value": 1,
+                  "name": "Claimed"
+                },
+                {
+                  "value": 2,
+                  "name": "Unclaimed"
+                },
+                {
+                  "value": 3,
+                  "name": "Abandoned"
+                },
+                {
+                  "value": 4,
+                  "name": "FirstStage"
+                },
+                {
+                  "value": 5,
+                  "name": "Timeout"
+                }
+              ]
+            }
           },
           "outpoint": {
             "allOf": [
@@ -4685,43 +4685,43 @@
         "type": "integer",
         "format": "int32",
         "x-enumNames": [
-  "OutcomeUnknown",
-  "Claimed",
-  "Unclaimed",
-  "Abandoned",
-  "FirstStage",
-  "Timeout"
-],
+          "OutcomeUnknown",
+          "Claimed",
+          "Unclaimed",
+          "Abandoned",
+          "FirstStage",
+          "Timeout"
+        ],
         "x-ms-enum": {
-  "name": "ResolutionOutcome",
-  "modelAsString": false,
-  "values": [
-    {
-      "value": 0,
-      "name": "OutcomeUnknown"
-    },
-    {
-      "value": 1,
-      "name": "Claimed"
-    },
-    {
-      "value": 2,
-      "name": "Unclaimed"
-    },
-    {
-      "value": 3,
-      "name": "Abandoned"
-    },
-    {
-      "value": 4,
-      "name": "FirstStage"
-    },
-    {
-      "value": 5,
-      "name": "Timeout"
-    }
-  ]
-}
+          "name": "ResolutionOutcome",
+          "modelAsString": false,
+          "values": [
+            {
+              "value": 0,
+              "name": "OutcomeUnknown"
+            },
+            {
+              "value": 1,
+              "name": "Claimed"
+            },
+            {
+              "value": 2,
+              "name": "Unclaimed"
+            },
+            {
+              "value": 3,
+              "name": "Abandoned"
+            },
+            {
+              "value": 4,
+              "name": "FirstStage"
+            },
+            {
+              "value": 5,
+              "name": "Timeout"
+            }
+          ]
+        }
       },
       "ResolutionType": {
         "enum": [
@@ -4734,38 +4734,38 @@
         "type": "integer",
         "format": "int32",
         "x-enumNames": [
-  "TypeUnknown",
-  "Anchor",
-  "IncomingHtlc",
-  "OutgoingHtlc",
-  "Commit"
-],
+          "TypeUnknown",
+          "Anchor",
+          "IncomingHtlc",
+          "OutgoingHtlc",
+          "Commit"
+        ],
         "x-ms-enum": {
-  "name": "ResolutionType",
-  "modelAsString": false,
-  "values": [
-    {
-      "value": 0,
-      "name": "TypeUnknown"
-    },
-    {
-      "value": 1,
-      "name": "Anchor"
-    },
-    {
-      "value": 2,
-      "name": "IncomingHtlc"
-    },
-    {
-      "value": 3,
-      "name": "OutgoingHtlc"
-    },
-    {
-      "value": 4,
-      "name": "Commit"
-    }
-  ]
-}
+          "name": "ResolutionType",
+          "modelAsString": false,
+          "values": [
+            {
+              "value": 0,
+              "name": "TypeUnknown"
+            },
+            {
+              "value": 1,
+              "name": "Anchor"
+            },
+            {
+              "value": 2,
+              "name": "IncomingHtlc"
+            },
+            {
+              "value": 3,
+              "name": "OutgoingHtlc"
+            },
+            {
+              "value": 4,
+              "name": "Commit"
+            }
+          ]
+        }
       },
       "Result": {
         "type": "object",
@@ -4777,88 +4777,88 @@
               }
             ],
             "x-enumNames": [
-  "Ok",
-  "InvalidToken",
-  "NotEnoughFunds",
-  "UnknownPayment",
-  "UnknownInvoice",
-  "InvoiceAlreadyCancelled",
-  "InvoiceAlreadyAccepted",
-  "InvoiceAlreadySettled",
-  "InvoiceNotAccepted",
-  "AlreadyPayed",
-  "PayoutNotOpened",
-  "PayoutAlreadySent",
-  "OperationFailed",
-  "AccessDenied",
-  "FeeLimitTooSmall"
-],
+              "Ok",
+              "InvalidToken",
+              "NotEnoughFunds",
+              "UnknownPayment",
+              "UnknownInvoice",
+              "InvoiceAlreadyCancelled",
+              "InvoiceAlreadyAccepted",
+              "InvoiceAlreadySettled",
+              "InvoiceNotAccepted",
+              "AlreadyPayed",
+              "PayoutNotOpened",
+              "PayoutAlreadySent",
+              "OperationFailed",
+              "AccessDenied",
+              "FeeLimitTooSmall"
+            ],
             "x-ms-enum": {
-  "name": "LNDWalletErrorCode",
-  "modelAsString": false,
-  "values": [
-    {
-      "value": 0,
-      "name": "Ok"
-    },
-    {
-      "value": 1,
-      "name": "InvalidToken"
-    },
-    {
-      "value": 2,
-      "name": "NotEnoughFunds"
-    },
-    {
-      "value": 3,
-      "name": "UnknownPayment"
-    },
-    {
-      "value": 4,
-      "name": "UnknownInvoice"
-    },
-    {
-      "value": 5,
-      "name": "InvoiceAlreadyCancelled"
-    },
-    {
-      "value": 6,
-      "name": "InvoiceAlreadyAccepted"
-    },
-    {
-      "value": 7,
-      "name": "InvoiceAlreadySettled"
-    },
-    {
-      "value": 8,
-      "name": "InvoiceNotAccepted"
-    },
-    {
-      "value": 9,
-      "name": "AlreadyPayed"
-    },
-    {
-      "value": 10,
-      "name": "PayoutNotOpened"
-    },
-    {
-      "value": 11,
-      "name": "PayoutAlreadySent"
-    },
-    {
-      "value": 12,
-      "name": "OperationFailed"
-    },
-    {
-      "value": 13,
-      "name": "AccessDenied"
-    },
-    {
-      "value": 14,
-      "name": "FeeLimitTooSmall"
-    }
-  ]
-}
+              "name": "LNDWalletErrorCode",
+              "modelAsString": false,
+              "values": [
+                {
+                  "value": 0,
+                  "name": "Ok"
+                },
+                {
+                  "value": 1,
+                  "name": "InvalidToken"
+                },
+                {
+                  "value": 2,
+                  "name": "NotEnoughFunds"
+                },
+                {
+                  "value": 3,
+                  "name": "UnknownPayment"
+                },
+                {
+                  "value": 4,
+                  "name": "UnknownInvoice"
+                },
+                {
+                  "value": 5,
+                  "name": "InvoiceAlreadyCancelled"
+                },
+                {
+                  "value": 6,
+                  "name": "InvoiceAlreadyAccepted"
+                },
+                {
+                  "value": 7,
+                  "name": "InvoiceAlreadySettled"
+                },
+                {
+                  "value": 8,
+                  "name": "InvoiceNotAccepted"
+                },
+                {
+                  "value": 9,
+                  "name": "AlreadyPayed"
+                },
+                {
+                  "value": 10,
+                  "name": "PayoutNotOpened"
+                },
+                {
+                  "value": 11,
+                  "name": "PayoutAlreadySent"
+                },
+                {
+                  "value": 12,
+                  "name": "OperationFailed"
+                },
+                {
+                  "value": 13,
+                  "name": "AccessDenied"
+                },
+                {
+                  "value": 14,
+                  "name": "FeeLimitTooSmall"
+                }
+              ]
+            }
           },
           "errorMessage": {
             "type": "string",
@@ -4890,73 +4890,73 @@
               }
             ],
             "x-enumNames": [
-  "None",
-  "Timeout",
-  "NoRoute",
-  "Error",
-  "IncorrectPaymentDetails",
-  "InsufficientBalance",
-  "Canceled",
-  "EmptyReturnStream",
-  "InvoiceAlreadySettled",
-  "InvoiceAlreadyCancelled",
-  "InvoiceAlreadyAccepted",
-  "FeeLimitTooSmall"
-],
+              "None",
+              "Timeout",
+              "NoRoute",
+              "Error",
+              "IncorrectPaymentDetails",
+              "InsufficientBalance",
+              "Canceled",
+              "EmptyReturnStream",
+              "InvoiceAlreadySettled",
+              "InvoiceAlreadyCancelled",
+              "InvoiceAlreadyAccepted",
+              "FeeLimitTooSmall"
+            ],
             "x-ms-enum": {
-  "name": "PaymentFailureReason",
-  "modelAsString": false,
-  "values": [
-    {
-      "value": 0,
-      "name": "None"
-    },
-    {
-      "value": 1,
-      "name": "Timeout"
-    },
-    {
-      "value": 2,
-      "name": "NoRoute"
-    },
-    {
-      "value": 3,
-      "name": "Error"
-    },
-    {
-      "value": 4,
-      "name": "IncorrectPaymentDetails"
-    },
-    {
-      "value": 5,
-      "name": "InsufficientBalance"
-    },
-    {
-      "value": 6,
-      "name": "Canceled"
-    },
-    {
-      "value": 101,
-      "name": "EmptyReturnStream"
-    },
-    {
-      "value": 102,
-      "name": "InvoiceAlreadySettled"
-    },
-    {
-      "value": 103,
-      "name": "InvoiceAlreadyCancelled"
-    },
-    {
-      "value": 104,
-      "name": "InvoiceAlreadyAccepted"
-    },
-    {
-      "value": 105,
-      "name": "FeeLimitTooSmall"
-    }
-  ]
-}
+              "name": "PaymentFailureReason",
+              "modelAsString": false,
+              "values": [
+                {
+                  "value": 0,
+                  "name": "None"
+                },
+                {
+                  "value": 1,
+                  "name": "Timeout"
+                },
+                {
+                  "value": 2,
+                  "name": "NoRoute"
+                },
+                {
+                  "value": 3,
+                  "name": "Error"
+                },
+                {
+                  "value": 4,
+                  "name": "IncorrectPaymentDetails"
+                },
+                {
+                  "value": 5,
+                  "name": "InsufficientBalance"
+                },
+                {
+                  "value": 6,
+                  "name": "Canceled"
+                },
+                {
+                  "value": 101,
+                  "name": "EmptyReturnStream"
+                },
+                {
+                  "value": 102,
+                  "name": "InvoiceAlreadySettled"
+                },
+                {
+                  "value": 103,
+                  "name": "InvoiceAlreadyCancelled"
+                },
+                {
+                  "value": 104,
+                  "name": "InvoiceAlreadyAccepted"
+                },
+                {
+                  "value": 105,
+                  "name": "FeeLimitTooSmall"
+                }
+              ]
+            }
           }
         },
         "additionalProperties": false
@@ -4979,88 +4979,88 @@
               }
             ],
             "x-enumNames": [
-  "Ok",
-  "InvalidToken",
-  "NotEnoughFunds",
-  "UnknownPayment",
-  "UnknownInvoice",
-  "InvoiceAlreadyCancelled",
-  "InvoiceAlreadyAccepted",
-  "InvoiceAlreadySettled",
-  "InvoiceNotAccepted",
-  "AlreadyPayed",
-  "PayoutNotOpened",
-  "PayoutAlreadySent",
-  "OperationFailed",
-  "AccessDenied",
-  "FeeLimitTooSmall"
-],
+              "Ok",
+              "InvalidToken",
+              "NotEnoughFunds",
+              "UnknownPayment",
+              "UnknownInvoice",
+              "InvoiceAlreadyCancelled",
+              "InvoiceAlreadyAccepted",
+              "InvoiceAlreadySettled",
+              "InvoiceNotAccepted",
+              "AlreadyPayed",
+              "PayoutNotOpened",
+              "PayoutAlreadySent",
+              "OperationFailed",
+              "AccessDenied",
+              "FeeLimitTooSmall"
+            ],
             "x-ms-enum": {
-  "name": "LNDWalletErrorCode",
-  "modelAsString": false,
-  "values": [
-    {
-      "value": 0,
-      "name": "Ok"
-    },
-    {
-      "value": 1,
-      "name": "InvalidToken"
-    },
-    {
-      "value": 2,
-      "name": "NotEnoughFunds"
-    },
-    {
-      "value": 3,
-      "name": "UnknownPayment"
-    },
-    {
-      "value": 4,
-      "name": "UnknownInvoice"
-    },
-    {
-      "value": 5,
-      "name": "InvoiceAlreadyCancelled"
-    },
-    {
-      "value": 6,
-      "name": "InvoiceAlreadyAccepted"
-    },
-    {
-      "value": 7,
-      "name": "InvoiceAlreadySettled"
-    },
-    {
-      "value": 8,
-      "name": "InvoiceNotAccepted"
-    },
-    {
-      "value": 9,
-      "name": "AlreadyPayed"
-    },
-    {
-      "value": 10,
-      "name": "PayoutNotOpened"
-    },
-    {
-      "value": 11,
-      "name": "PayoutAlreadySent"
-    },
-    {
-      "value": 12,
-      "name": "OperationFailed"
-    },
-    {
-      "value": 13,
-      "name": "AccessDenied"
-    },
-    {
-      "value": 14,
-      "name": "FeeLimitTooSmall"
-    }
-  ]
-}
+              "name": "LNDWalletErrorCode",
+              "modelAsString": false,
+              "values": [
+                {
+                  "value": 0,
+                  "name": "Ok"
+                },
+                {
+                  "value": 1,
+                  "name": "InvalidToken"
+                },
+                {
+                  "value": 2,
+                  "name": "NotEnoughFunds"
+                },
+                {
+                  "value": 3,
+                  "name": "UnknownPayment"
+                },
+                {
+                  "value": 4,
+                  "name": "UnknownInvoice"
+                },
+                {
+                  "value": 5,
+                  "name": "InvoiceAlreadyCancelled"
+                },
+                {
+                  "value": 6,
+                  "name": "InvoiceAlreadyAccepted"
+                },
+                {
+                  "value": 7,
+                  "name": "InvoiceAlreadySettled"
+                },
+                {
+                  "value": 8,
+                  "name": "InvoiceNotAccepted"
+                },
+                {
+                  "value": 9,
+                  "name": "AlreadyPayed"
+                },
+                {
+                  "value": 10,
+                  "name": "PayoutNotOpened"
+                },
+                {
+                  "value": 11,
+                  "name": "PayoutAlreadySent"
+                },
+                {
+                  "value": 12,
+                  "name": "OperationFailed"
+                },
+                {
+                  "value": 13,
+                  "name": "AccessDenied"
+                },
+                {
+                  "value": 14,
+                  "name": "FeeLimitTooSmall"
+                }
+              ]
+            }
           },
           "errorMessage": {
             "type": "string",
@@ -5083,88 +5083,88 @@
               }
             ],
             "x-enumNames": [
-  "Ok",
-  "InvalidToken",
-  "NotEnoughFunds",
-  "UnknownPayment",
-  "UnknownInvoice",
-  "InvoiceAlreadyCancelled",
-  "InvoiceAlreadyAccepted",
-  "InvoiceAlreadySettled",
-  "InvoiceNotAccepted",
-  "AlreadyPayed",
-  "PayoutNotOpened",
-  "PayoutAlreadySent",
-  "OperationFailed",
-  "AccessDenied",
-  "FeeLimitTooSmall"
-],
+              "Ok",
+              "InvalidToken",
+              "NotEnoughFunds",
+              "UnknownPayment",
+              "UnknownInvoice",
+              "InvoiceAlreadyCancelled",
+              "InvoiceAlreadyAccepted",
+              "InvoiceAlreadySettled",
+              "InvoiceNotAccepted",
+              "AlreadyPayed",
+              "PayoutNotOpened",
+              "PayoutAlreadySent",
+              "OperationFailed",
+              "AccessDenied",
+              "FeeLimitTooSmall"
+            ],
             "x-ms-enum": {
-  "name": "LNDWalletErrorCode",
-  "modelAsString": false,
-  "values": [
-    {
-      "value": 0,
-      "name": "Ok"
-    },
-    {
-      "value": 1,
-      "name": "InvalidToken"
-    },
-    {
-      "value": 2,
-      "name": "NotEnoughFunds"
-    },
-    {
-      "value": 3,
-      "name": "UnknownPayment"
-    },
-    {
-      "value": 4,
-      "name": "UnknownInvoice"
-    },
-    {
-      "value": 5,
-      "name": "InvoiceAlreadyCancelled"
-    },
-    {
-      "value": 6,
-      "name": "InvoiceAlreadyAccepted"
-    },
-    {
-      "value": 7,
-      "name": "InvoiceAlreadySettled"
-    },
-    {
-      "value": 8,
-      "name": "InvoiceNotAccepted"
-    },
-    {
-      "value": 9,
-      "name": "AlreadyPayed"
-    },
-    {
-      "value": 10,
-      "name": "PayoutNotOpened"
-    },
-    {
-      "value": 11,
-      "name": "PayoutAlreadySent"
-    },
-    {
-      "value": 12,
-      "name": "OperationFailed"
-    },
-    {
-      "value": 13,
-      "name": "AccessDenied"
-    },
-    {
-      "value": 14,
-      "name": "FeeLimitTooSmall"
-    }
-  ]
-}
+              "name": "LNDWalletErrorCode",
+              "modelAsString": false,
+              "values": [
+                {
+                  "value": 0,
+                  "name": "Ok"
+                },
+                {
+                  "value": 1,
+                  "name": "InvalidToken"
+                },
+                {
+                  "value": 2,
+                  "name": "NotEnoughFunds"
+                },
+                {
+                  "value": 3,
+                  "name": "UnknownPayment"
+                },
+                {
+                  "value": 4,
+                  "name": "UnknownInvoice"
+                },
+                {
+                  "value": 5,
+                  "name": "InvoiceAlreadyCancelled"
+                },
+                {
+                  "value": 6,
+                  "name": "InvoiceAlreadyAccepted"
+                },
+                {
+                  "value": 7,
+                  "name": "InvoiceAlreadySettled"
+                },
+                {
+                  "value": 8,
+                  "name": "InvoiceNotAccepted"
+                },
+                {
+                  "value": 9,
+                  "name": "AlreadyPayed"
+                },
+                {
+                  "value": 10,
+                  "name": "PayoutNotOpened"
+                },
+                {
+                  "value": 11,
+                  "name": "PayoutAlreadySent"
+                },
+                {
+                  "value": 12,
+                  "name": "OperationFailed"
+                },
+                {
+                  "value": 13,
+                  "name": "AccessDenied"
+                },
+                {
+                  "value": 14,
+                  "name": "FeeLimitTooSmall"
+                }
+              ]
+            }
           },
           "errorMessage": {
             "type": "string",
@@ -5223,88 +5223,88 @@
               }
             ],
             "x-enumNames": [
-  "Ok",
-  "InvalidToken",
-  "NotEnoughFunds",
-  "UnknownPayment",
-  "UnknownInvoice",
-  "InvoiceAlreadyCancelled",
-  "InvoiceAlreadyAccepted",
-  "InvoiceAlreadySettled",
-  "InvoiceNotAccepted",
-  "AlreadyPayed",
-  "PayoutNotOpened",
-  "PayoutAlreadySent",
-  "OperationFailed",
-  "AccessDenied",
-  "FeeLimitTooSmall"
-],
+              "Ok",
+              "InvalidToken",
+              "NotEnoughFunds",
+              "UnknownPayment",
+              "UnknownInvoice",
+              "InvoiceAlreadyCancelled",
+              "InvoiceAlreadyAccepted",
+              "InvoiceAlreadySettled",
+              "InvoiceNotAccepted",
+              "AlreadyPayed",
+              "PayoutNotOpened",
+              "PayoutAlreadySent",
+              "OperationFailed",
+              "AccessDenied",
+              "FeeLimitTooSmall"
+            ],
             "x-ms-enum": {
-  "name": "LNDWalletErrorCode",
-  "modelAsString": false,
-  "values": [
-    {
-      "value": 0,
-      "name": "Ok"
-    },
-    {
-      "value": 1,
-      "name": "InvalidToken"
-    },
-    {
-      "value": 2,
-      "name": "NotEnoughFunds"
-    },
-    {
-      "value": 3,
-      "name": "UnknownPayment"
-    },
-    {
-      "value": 4,
-      "name": "UnknownInvoice"
-    },
-    {
-      "value": 5,
-      "name": "InvoiceAlreadyCancelled"
-    },
-    {
-      "value": 6,
-      "name": "InvoiceAlreadyAccepted"
-    },
-    {
-      "value": 7,
-      "name": "InvoiceAlreadySettled"
-    },
-    {
-      "value": 8,
-      "name": "InvoiceNotAccepted"
-    },
-    {
-      "value": 9,
-      "name": "AlreadyPayed"
-    },
-    {
-      "value": 10,
-      "name": "PayoutNotOpened"
-    },
-    {
-      "value": 11,
-      "name": "PayoutAlreadySent"
-    },
-    {
-      "value": 12,
-      "name": "OperationFailed"
-    },
-    {
-      "value": 13,
-      "name": "AccessDenied"
-    },
-    {
-      "value": 14,
-      "name": "FeeLimitTooSmall"
-    }
-  ]
-}
+              "name": "LNDWalletErrorCode",
+              "modelAsString": false,
+              "values": [
+                {
+                  "value": 0,
+                  "name": "Ok"
+                },
+                {
+                  "value": 1,
+                  "name": "InvalidToken"
+                },
+                {
+                  "value": 2,
+                  "name": "NotEnoughFunds"
+                },
+                {
+                  "value": 3,
+                  "name": "UnknownPayment"
+                },
+                {
+                  "value": 4,
+                  "name": "UnknownInvoice"
+                },
+                {
+                  "value": 5,
+                  "name": "InvoiceAlreadyCancelled"
+                },
+                {
+                  "value": 6,
+                  "name": "InvoiceAlreadyAccepted"
+                },
+                {
+                  "value": 7,
+                  "name": "InvoiceAlreadySettled"
+                },
+                {
+                  "value": 8,
+                  "name": "InvoiceNotAccepted"
+                },
+                {
+                  "value": 9,
+                  "name": "AlreadyPayed"
+                },
+                {
+                  "value": 10,
+                  "name": "PayoutNotOpened"
+                },
+                {
+                  "value": 11,
+                  "name": "PayoutAlreadySent"
+                },
+                {
+                  "value": 12,
+                  "name": "OperationFailed"
+                },
+                {
+                  "value": 13,
+                  "name": "AccessDenied"
+                },
+                {
+                  "value": 14,
+                  "name": "FeeLimitTooSmall"
+                }
+              ]
+            }
           },
           "errorMessage": {
             "type": "string",

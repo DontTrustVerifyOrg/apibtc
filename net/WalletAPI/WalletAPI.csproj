@@ -11,7 +11,7 @@
     <NoWarn>1701;1702;1998;8600;8601;8602;8603;8604;8618;8625</NoWarn>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="GigGossip.DebugLogApi.Client" Version="2.2.2" />
+    <PackageReference Include="GigGossip.DebugLogApi.Client" Version="2.2.3" />
     <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="8.0.13" />
     <PackageReference Include="Nito.AsyncEx" Version="5.1.2" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="7.3.1" />
