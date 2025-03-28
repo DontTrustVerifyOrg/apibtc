@@ -24,7 +24,7 @@ docker compose up -d bitcoin
 Run lightning node
 
 ```bash
-docker run -d --name lightning_node --rm -v $(pwd)/data/lnd:/app_data:Z -v $(pwd)/conf/lnd/lnd.conf:/app_data/lnd.conf:ro lightninglabs/lnd:v0.18.3-beta lnd --lnddir=/app_data
+docker run -d --name lightning_node --rm -v $(pwd)/data/lnd:/app_data:Z -v $(pwd)/conf/lnd/lnd.conf:/app_data/lnd.conf:ro  --network giggossip lightninglabs/lnd:v0.18.3-beta lnd --lnddir=/app_data
 ```
 
 Create lightning wallet, afterwards provide password from `conf/lnd/password.txt` when asked, then generate or provide a mnemonic according to the instructions.
