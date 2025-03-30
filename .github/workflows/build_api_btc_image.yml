@@ -30,9 +30,9 @@ jobs:
         uses: docker/build-push-action@v4
         with:
           context: ./
-          file: ./docker/backend/build_wallet_api.Dockerfile
+          file: ./docker/api/build_api_btc.Dockerfile
           push: true
-          tags: awazcognitum/lnd-wallet-api:latest
+          tags: awazcognitum/apibtc:latest
 
 
   trigger-deploy-wallet:
