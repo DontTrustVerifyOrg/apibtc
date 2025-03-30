@@ -71,23 +71,10 @@ For the sake of this tutorial we will assume that we work in the `~/work/` folde
 │   ├── .secret
 │   │   └── password.txt - lnd wallet unlock password
 │   │
-│   ├── .nostr_relay
-│   │   └── nostr.sqlote3 - nostr database
-│   │
-│   ├── .giggossip  - gig gossip configurations
-│   │   ├── giggossipdata
-│   │   │   ├── basictest.db-wal - basictest database
-│   │   │   ├── basictest.db-shm - basictest database
-│   │   │   └── basictest.db - basictest database
-│   │   ├── basictest.conf
+│   ├── .wallet  - wallet configurations
 │   │   ├── btctest.conf
 │   │   ├── lndtest.conf
 │   │   ├── lndwallettest.conf
-│   │   ├── settler.conf
-│   │   ├── settlerdata
-│   │   │   ├── settler.db-wal - settler database
-│   │   │   ├── settler.db-shm - settler database
-│   │   │   └── settler.db - settler database
 │   │   ├── wallet.conf
 │   │   ├── walletdata
 │   │   │   ├── wallet.db-wal - wallet database
@@ -207,7 +194,7 @@ $ bitcoin-local-cli getbalance
 
 Running the BTCTest
 --------
-Now you should be able to run and play with `BTCTest` program from the solution. To work with this programm you need to put `btctest.conf` configuration file under `~/work/locallnd/.giggossip/`
+Now you should be able to run and play with `BTCTest` program from the solution. To work with this programm you need to put `btctest.conf` configuration file under `~/work/locallnd/.wallet/`
 
 ```ini
 [Bitcoin]
@@ -222,7 +209,7 @@ WalletName = "testwallet"
 And run it with:
 
 ```bash
-$ dotnet ~/work/donttrustverify/gig-gossip/net/NGigGossip4Nostr/BTCTest/bin/Debug/net7.0/BTCTest.dll --basedir="$HOME/work/locallnd/.giggossip/"
+$ dotnet ~/work/donttrustverify/apibtc/net/BTCTest/bin/Debug/net7.0/BTCTest.dll --basedir="$HOME/work/locallnd/.wallet/"
 Number of blocks: 1262
 Wallet ballance: 14876.06431636
 ```
@@ -389,7 +376,7 @@ graph BT
     LND3 -- LNDClient --- LNT(LNDTest)
 ```
 
-To work with this 'LNDTest' you need to put `lndtest.conf` configuration file under `~/work/locallnd/.giggossip/`
+To work with this 'LNDTest' you need to put `lndtest.conf` configuration file under `~/work/locallnd/.wallet/`
 
 ```ini
 [Bitcoin]
@@ -427,7 +414,7 @@ MaxSatoshisPerChannel = 1000000
 They are pointing to the Macaroon files and Tls Certificates that were generated during the startup of the LND nodes. <https://docs.lightning.engineering/the-lightning-network/l402/macaroons>
 
 ```bash
-$ dotnet ~/work/donttrustverify/gig-gossip/net/NGigGossip4Nostr/LNDTest/bin/Debug/net7.0/LNDTest.dll --basedir="$HOME/work/locallnd/.giggossip/"
+$ dotnet ~/work/donttrustverify/apibtc/net/LNDTest/bin/Debug/net7.0/LNDTest.dll --basedir="$HOME/work/locallnd/.giggossip/"
 localhost:9735 Pubkey: 02ab5c7f2ff8c0962892467165bbe6fff3253a53d7b44aeaa5b44c851916384411
 localhost:9734 Pubkey: 02c4708baffce0e83ed0f91ae7de1726dea44100ca9ac03cef8c899d07f673f8ee
 localhost:9736 Pubkey: 03440b27f8d0ba1f3bb6d1a92e7181367d3ba89c9057d70cc3fecb76246311db5d
@@ -454,9 +441,9 @@ $ lncli1 getinfo
 Public keys of the nodes are important to properly configure the `LNDWallet` described in next sections.
 `LNDTest` app is then checking the ballance of the node `localhost:9734` and if empty it tops it up with local Bitcoin amount from Bitcoin network. It is then opening channels and creating some invoices and payments. Give it a try.
 
-Working with LND wallets
+Working with APILND wallets
 =======
-Lightning Network node usually sits on the same Virtual Network as Bitcoin node, therefore makes it practically imposible to become a client-side solution. Client applications like mobile-apps need to communicate with the node via API. This API is implemented in `LNDWallet` and `LNDWalletAPI` exposes the `OpenAPI` allowing to work with User Accounts. Multiple User Accounts can share the same Lightnig Network Node. Accounts and transactions that are maintained by the same `LNDWalletAPI` reside in local databases of the wallet.
+Lightning Network node usually sits on the same Virtual Network as Bitcoin node, therefore makes it practically imposible to become a client-side solution. Client applications like mobile-apps need to communicate with the node via API. This API is implemented in `WalletAPI` exposes the `OpenAPI` allowing to work with User Accounts. Multiple User Accounts can share the same Lightnig Network Node. Accounts and transactions that are maintained by the same `WalletAPI` reside in local databases of the wallet.
 
 ```mermaid
 graph BT
@@ -498,11 +485,11 @@ graph BT
     WLT3 -- LND Account ---- U9(User9)
 ```
 
-The configuration file for `WalletAPI` sits in `wallet.conf` inside of `~/work/locallnd/.giggossip/` folder and has the following structure:
+The configuration file for `WalletAPI` sits in `wallet.conf` inside of `~/work/locallnd/.wallet/` folder and has the following structure:
 ```ini
 [Wallet]
 ServiceUri = "https://localhost:7101/"
-ConnectionString="Data Source=$HOME/work/locallnd/.giggossip/walletdata/wallet.db"
+ConnectionString="Data Source=$HOME/work/locallnd/.wallet/walletdata/wallet.db"
 NewAddressTxFee = 100
 AddInvoiceTxFee = 100
 SendPaymentTxFee = 100
@@ -523,291 +510,6 @@ The LND node configuration section contains the list of `FriendNodes` in the for
 
 To start the `WalletAPI` we write:
 ```bash
-$ dotnet $HOME/work/donttrustverify/gig-gossip/net/NGigGossip4Nostr/GigLNDWalletAPI/bin/Debug/net7.0/GigLNDWalletAPI.dll --basedir="$HOME/work/locallnd/.giggossip/"
+$ dotnet $HOME/work/donttrustverify/gig-gossip/net/WalletAPI/bin/Debug/net7.0/WalletAPI.dll --basedir="$HOME/work/locallnd/.wallet/"
 ```
 
-Working with Settlers
-======
-Settler is a Certification Authority for GigGossip that  reveals preimages for the LND payments making possible for dispute resolution implementation.
-
-To configure `SettlerAPI` you need to put the following under `settler.conf` into the `~/work/locallnd/.giggossip/`.
-
-```ini
-[Settler]
-ServiceUri="https://localhost:7189/"
-ConnectionString="Data Source=$HOME/work/locallnd/.giggossip/settlerdata/settler.db"
-PriceAmountForSettlement = 1000
-InvoicePaymentTimeoutSec=1000
-GigWalletOpenApi="https://localhost:7101/"
-SettlerPrivateKey="7f4c11a9742721d66e40e321ca70b682c27f7422190c84a187525e69e6038369"
-```
-
-The file specifies `ServiceUri` - the endpoint OpenAPI uri on which the Settler API operates, `ConnectionString` - the conenction string for the internal Settler database, price for the settlement and the timeout after which the payments are automatically settled. `SettlerPrivateKey` is the main private key for the settler used to sign all the certificates.
-
-To start the `SettlerAPI` we write:
-```bash
-$ dotnet $HOME/work/donttrustverify/gig-gossip/net/NGigGossip4Nostr/GigGossipSettlerAPI/bin/Debug/net7.0/GigGossipSettlerAPI.dll --basedir="$HOME/work/locallnd/.giggossip/"
-```
-
-Setting up Nostr-Relay
-======
-Gig gossip communicates using Nostr. Nostr is based on the idea of implicit network built on top of redundant connections of Users to multiple relays. Relays are not connected directly to other relays. User can publish event or subscribe for event from one or multiple relays. Published event is distributed to all the other users of the specific relay. The network topology emerges as the users and relays are joing network. Nostr allows implementing the message p2p communication with encrypted messages. The protocol is described here: <https://github.com/nostr-protocol/nips>.
-
-```mermaid
-graph BT
-    NSTR1(NostrRelay1) --- U1(User1)
-    NSTR1(NostrRelay1) --- U2(User2)
-    NSTR1(NostrRelay1) --- U3(User3)
-    NSTR1(NostrRelay1) --- U4(User4)
-    NSTR1(NostrRelay1) --- U5(User5)
-    NSTR2(NostrRelay2) --- U3(User3)
-    NSTR2(NostrRelay2) --- U4(User4)
-    NSTR2(NostrRelay2) --- U5(User5)
-    NSTR3(NostrRelay3) --- U4(User4)
-    NSTR3(NostrRelay3) --- U5(User5)
-    NSTR3(NostrRelay3) --- U6(User6)
-    NSTR3(NostrRelay3) --- U7(User7)
-```
-
-Here we will be using python impementation of Nostr-Relay <https://pypi.org/project/nostr-relay/>. Install it into your VirtualEnv or Conda envinromnent with:
-```bash
-$ pip install nostr-relay
-```
-
-We configure the `nostr-relay` with the file `config.yaml` in the `~/work/locallnd/.nostr_relay`.
-
-```yaml
-DEBUG: false
-
-relay_name: python relay
-relay_description: relay written in python
-sysop_pubkey: 
-sysop_contact: 
-
-storage:
-  sqlalchemy.url: sqlite+aiosqlite:///nostr.sqlite3
-  # the number of concurrent REQ queries sent to the db
-  num_concurrent_reqs: 10
-  # the number of concurrent event saves. (sqlite can only support 1 writer at a time)
-  num_concurrent_adds: 2
-  validators:
-    - nostr_relay.validators.is_not_too_large
-    - nostr_relay.validators.is_signed
-    - nostr_relay.validators.is_recent
-    - nostr_relay.validators.is_not_hellthread
-
-verification:
-  # options are disabled, passive, enabled
-  nip05_verification: disabled
-  expiration: 86400 * 30
-  update_frequency: 3600
-  #blacklist:
-  # - badhost.biz
-  #whitelist:
-  # - goodhost.com
-
-
-gunicorn:
-  bind: 127.0.0.1:6969
-  workers: 1
-  loglevel: info
-  reload: false
-
-
-purple:
-  host: 127.0.0.1
-  port: 6969
-  workers: 1
-  disable_compression: true
-
-
-# see docs/authentication.md
-authentication:
-  enabled: false
-  valid_urls: 
-    - ws://localhost:6969
-    - ws://127.0.0.1:6969
-  actions:
-    save: a
-    query: a
-
-# number of seconds to allow between client messages
-message_timeout: 1800
-
-# number of open subscriptions per connection
-subscription_limit: 32
-
-# set this to a private key used for internal control events
-# service_privatekey: 9627da965699a2a3048f97b77df5047e8cd0d11daca75e7687d0b28b65416a3c
-
-# set this to limit the number of events returned per REQ
-max_limit: 6000
-
-# set this to the maximum number of "p" tags in an event
-hellthread_limit: 100
-```
-
-And we are starting this with
-```bash
-$ cd ~/work/locallnd/.nostr_relay/ && nostr-relay -c config.yaml serve
-```
-
-This will start our relay listening on port `6969`. We can access it via `ws://127.0.0.1:6969`.
-
-Running the BasicTest
-=======
-
-Basic test runs the following gig-gossip setup.
-
-```mermaid
-graph BT
-    LND2 --- WLT2(Wallet2API)
-    WLT2 -- LND Wallet Account --- SAPI(Settler API)
-    WLT2 -- LND Wallet Account --- CUST(Customer)
-    WLT2 -- LND Wallet Account --- WORK(GigWorker)
-    CUST --- SAPI
-    WORK --- SAPI
-    NSTR(NostrRelay)
-    CUST --- NSTR
-    WORK --- NSTR
-    CUST <-.-> WORK
-```
-
-The configuration file is the following:
-```ini
-[Bitcoin]
-AuthenticationString="lnd:lightning"
-HostOrUri="127.0.0.1:18332"
-Network="RegTest"
-WalletName = "testwallet"
-
-[SettlerAdmin]
-SettlerOpenApi="https://localhost:7189/"
-PrivateKey="7f4c11a9742721d66e40e321ca70b682c27f7402190c84a187525e69e6038362"
-
-[Application]
-FlowLoggerPath="$HOME/work/locallnd/.giggossip/giggossipdata/basictest.md"
-
-[GigWorker]
-GigWalletOpenApi="https://localhost:7101/"
-ConnectionString="Data Source=$HOME/work/locallnd/.giggossip/giggossipdata/basictest.db"
-Fanout = 2
-NostrRelays = ["ws://127.0.0.1:6969"]
-PrivateKey="7f4c11a9742721d66e40e321ca70b682c27f7402190c84a187525e69e6038369"
-SettlerOpenApi="https://localhost:7189/"
-PriceAmountForRouting=1000
-BroadcastConditionsTimeoutMs=1000000
-BroadcastConditionsPowScheme="sha256"
-BroadcastConditionsPowComplexity=0
-TimestampToleranceMs=1000000
-InvoicePaymentTimeoutSec=1000
-ChunkSize=2048
-
-[Customer]
-GigWalletOpenApi="https://localhost:7101/"
-ConnectionString="Data Source=$HOME/work/locallnd/.giggossip/giggossipdata/basictest.db"
-Fanout = 2
-NostrRelays = ["ws://127.0.0.1:6969"]
-PrivateKey="7f4c11a9742721d66e40e321ca70b632c27f7422190c84a187525e69e6038369"
-SettlerOpenApi="https://localhost:7189/"
-PriceAmountForRouting=1000
-BroadcastConditionsTimeoutMs=1000000
-BroadcastConditionsPowScheme="sha256"
-BroadcastConditionsPowComplexity=0
-TimestampToleranceMs=1000000
-InvoicePaymentTimeoutSec=1000
-ChunkSize=2048
-```
-
-
-Running the MediumTest
-=======
-
-Medium test runs the following gig-gossip setup.
-
-```mermaid
-graph BT
-    LND2 --- WLT2(Wallet2API)
-    WLT2 -- LND Wallet Account --- SAPI(Settler API)
-    WLT2 -- LND Wallet Account --- CUST(Customer)
-    WLT2 -- LND Wallet Account --- WORK(GigWorker)
-    WLT2 -- LND Wallet Account --- GOS1(Gossiper1)
-    WLT2 -- LND Wallet Account --- GOS2(Gossiper2)
-    WLT2 -- LND Wallet Account --- GOS3(Gossiper3)
-    CUST --- SAPI
-    WORK --- SAPI
-    NSTR(NostrRelay)
-    CUST --- NSTR
-    GOS1 --- NSTR
-    GOS2 --- NSTR
-    GOS3 --- NSTR
-    WORK --- NSTR
-    CUST <-.-> GOS1
-    GOS1 <-.-> GOS2
-    GOS2 <-.-> GOS3
-    GOS1 <-.-> GOS3
-    GOS3 <-.-> WORK
-```
-
-The configuration file is the following:
-```ini
-[Bitcoin]
-AuthenticationString="lnd:lightning"
-HostOrUri="127.0.0.1:18332"
-Network="RegTest"
-WalletName = "testwallet"
-
-[SettlerAdmin]
-SettlerOpenApi="https://localhost:7189/"
-PrivateKey="7f4c11a9742721d66e40e321ca70b682c27f7402190c84a187525e69e6038362"
-
-[Application]
-FlowLoggerPath="$HOME/work/locallnd/.giggossip/giggossipdata/mediumtest.md"
-NumberOfGossipers=3
-
-[GigWorker]
-GigWalletOpenApi="https://localhost:7101/"
-ConnectionString="Data Source=$HOME/work/locallnd/.giggossip/giggossipdata/mediumtest.db"
-Fanout = 2
-NostrRelays = ["ws://127.0.0.1:6969"]
-PrivateKey="7f4c11a9742721d66e40e321ca70b682c27f7402190c84a187525e69e6038369"
-SettlerOpenApi="https://localhost:7189/"
-PriceAmountForRouting=1000
-BroadcastConditionsTimeoutMs=1000000
-BroadcastConditionsPowScheme="sha256"
-BroadcastConditionsPowComplexity=0
-TimestampToleranceMs=1000000
-InvoicePaymentTimeoutSec=1000
-ChunkSize=2048
-
-[Customer]
-GigWalletOpenApi="https://localhost:7101/"
-ConnectionString="Data Source=$HOME/work/locallnd/.giggossip/giggossipdata/mediumtest.db"
-Fanout = 2
-NostrRelays = ["ws://127.0.0.1:6969"]
-PrivateKey="7f4c11a9742721d66e40e321ca70b632c27f7422190c84a187525e69e6038369"
-SettlerOpenApi="https://localhost:7189/"
-PriceAmountForRouting=1000
-BroadcastConditionsTimeoutMs=1000000
-BroadcastConditionsPowScheme="sha256"
-BroadcastConditionsPowComplexity=0
-TimestampToleranceMs=1000000
-InvoicePaymentTimeoutSec=1000
-ChunkSize=2048
-
-[Gossiper]
-GigWalletOpenApi="https://localhost:7101/"
-ConnectionString="Data Source=$HOME/work/locallnd/.giggossip/giggossipdata/mediumtest.db"
-Fanout = 2
-NostrRelays = ["ws://127.0.0.1:6969"]
-PrivateKey=""
-SettlerOpenApi="https://localhost:7189/"
-PriceAmountForRouting=1000
-BroadcastConditionsTimeoutMs=1000000
-BroadcastConditionsPowScheme="sha256"
-BroadcastConditionsPowComplexity=0
-TimestampToleranceMs=1000000
-InvoicePaymentTimeoutSec=1000
-ChunkSize=2048
-
-```

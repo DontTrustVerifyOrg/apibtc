@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using System.ComponentModel.DataAnnotations;
 using Microsoft.EntityFrameworkCore.Metadata.Internal;
+using System.Collections.Concurrent;
 
 namespace LNDWallet;
 
@@ -255,11 +256,44 @@ public class Token
     public required string PublicKey { get; set; }
 }
 
+
+public class WaletContextFactory : IDisposable
+{
+    DBProvider provider;
+    string connectionString;
+    ConcurrentQueue<WaletContext> contexts = new();
+
+    public WaletContextFactory(DBProvider provider, string connectionString)
+    {
+        this.provider = provider;
+        this.connectionString = connectionString;
+    }
+
+    public WaletContext Create()
+    {
+        if (!contexts.TryDequeue(out var context))
+            context = new WaletContext(this, provider, connectionString);
+        return context;
+    }
+
+    public void Dispose()
+    {
+        while (contexts.TryDequeue(out var context))
+            context.HardDispose();
+    }
+
+    public void Release(WaletContext context)
+    {
+        contexts.Enqueue(context);
+    }
+}
+
 /// <summary>
 /// Context class for interaction with database.
 /// </summary>
-public class WaletContext : DbContext
+public class WaletContext : DbContext, IDisposable
 {
+    WaletContextFactory factory;
     DBProvider provider;
     /// <summary>
     /// Connection string to the database.
@@ -270,10 +304,21 @@ public class WaletContext : DbContext
     /// Initializes a new instance of the <see cref="WaletContext"/> class.
     /// </summary>
     /// <param name="connectionString">The connection string to connect to the database.</param>
-    public WaletContext(DBProvider provider, string connectionString)
+    public WaletContext(WaletContextFactory factory, DBProvider provider, string connectionString)
     {
+        this.factory = factory;
         this.provider = provider;
         this.connectionString = connectionString;
+    }
+
+    public override void Dispose()
+    {
+        factory.Release(this);
+    }
+
+    public void HardDispose()
+    {
+        base.Dispose();
     }
 
     public Microsoft.EntityFrameworkCore.Storage.IDbContextTransaction BEGIN_TRANSACTION(System.Data.IsolationLevel isolationLevel= System.Data.IsolationLevel.ReadCommitted)
