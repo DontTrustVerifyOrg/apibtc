@@ -1,0 +1,63 @@
+name: api_btc
+
+services:
+
+  btc:
+    build:
+      context: ../..
+      dockerfile: docker/btc/build_btc.Dockerfile
+
+    restart: on-failure
+    ports:
+      - 18332:18332
+      - 28332:28332
+      - 28333:28333
+    volumes:
+      - ./data/btc:/app/data/:Z
+      - ./conf.template/btc/bitcoin.conf:/app/data/bitcoin.conf:ro
+    logging:
+      driver: local
+      options:
+        max-size: "100m"
+
+  lnd:
+    build:
+      context: ../..
+      dockerfile: docker/lnd/build_lnd.Dockerfile
+
+    restart: on-failure
+    ports:
+      - 9734:9734
+      - 11009:11009
+      - 8180:8180
+    volumes:
+      - ./data/lnd:/app/data/:Z
+      - ./conf.template/lnd/lnd.conf:/app/data/lnd.conf:ro
+      - ./conf.template/lnd/password.txt:/secret/password.txt:ro
+    logging:
+      driver: local
+      options:
+        max-size: "100m"
+
+  api:
+    build:
+      context: ../..
+      dockerfile: docker/api/build_api_btc.Dockerfile
+
+    restart: on-failure
+    ports:
+      - 7101:80
+    volumes:
+      - ./data/wallet/:/app/data/:Z
+      - ./conf.template/wallet/wallet.conf:/app/data/wallet.conf:ro
+      - ./data/lnd/:/lnd/:Z
+    logging:
+      driver: local
+      options:
+        max-size: "100m"
+
+networks:
+  default:
+    name: api_btc
+    driver: bridge
+

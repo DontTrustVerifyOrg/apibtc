@@ -4,7 +4,7 @@ set -e
 
 if [ -n "$GITHUB_CONFIG_URL" ] && [ -n "$GITHUB_USERNAME" ] && [ -n "$GITHUB_TOKEN" ]; then
     echo "Downloading configuration file from GitHub"
-    curl -sS --fail -u $GITHUB_USERNAME:$GITHUB_TOKEN -o /app_data/bitcoin.conf $GITHUB_CONFIG_URL
+    curl -sS --fail -u $GITHUB_USERNAME:$GITHUB_TOKEN -o /app/data/bitcoin.conf $GITHUB_CONFIG_URL
     echo "Configuration file downloaded successfully from GitHub"
 
     if [ -n "$AZURE_KEY_VAULT_URL" ] && [ -n "$AZURE_CLIENT_ID" ] && [ -n "$AZURE_CLIENT_SECRET" ] && [ -n "$AZURE_TENANT_ID" ]; then
@@ -32,21 +32,21 @@ if [ -n "$GITHUB_CONFIG_URL" ] && [ -n "$GITHUB_USERNAME" ] && [ -n "$GITHUB_TOK
                 fi
                 echo "$var_name fetched successfully from Azure Key Vault"
                 # Replace the placeholder with the actual value
-                sed -i "s|\${$var_name}|$(echo "$var_value" | sed 's/[&/\]/\\&/g')|g" /app_data/bitcoin.conf
+                sed -i "s|\${$var_name}|$(echo "$var_value" | sed 's/[&/\]/\\&/g')|g" /app/data/bitcoin.conf
             fi
-        done < /app_data/bitcoin.conf
+        done < /app/data/bitcoin.conf
         
     fi
-elif [ -e /app_data/bitcoin.conf ]; then
+elif [ -e /app/data/bitcoin.conf ]; then
     echo "Using existing configuration file"
 else
     echo "Creating configuration file from template and environment variables"
-    envsubst < /app/bitcoin.conf.template > /app_data/bitcoin.conf
+    envsubst < /app/bitcoin.conf.template > /app/data/bitcoin.conf
 fi
 
 
 
 echo
-echo "Starting: bitcoind -datadir=/app_data -printtoconsole"
+echo "Starting: bitcoind -datadir=/app/data -printtoconsole"
 echo
-bitcoind -datadir=/app_data -printtoconsole
+bitcoind -datadir=/app/data -printtoconsole
