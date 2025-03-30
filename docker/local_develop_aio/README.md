@@ -15,16 +15,10 @@ Software:
 
 Setup commands are based on Linux, on Windows some of the commandline commands might need to be adjusted. Generally the services itself work the same on both platforms.
 
-Build docker images
-
-```bash
-docker compose build
-```
-
 Run bitcoin node
 
 ```bash
-docker compose up -d btc
+docker compose up -d
 ```
 
 Run lightning node
@@ -34,23 +28,18 @@ Run lightning node
 - On linux:
 
 ```bash
-docker run -it --rm --name api_btc_lnd -e INIT=1 -v $(pwd)/data/lnd:/app/data:Z -v $(pwd)/../conf.local/lnd/lnd.conf:/app/data/lnd.conf:ro --network apibtc apibtc-lnd:latest
+docker exec -it apibtc-aio-1 bash -c "lncli -n regtest --lnddir=/app/lnd --rpcserver=localhost:11009 create && pkill lnd"
 ```
 
 - On Windows:
 
     Make sure to adjust the paths according to your local setup.
 
-Create btc test wallet
-
-```bash
-docker exec -it apibtc-btc-1 bitcoin-cli -datadir=/app/data createwallet "testwallet"
-```
 
 [Regtest only] Mine 10 blocks to synchronize the Lightning Node
 
 ```bash
-docker exec -it apibtc-btc-1 bitcoin-cli -datadir=/app/data -generate 10
+docker exec -it api_btc-btc-1 bitcoin-cli -datadir=/app/btc -generate 10
 ```
 
 

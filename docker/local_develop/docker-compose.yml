@@ -1,4 +1,4 @@
-name: api_btc
+name: apibtc
 
 services:
 
@@ -14,7 +14,7 @@ services:
       - 28333:28333
     volumes:
       - ./data/btc:/app/data/:Z
-      - ./conf.template/btc/bitcoin.conf:/app/data/bitcoin.conf:ro
+      - ./conf.local/btc/bitcoin.conf:/app/data/bitcoin.conf:ro
     logging:
       driver: local
       options:
@@ -32,8 +32,8 @@ services:
       - 8180:8180
     volumes:
       - ./data/lnd:/app/data/:Z
-      - ./conf.template/lnd/lnd.conf:/app/data/lnd.conf:ro
-      - ./conf.template/lnd/password.txt:/secret/password.txt:ro
+      - ./conf.local/lnd/lnd.conf:/app/data/lnd.conf:ro
+      - ./conf.local/lnd/password.txt:/secret/password.txt:ro
     logging:
       driver: local
       options:
@@ -49,7 +49,7 @@ services:
       - 7101:80
     volumes:
       - ./data/wallet/:/app/data/:Z
-      - ./conf.template/wallet/wallet.conf:/app/data/wallet.conf:ro
+      - ./conf.local/wallet/wallet.conf:/app/data/wallet.conf:ro
       - ./data/lnd/:/lnd/:Z
     logging:
       driver: local
@@ -58,6 +58,6 @@ services:
 
 networks:
   default:
-    name: api_btc
+    name: apibtc
     driver: bridge
 

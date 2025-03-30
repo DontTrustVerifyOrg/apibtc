@@ -1,0 +1,38 @@
+name: apibtc
+
+services:
+
+  aio:
+    build:
+      context: ../..
+      dockerfile: docker/aio/build_aio.Dockerfile
+
+    restart: on-failure
+    ports:
+      - 18332:18332
+      - 28332:28332
+      - 28333:28333
+      - 9734:9734
+      - 11009:11009
+      - 8180:8180
+      - 7101:80
+    volumes:
+      # - ./data/btc:/app/btc/:Z
+      # - ./data/lnd:/app/lnd/:Z
+      # - ./data/wallet/:/app/data/:Z
+
+      - ./conf.local/lnd/lnd.conf:/app/lnd/lnd.conf:ro
+      - ./conf.local/lnd/password.txt:/secret/password.txt:ro
+      - ./conf.local/btc/bitcoin.conf:/app/btc/bitcoin.conf:ro
+      - ./conf.local/wallet/wallet.conf:/app/data/wallet.conf:ro
+    logging:
+      driver: local
+      options:
+        max-size: "100m"
+
+
+networks:
+  default:
+    name: apibtc
+    driver: bridge
+
