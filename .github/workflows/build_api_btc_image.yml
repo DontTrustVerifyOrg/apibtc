@@ -37,7 +37,7 @@ jobs:
 
   trigger-deploy-wallet:
     runs-on: ubuntu-latest
-    needs: [build-wallet-api]
+    needs: [build-and-push-api]
     steps:
       - uses: GuillaumeFalourd/wait-sleep-action@v1
         with:
