@@ -26,11 +26,18 @@ RUN dotnet publish -c Release -o out ./WalletAPI.csproj
 
 
 # FROM debian:12.7
-FROM mcr.microsoft.com/dotnet/aspnet:8.0
+# FROM mcr.microsoft.com/dotnet/aspnet:8.0
+FROM postgres:17
+
+
+RUN apt-get update && apt-get install -y gettext procps curl lsb-release
+RUN curl -L https://dot.net/v1/dotnet-install.sh -o dotnet-install.sh
+RUN chmod +x dotnet-install.sh
+RUN ./dotnet-install.sh --runtime aspnetcore
+RUN rm dotnet-install.sh
+ENV PATH=$PATH:$DOTNET_ROOT:$DOTNET_ROOT/tools
 
 WORKDIR /app
-
-RUN apt-get update && apt-get install -y gettext procps
 
 RUN mkdir -p api lnd btc data
 RUN ln -s /app/lnd /lnd
@@ -46,6 +53,4 @@ COPY ./docker/api/wallet.conf.template /app/wallet.conf.template
 COPY ./docker/aio/entrypoint.sh /app/entrypoint.sh
 RUN chmod +x /app/entrypoint.sh
 
-
-# ENTRYPOINT [ "bash" ]
 ENTRYPOINT ["/app/entrypoint.sh"]

@@ -2,6 +2,14 @@
 
 set -e
 
+docker-entrypoint.sh postgres &
+
+
+# Start PostgreSQL service
+# echo "initialized"
+
+# sleep infinity
+
 if [ -e /app/btc/bitcoin.conf ]; then
     echo "Using existing configuration file"
 else
@@ -31,33 +39,71 @@ echo
 bitcoind -datadir=/app/btc &
 
 
-echo "Attempt to create a wallet..."
-while ! bitcoin-cli -datadir=/app/btc createwallet "testwallet" > /dev/null 2>&1; do
+echo "Checking if wallet exists..."
+
+# Wait for bitcoin node to be ready
+while ! bitcoin-cli -datadir=/app/btc getblockchaininfo > /dev/null 2>&1; do
     echo "Waiting for bitcoin node to be ready..."
     sleep 5
 done
 
+sleep 10
 
-echo "Starting in init mode: lnd --lnddir=/app/lnd"
-lnd --lnddir=/app/lnd &
-while ! lncli -n regtest --lnddir=/app/lnd --rpcserver=localhost:11009 state > /dev/null 2>&1; do
-    echo "Waiting for lightning node to start..."
+bitcoin-cli -datadir=/app/btc listwallets
+
+# Check if wallet already exists
+if [ -d "/app/btc/regtest/wallets/testwallet" ]; then
+    echo "Wallet 'testwallet' already exists"
+    bitcoin-cli -datadir=/app/btc loadwallet "testwallet" > /dev/null 2>&1 || true
+else
+    echo "Creating wallet 'testwallet'..."
+    bitcoin-cli -datadir=/app/btc createwallet "testwallet"
+fi
+
+while ! bitcoin-cli -datadir=/app/btc getbalances > /dev/null 2>&1; do
+    echo "Waiting for bitcoin wallet to be ready..."
     sleep 5
 done
+
+
+# echo "asdfasdf"
+# sleep infinity
+
+
+if [ ! -f "/app/lnd/data/chain/bitcoin/regtest/wallet.db" ]; then
+    echo "Starting in init mode: lnd --lnddir=/app/lnd"
+    lnd --lnddir=/app/lnd &
+
+    echo "Waiting for lightning node to start..."
+    while ! timeout 1 bash -c ">/dev/tcp/localhost/11009" 2>/dev/null; do
+        echo "Waiting for lightning node port to open..."
+        sleep 2
+    done
+
+    while ! lncli -n regtest --lnddir=/app/lnd --rpcserver=localhost:11009 state > /dev/null 2>&1; do
+        echo "Waiting for lightning node to start..."
+        sleep 5
+    done
+
+    while ! lncli -n regtest --lnddir=/app/lnd --rpcserver=localhost:11009 getinfo > /dev/null 2>&1; do
+        echo "Make sure the lightning node is initialized - check README.md for more information. Waiting for it to be ready..."
+        sleep 5
+    done
+
+    pkill lnd
+    sleep 10
+fi
+
+echo "Starting lightning node with unlocked wallet..."
+lnd --lnddir=/app/lnd --wallet-unlock-password-file=/secret/password.txt &
 
 while ! lncli -n regtest --lnddir=/app/lnd --rpcserver=localhost:11009 getinfo > /dev/null 2>&1; do
-    echo "Make sure the lightning node is initialized. Waiting for it to be ready..."
+    echo "Waiting for lightning node to be ready..."
     sleep 5
-
-    if ! pgrep -f "lnd" > /dev/null; then
-        echo "Starting lightning node..."
-        lnd --lnddir=/app/lnd --wallet-unlock-password-file=/secret/password.txt &
-    fi
 done
-
 
 
 echo "Starting API..."
 cd /app/api
-dotnet WalletAPI.dll --basedir=/app/data
+/root/.dotnet/dotnet WalletAPI.dll --basedir=/app/data
 

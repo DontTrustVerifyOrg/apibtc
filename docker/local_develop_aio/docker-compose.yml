@@ -8,6 +8,10 @@ services:
       dockerfile: docker/aio/build_aio.Dockerfile
 
     restart: on-failure
+    environment:
+      - POSTGRES_PASSWORD=apibtc
+      - POSTGRES_USER=apibtc
+      - POSTGRES_DB=apibtc
     ports:
       - 18332:18332
       - 28332:28332
