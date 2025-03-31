@@ -8,6 +8,10 @@ import uuid
 import base64
 from enum import Enum
 from typing import Any, Dict, Optional, Union
+import logging
+import sys
+from signalrcore.hub_connection_builder import HubConnectionBuilder
+import urllib.parse
 
 class LNDWalletErrorCode(Enum):
     Ok = 0
@@ -510,4 +514,24 @@ class Wallet:
             error_message = response_json.get('errorMessage', 'An error occurred')
             raise Exception(f"{error_code.name}: {error_message}")
         return response_json.get('value')
+
+    def startinvoicestateupdatestream(self):
+        """
+        Initiates a stream of updates related to the state of invoices. This allows users to receive real-time notifications about changes in invoice status, such as payments received or cancellations.
+
+        Returns:
+            HubConnection object for managing the connection and receiving updates
+        """
+        hub_connection = HubConnectionBuilder()\
+            .with_url(self.base_url + "/invoicestateupdatestream?authtoken="+urllib.parse.quote(w._create_authtoken().decode('utf-8')), options={"verify_ssl": True}) \
+            .configure_logging(logging.DEBUG, socket_trace=True, handler=handler) \
+            .with_automatic_reconnect({
+                    "type": "interval",
+                    "keep_alive_interval": 10,
+                    "intervals": [1, 3, 5, 6, 7, 87, 3]
+                }).build()
+        hub_connection.start()
+        hub_connection.on_open(lambda: print("connection opened and handshake received ready to send messages"))
+        hub_connection.on_close(lambda: print("connection closed"))
+        return hub_connection
 
