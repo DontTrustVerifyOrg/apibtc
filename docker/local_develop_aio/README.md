@@ -28,7 +28,7 @@ Run lightning node
 - On linux:
 
 ```bash
-docker exec -it apibtc-aio-1 bash -c "lncli -n regtest --lnddir=/app/lnd --rpcserver=localhost:11009 create && pkill lnd"
+docker exec -it apibtc-aio-1 lncli -n regtest --lnddir=/app/lnd --rpcserver=localhost:11009 create
 ```
 
 - On Windows:
