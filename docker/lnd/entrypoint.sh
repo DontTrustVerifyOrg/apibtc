@@ -2,6 +2,8 @@
 
 set -e
 
+mkdir -p /app/data
+
 if [ -n "$GITHUB_CONFIG_URL" ] && [ -n "$GITHUB_USERNAME" ] && [ -n "$GITHUB_TOKEN" ]; then
     echo "Downloading configuration file from GitHub"
     curl -sS --fail -u $GITHUB_USERNAME:$GITHUB_TOKEN -o /app/data/lnd.conf $GITHUB_CONFIG_URL
