@@ -1606,96 +1606,100 @@ public class LNDWalletManager : LNDEventSource
     public void Start()
     {
         alreadySubscribedSingleInvoicesTokenSources = new();
-        using var walletContext = walletContextFactory.Create();
-
-        try
         {
-            walletContext.INSERT(new TrackingIndex { Id = TackingIndexId.StartTransactions, Value = 0 }).SAVE();
-            walletContext.INSERT(new TrackingIndex { Id = TackingIndexId.AddInvoice, Value = 0 }).SAVE();
-            walletContext.INSERT(new TrackingIndex { Id = TackingIndexId.SettleInvoice, Value = 0 }).SAVE();
-        }
-        catch (DbUpdateException)
-        {
-            //Ignore already inserted
-        }
+            using var walletContext = walletContextFactory.Create();
 
-        subscribeInvoicesCancallationTokenSource = new CancellationTokenSource();
-        subscribeInvoicesThread = new Thread(async () =>
-        {
-            TraceEx.TraceInformation("SubscribeInvoices Thread Starting");
-            var allInvs = new Dictionary<string, InvoiceRecord>(
-                from inv in LND.ListInvoices(lndConf).Invoices
-                select KeyValuePair.Create(inv.RHash.ToArray().AsHex(), LNDAccountManager.ParseInvoiceToInvoiceRecord(invoice: inv, isHodl: false)));
-
-            var internalPayments = new HashSet<string>(from pay in walletContext.InternalPayments
-                                                       where pay.Status == InternalPaymentStatus.InFlight
-                                                       select pay.PaymentHash);
-
-            foreach (var inv in allInvs.Values)
+            try
             {
-                if (!internalPayments.Contains(inv.PaymentHash) && inv.State == InvoiceState.Accepted)
-                {
-                    var pubkey = (from i in walletContext.HodlInvoices
-                                  where i.PaymentHash == inv.PaymentHash
-                                  select i.PublicKey).FirstOrDefault();
-                    if (pubkey == null)
-                        pubkey = (from i in walletContext.ClassicInvoices
-                                  where i.PaymentHash == inv.PaymentHash
-                                  select i.PublicKey).FirstOrDefault();
-                    if (pubkey == null)
-                        continue;
-                    SubscribeSingleInvoiceTracking(pubkey, inv.PaymentHash);
-                }
+                walletContext.INSERT(new TrackingIndex { Id = TackingIndexId.StartTransactions, Value = 0 }).SAVE();
+                walletContext.INSERT(new TrackingIndex { Id = TackingIndexId.AddInvoice, Value = 0 }).SAVE();
+                walletContext.INSERT(new TrackingIndex { Id = TackingIndexId.SettleInvoice, Value = 0 }).SAVE();
             }
-
-            while (!Stopping)
+            catch (DbUpdateException)
             {
-                TraceEx.TraceInformation("SubscribeInvoices Loop Starting");
-                try
+                //Ignore already inserted
+            }
+        }
+        { 
+            subscribeInvoicesCancallationTokenSource = new CancellationTokenSource();
+            subscribeInvoicesThread = new Thread(async () =>
+            {
+                using var walletContext = walletContextFactory.Create();
+                TraceEx.TraceInformation("SubscribeInvoices Thread Starting");
+                var allInvs = new Dictionary<string, InvoiceRecord>(
+                    from inv in LND.ListInvoices(lndConf).Invoices
+                    select KeyValuePair.Create(inv.RHash.ToArray().AsHex(), LNDAccountManager.ParseInvoiceToInvoiceRecord(invoice: inv, isHodl: false)));
+
+                var internalPayments = new HashSet<string>(from pay in walletContext.InternalPayments
+                                                           where pay.Status == InternalPaymentStatus.InFlight
+                                                           select pay.PaymentHash);
+
+                foreach (var inv in allInvs.Values)
                 {
-                    var trackIdxes = new Dictionary<TackingIndexId, ulong>(from idx in walletContext.TrackingIndexes
-                                                                           select KeyValuePair.Create(idx.Id, idx.Value));
-
-                    var stream = LND.SubscribeInvoices(lndConf, trackIdxes[TackingIndexId.AddInvoice], trackIdxes[TackingIndexId.SettleInvoice],
-                        cancellationToken: subscribeInvoicesCancallationTokenSource.Token);
-
-                    while (await stream.ResponseStream.MoveNext(subscribeInvoicesCancallationTokenSource.Token))
+                    if (!internalPayments.Contains(inv.PaymentHash) && inv.State == InvoiceState.Accepted)
                     {
-                        var inv = stream.ResponseStream.Current;
-
                         var pubkey = (from i in walletContext.HodlInvoices
-                                where i.PaymentHash == inv.RHash.ToArray().AsHex()
-                                select i.PublicKey).FirstOrDefault();
+                                      where i.PaymentHash == inv.PaymentHash
+                                      select i.PublicKey).FirstOrDefault();
                         if (pubkey == null)
                             pubkey = (from i in walletContext.ClassicInvoices
-                                        where i.PaymentHash == inv.RHash.ToArray().AsHex()
-                                        select i.PublicKey).FirstOrDefault();
-
-                        if(pubkey==null)
+                                      where i.PaymentHash == inv.PaymentHash
+                                      select i.PublicKey).FirstOrDefault();
+                        if (pubkey == null)
                             continue;
-
-                        this.FireOnInvoiceStateChanged(pubkey, inv.RHash.ToArray().AsHex(), (InvoiceState)inv.State);
-                        if (inv.State == Lnrpc.Invoice.Types.InvoiceState.Accepted)
-                            SubscribeSingleInvoiceTracking(pubkey, inv.RHash.ToArray().AsHex());
-
-                        walletContext.UPDATE(new TrackingIndex { Id = TackingIndexId.AddInvoice, Value = inv.AddIndex }).SAVE();
-                        walletContext.UPDATE(new TrackingIndex { Id = TackingIndexId.SettleInvoice, Value = inv.SettleIndex }).SAVE();
+                        SubscribeSingleInvoiceTracking(pubkey, inv.PaymentHash);
                     }
                 }
-                catch (RpcException e)
-                {
-                    TraceEx.TraceInformation($"Subscribe Invoices streaming was {e.Status.StatusCode.ToString()} from the client!");
-                    TraceEx.TraceException(e);
-                }
-                catch (Exception ex)
-                {
-                    TraceEx.TraceException(ex);
-                }
-            }
 
-            TraceEx.TraceInformation("SubscribeInvoices Thread Joining");
+                while (!Stopping)
+                {
+                    TraceEx.TraceInformation("SubscribeInvoices Loop Starting");
+                    try
+                    {
+                        var trackIdxes = new Dictionary<TackingIndexId, ulong>(from idx in walletContext.TrackingIndexes
+                                                                               select KeyValuePair.Create(idx.Id, idx.Value));
 
-        });
+                        var stream = LND.SubscribeInvoices(lndConf, trackIdxes[TackingIndexId.AddInvoice], trackIdxes[TackingIndexId.SettleInvoice],
+                            cancellationToken: subscribeInvoicesCancallationTokenSource.Token);
+
+                        while (await stream.ResponseStream.MoveNext(subscribeInvoicesCancallationTokenSource.Token))
+                        {
+                            var inv = stream.ResponseStream.Current;
+
+                            var pubkey = (from i in walletContext.HodlInvoices
+                                          where i.PaymentHash == inv.RHash.ToArray().AsHex()
+                                          select i.PublicKey).FirstOrDefault();
+                            if (pubkey == null)
+                                pubkey = (from i in walletContext.ClassicInvoices
+                                          where i.PaymentHash == inv.RHash.ToArray().AsHex()
+                                          select i.PublicKey).FirstOrDefault();
+
+                            if (pubkey == null)
+                                continue;
+
+                            this.FireOnInvoiceStateChanged(pubkey, inv.RHash.ToArray().AsHex(), (InvoiceState)inv.State);
+                            if (inv.State == Lnrpc.Invoice.Types.InvoiceState.Accepted)
+                                SubscribeSingleInvoiceTracking(pubkey, inv.RHash.ToArray().AsHex());
+
+                            walletContext.UPDATE(new TrackingIndex { Id = TackingIndexId.AddInvoice, Value = inv.AddIndex }).SAVE();
+                            walletContext.UPDATE(new TrackingIndex { Id = TackingIndexId.SettleInvoice, Value = inv.SettleIndex }).SAVE();
+                        }
+                    }
+                    catch (RpcException e)
+                    {
+                        TraceEx.TraceInformation($"Subscribe Invoices streaming was {e.Status.StatusCode.ToString()} from the client!");
+                        TraceEx.TraceException(e);
+                    }
+                    catch (Exception ex)
+                    {
+                        TraceEx.TraceException(ex);
+                    }
+                }
+
+                TraceEx.TraceInformation("SubscribeInvoices Thread Joining");
+
+            });
+        }
 
         trackPaymentsCancallationTokenSource = new CancellationTokenSource();
         trackPaymentsThread = new Thread(async () =>
@@ -1706,6 +1710,7 @@ public class LNDWalletManager : LNDEventSource
                 TraceEx.TraceInformation("TrackPayments Loop Starting");
                 try
                 {
+                    using var walletContext = walletContextFactory.Create();
                     var stream = LND.TrackPayments(lndConf, cancellationToken: trackPaymentsCancallationTokenSource.Token);
                     while (await stream.ResponseStream.MoveNext(trackPaymentsCancallationTokenSource.Token))
                     {
@@ -1739,6 +1744,7 @@ public class LNDWalletManager : LNDEventSource
             TraceEx.TraceInformation("SubscribeTransactions Thread Starting");
             while (!Stopping)
             {
+                using var walletContext = walletContextFactory.Create();
                 var trackIdxes = new Dictionary<TackingIndexId, ulong>(from idx in walletContext.TrackingIndexes
                                                                        select KeyValuePair.Create(idx.Id, idx.Value));
                 TraceEx.TraceInformation("SubscribeTransactions Loop Starting");
