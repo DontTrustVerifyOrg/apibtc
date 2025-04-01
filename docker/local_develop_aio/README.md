@@ -13,8 +13,6 @@ Software:
 
 # Environment setup on local machine
 
-Setup commands are based on Linux, on Windows some of the commandline commands might need to be adjusted. Generally the services itself work the same on both platforms.
-
 1. Build services
 
 ```bash

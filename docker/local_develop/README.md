@@ -13,52 +13,33 @@ Software:
 
 # Environment setup on local machine
 
-Setup commands are based on Linux, on Windows some of the commandline commands might need to be adjusted. Generally the services itself work the same on both platforms.
-
-Build docker images
+1. Build services
 
 ```bash
 docker compose build
 ```
 
-Run bitcoin node
-
-```bash
-docker compose up -d btc
-```
-
-Run lightning node
-
-    Create lightning wallet, afterwards provide password from `conf.local/lnd/password.txt` when asked, then generate or provide a mnemonic according to the instructions.
-
-- On linux:
-
-```bash
-docker run -it --rm --name api_btc_lnd -e INIT=1 -v $(pwd)/data/lnd:/app/lnd:Z -v $(pwd)/../conf.local/lnd/lnd.conf:/app/lnd/lnd.conf:ro --network apibtc apibtc-lnd:latest
-```
-
-- On Windows:
-
-    Make sure to adjust the paths according to your local setup.
-
-Create btc test wallet
-
-```bash
-docker exec -it apibtc-btc-1 bitcoin-cli -datadir=/app/data createwallet "testwallet"
-```
-
-[Regtest only] Mine 10 blocks to synchronize the Lightning Node
-
-```bash
-docker exec -it apibtc-btc-1 bitcoin-cli -datadir=/app/data -generate 10
-```
-
-
-Start rest of the services from compose
+2. Run stack
 
 ```bash
 docker compose up -d
 ```
+
+3. Wait for the stack to be ready, you can look at the logs to see the progress. You can check for the message in logs `Make sure the lightning node is initialized ...`
+
+```bash
+docker compose logs -f
+```
+
+4. Create lightning wallet, provided password has to be the same as in `conf.local/lnd/password.txt`, then generate or provide a mnemonic according to the instructions.
+
+```bash
+docker exec -it apibtc-lnd-1 lncli -n regtest --lnddir=/app/lnd --rpcserver=localhost:11009 create
+```
+
+![caution] Make sure to save the mnemonic, it will be needed to restore the wallet later. 
+
+
 
 # Stop services
 

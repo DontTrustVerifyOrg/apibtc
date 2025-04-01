@@ -45,7 +45,6 @@ else
 fi
 
 
-echo
-echo "Starting: dotnet $1 --basedir=/app/apibtc"
-echo
-dotnet $1 --basedir=/app/apibtc
+echo "Starting: dotnet $1 --basedir=/app/$3"
+cd /usr/local/$3
+dotnet $1 --basedir=/app/$3

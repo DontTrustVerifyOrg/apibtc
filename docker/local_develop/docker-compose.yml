@@ -42,7 +42,7 @@ services:
   api:
     build:
       context: ../..
-      dockerfile: docker/api/build_api_btc.Dockerfile
+      dockerfile: docker/apibtc/build_apibtc.Dockerfile
 
     restart: on-failure
     ports:
@@ -50,7 +50,25 @@ services:
     volumes:
       - ./data/wallet/:/app/apibtc/:Z
       - ./conf.local/wallet/wallet.conf:/app/apibtc/wallet.conf:ro
-      - ./data/lnd/:/app/lnd/:Z
+      - ./data/lnd/:/app/lnd/:ro
+      - ./data/btc:/app/btc/:ro
+    logging:
+      driver: local
+      options:
+        max-size: "100m"
+
+  db:
+    image: postgres:17.4-bookworm
+    restart: on-failure
+    ports:
+      - 5432:5432
+    environment:
+      - POSTGRES_PASSWORD=apibtc
+      - POSTGRES_USER=apibtc
+      - POSTGRES_DB=apibtc
+      - PGDATA=/var/lib/postgresql/data/pgdata  
+    volumes:
+      - ./data/postgres:/var/lib/postgresql/data:Z
     logging:
       driver: local
       options:

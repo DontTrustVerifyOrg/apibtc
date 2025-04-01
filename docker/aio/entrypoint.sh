@@ -26,7 +26,7 @@ else
 fi
 
 echo "Starting: bitcoind -datadir=/app/btc -printtoconsole"
-bitcoind -datadir=/app/btc &
+bitcoind -datadir=/app/btc -printtoconsole &
 
 echo "Checking if wallet exists..."
 
@@ -37,8 +37,6 @@ while ! bitcoin-cli -datadir=/app/btc getblockchaininfo > /dev/null 2>&1; do
 done
 
 sleep 10
-
-bitcoin-cli -datadir=/app/btc listwallets
 
 # Check if wallet already exists
 if [ -d "/app/btc/regtest/wallets/testwallet" ]; then
