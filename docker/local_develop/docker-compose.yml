@@ -68,7 +68,7 @@ services:
       - POSTGRES_DB=apibtc
       - PGDATA=/var/lib/postgresql/data/pgdata  
     volumes:
-      - ./data/postgres:/var/lib/postgresql/data:Z
+      - ./data/db:/var/lib/postgresql/data:Z
     logging:
       driver: local
       options:

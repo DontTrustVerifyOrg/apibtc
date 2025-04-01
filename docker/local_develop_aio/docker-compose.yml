@@ -1,11 +1,11 @@
 services:
 
-  apibtc_aio:
+  apibtc-aio:
     build:
       context: ../..
       dockerfile: docker/aio/build_aio.Dockerfile
 
-    container_name: apibtc_aio
+    container_name: apibtc-aio
     restart: on-failure
     environment:
       - POSTGRES_PASSWORD=apibtc
@@ -30,7 +30,7 @@ services:
       - ./data/btc:/app/btc/:Z
       - ./data/lnd:/app/lnd/:Z
       - ./data/wallet/:/app/apibtc/:Z
-      - ./data/postgres:/var/lib/postgresql/data/pgdata:Z
+      - ./data/db:/var/lib/postgresql/data/pgdata:Z
     logging:
       driver: local
       options:
