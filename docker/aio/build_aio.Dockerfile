@@ -25,10 +25,7 @@ RUN dotnet publish -c Release -o out ./WalletAPI.csproj
 
 
 
-# FROM debian:12.7
-# FROM mcr.microsoft.com/dotnet/aspnet:8.0
-FROM postgres:17
-
+FROM postgres:17.4-bookworm
 
 RUN apt-get update && apt-get install -y gettext procps curl lsb-release
 RUN curl -L https://dot.net/v1/dotnet-install.sh -o dotnet-install.sh
@@ -44,11 +41,11 @@ RUN ln -s /app/lnd /lnd
 
 COPY --from=build_btc_lnd /app/btc/bin/* /usr/local/bin/
 COPY --from=build_btc_lnd /app/lnd/* /usr/local/bin/
-COPY --from=build_api /app/net/WalletAPI/out /app/api/
+COPY --from=build_api /app/net/WalletAPI/out /usr/local/walletapi/
 
 COPY ./docker/btc/bitcoin.conf.template /app/bitcoin.conf.template
 COPY ./docker/lnd/lnd.conf.template /app/lnd.conf.template
-COPY ./docker/api/wallet.conf.template /app/wallet.conf.template
+COPY ./docker/apibtc/wallet.conf.template /app/wallet.conf.template
 
 COPY ./docker/aio/entrypoint.sh /app/entrypoint.sh
 RUN chmod +x /app/entrypoint.sh

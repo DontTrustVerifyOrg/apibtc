@@ -4,12 +4,6 @@ set -e
 
 docker-entrypoint.sh postgres &
 
-
-# Start PostgreSQL service
-# echo "initialized"
-
-# sleep infinity
-
 if [ -e /app/btc/bitcoin.conf ]; then
     echo "Using existing configuration file"
 else
@@ -24,20 +18,15 @@ else
     envsubst < /app/lnd.conf.template > /app/lnd/lnd.conf
 fi
 
-if [ -e /app/data/wallet.conf ]; then
+if [ -e /app/apibtc/wallet.conf ]; then
     echo "Using existing configuration file"
 else
     echo "Creating configuration file from template and environment variables"
-    envsubst < /app/wallet.conf.template > /app/data/wallet.conf
+    envsubst < /app/wallet.conf.template > /app/apibtc/wallet.conf
 fi
 
-
-
-echo
 echo "Starting: bitcoind -datadir=/app/btc -printtoconsole"
-echo
 bitcoind -datadir=/app/btc &
-
 
 echo "Checking if wallet exists..."
 
@@ -64,11 +53,6 @@ while ! bitcoin-cli -datadir=/app/btc getbalances > /dev/null 2>&1; do
     echo "Waiting for bitcoin wallet to be ready..."
     sleep 5
 done
-
-
-# echo "asdfasdf"
-# sleep infinity
-
 
 if [ ! -f "/app/lnd/data/chain/bitcoin/regtest/wallet.db" ]; then
     echo "Starting in init mode: lnd --lnddir=/app/lnd"
@@ -111,6 +95,6 @@ done
 echo "PostgreSQL database is ready!"
 
 echo "Starting API..."
-cd /app/api
-/root/.dotnet/dotnet WalletAPI.dll --basedir=/app/data
+cd /usr/local/walletapi
+/root/.dotnet/dotnet WalletAPI.dll --basedir=/app/apibtc
 

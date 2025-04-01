@@ -4,7 +4,7 @@ set -e
 
 if [ -n "$GITHUB_CONFIG_URL" ] && [ -n "$GITHUB_USERNAME" ] && [ -n "$GITHUB_TOKEN" ]; then
     echo "Downloading configuration file from GitHub"
-    curl -sS --fail -u $GITHUB_USERNAME:$GITHUB_TOKEN -o /app/data/$2 $GITHUB_CONFIG_URL
+    curl -sS --fail -u $GITHUB_USERNAME:$GITHUB_TOKEN -o /app/apibtc/$2 $GITHUB_CONFIG_URL
     echo "Configuration file downloaded successfully from GitHub"
 
     if [ -n "$AZURE_KEY_VAULT_URL" ] && [ -n "$AZURE_CLIENT_ID" ] && [ -n "$AZURE_CLIENT_SECRET" ] && [ -n "$AZURE_TENANT_ID" ]; then
@@ -32,20 +32,20 @@ if [ -n "$GITHUB_CONFIG_URL" ] && [ -n "$GITHUB_USERNAME" ] && [ -n "$GITHUB_TOK
                 fi
                 echo "$var_name fetched successfully from Azure Key Vault"
                 # Replace the placeholder with the actual value
-                sed -i "s|\${$var_name}|$(echo "$var_value" | sed 's/[&/\]/\\&/g')|g" /app/data/$2
+                sed -i "s|\${$var_name}|$(echo "$var_value" | sed 's/[&/\]/\\&/g')|g" /app/apibtc/$2
             fi
-        done < /app/data/$2
+        done < /app/apibtc/$2
         
     fi
-elif [ -e /app/data/$2 ]; then
+elif [ -e /app/apibtc/$2 ]; then
     echo "Using existing configuration file"
 else
     echo "Creating configuration file from template and environment variables"
-    envsubst < /app/$2.template > /app/data/$2
+    envsubst < /app/$2.template > /app/apibtc/$2
 fi
 
 
 echo
-echo "Starting: dotnet $1 --basedir=/app/data"
+echo "Starting: dotnet $1 --basedir=/app/apibtc"
 echo
-dotnet $1 --basedir=/app/data
+dotnet $1 --basedir=/app/apibtc

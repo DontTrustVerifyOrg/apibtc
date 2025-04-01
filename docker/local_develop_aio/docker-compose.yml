@@ -1,34 +1,36 @@
-name: apibtc
-
 services:
 
-  aio:
+  apibtc_aio:
     build:
       context: ../..
       dockerfile: docker/aio/build_aio.Dockerfile
 
+    container_name: apibtc_aio
     restart: on-failure
     environment:
       - POSTGRES_PASSWORD=apibtc
       - POSTGRES_USER=apibtc
       - POSTGRES_DB=apibtc
+      - PGDATA=/var/lib/postgresql/data/pgdata
     ports:
       - 18332:18332
       - 28332:28332
       - 28333:28333
       - 9734:9734
       - 11009:11009
+      - 5432:5432
       - 8180:8180
       - 7101:80
     volumes:
-      # - ./data/btc:/app/btc/:Z
-      # - ./data/lnd:/app/lnd/:Z
-      # - ./data/wallet/:/app/data/:Z
-
       - ./conf.local/lnd/lnd.conf:/app/lnd/lnd.conf:ro
       - ./conf.local/lnd/password.txt:/secret/password.txt:ro
       - ./conf.local/btc/bitcoin.conf:/app/btc/bitcoin.conf:ro
-      - ./conf.local/wallet/wallet.conf:/app/data/wallet.conf:ro
+      - ./conf.local/wallet/wallet.conf:/app/apibtc/wallet.conf:ro
+      
+      - ./data/btc:/app/btc/:Z
+      - ./data/lnd:/app/lnd/:Z
+      - ./data/wallet/:/app/apibtc/:Z
+      - ./data/postgres:/var/lib/postgresql/data/pgdata:Z
     logging:
       driver: local
       options:

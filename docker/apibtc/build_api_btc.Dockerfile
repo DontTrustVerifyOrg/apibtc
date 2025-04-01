@@ -9,7 +9,7 @@ RUN dotnet publish -c Release -o out ./WalletAPI.csproj
 FROM mcr.microsoft.com/dotnet/aspnet:8.0
 RUN apt update && apt install -y gettext jq curl
 WORKDIR /app
-RUN mkdir -p /app/data/
+RUN mkdir -p /app/apibtc/
 COPY ./docker/api/entrypoint.sh /app/entrypoint.sh
 COPY --from=build /app/net/WalletAPI/out .
 COPY ./docker/api/wallet.conf.template /app/wallet.conf.template

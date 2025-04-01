@@ -4,7 +4,7 @@ set -e
 
 if [ -n "$GITHUB_CONFIG_URL" ] && [ -n "$GITHUB_USERNAME" ] && [ -n "$GITHUB_TOKEN" ]; then
     echo "Downloading configuration file from GitHub"
-    curl -sS --fail -u $GITHUB_USERNAME:$GITHUB_TOKEN -o /app/data/lnd.conf $GITHUB_CONFIG_URL
+    curl -sS --fail -u $GITHUB_USERNAME:$GITHUB_TOKEN -o /app/lnd/lnd.conf $GITHUB_CONFIG_URL
     echo "Configuration file downloaded successfully from GitHub"
 
     if [ -n "$AZURE_KEY_VAULT_URL" ] && [ -n "$AZURE_CLIENT_ID" ] && [ -n "$AZURE_CLIENT_SECRET" ] && [ -n "$AZURE_TENANT_ID" ]; then
@@ -32,15 +32,15 @@ if [ -n "$GITHUB_CONFIG_URL" ] && [ -n "$GITHUB_USERNAME" ] && [ -n "$GITHUB_TOK
                 fi
                 echo "$var_name fetched successfully from Azure Key Vault"
                 # Replace the placeholder with the actual value
-                sed -i "s|\${$var_name}|$(echo "$var_value" | sed 's/[&/\]/\\&/g')|g" /app/data/lnd.conf
+                sed -i "s|\${$var_name}|$(echo "$var_value" | sed 's/[&/\]/\\&/g')|g" /app/lnd/lnd.conf
             fi
-        done < /app/data/lnd.conf
+        done < /app/lnd/lnd.conf
     fi
-elif [ -e /app/data/lnd.conf ]; then
+elif [ -e /app/lnd/lnd.conf ]; then
     echo "Using existing configuration file"
 else
     echo "Creating configuration file from template and environment variables"
-    envsubst < /app/lnd.conf.template > /app/data/lnd.conf
+    envsubst < /app/lnd.conf.template > /app/lnd/lnd.conf
 fi
 
 
@@ -81,18 +81,18 @@ fi
 
 echo
 if [ -v INIT ]; then
-    echo "Starting in init mode: lnd --lnddir=/app/data"
+    echo "Starting in init mode: lnd --lnddir=/app/lnd"
     echo
-    lnd --lnddir=/app/data &
-    while ! lncli -n regtest --lnddir=/app/data --rpcserver=localhost:11009 state > /dev/null 2>&1; do
+    lnd --lnddir=/app/lnd &
+    while ! lncli -n regtest --lnddir=/app/lnd --rpcserver=localhost:11009 state > /dev/null 2>&1; do
         sleep 1
         echo "Waiting for lightning node to be ready..."
     done
     echo "Lightning wallet creation"
-    lncli -n regtest --lnddir=/app/data --rpcserver=localhost:11009 create
+    lncli -n regtest --lnddir=/app/lnd --rpcserver=localhost:11009 create
 else
-    echo "Starting: lnd --lnddir=/app/data --wallet-unlock-password-file=/secret/password.txt"
+    echo "Starting: lnd --lnddir=/app/lnd --wallet-unlock-password-file=/secret/password.txt"
     echo
-    lnd --lnddir=/app/data --wallet-unlock-password-file=/secret/password.txt
+    lnd --lnddir=/app/lnd --wallet-unlock-password-file=/secret/password.txt
 fi
 

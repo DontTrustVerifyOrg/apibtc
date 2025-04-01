@@ -13,8 +13,8 @@ services:
       - 28332:28332
       - 28333:28333
     volumes:
-      - ./data/btc:/app/data/:Z
-      - ./conf.local/btc/bitcoin.conf:/app/data/bitcoin.conf:ro
+      - ./data/btc:/app/btc/:Z
+      - ./conf.local/btc/bitcoin.conf:/app/btc/bitcoin.conf:ro
     logging:
       driver: local
       options:
@@ -31,8 +31,8 @@ services:
       - 11009:11009
       - 8180:8180
     volumes:
-      - ./data/lnd:/app/data/:Z
-      - ./conf.local/lnd/lnd.conf:/app/data/lnd.conf:ro
+      - ./data/lnd:/app/lnd/:Z
+      - ./conf.local/lnd/lnd.conf:/app/lnd/lnd.conf:ro
       - ./conf.local/lnd/password.txt:/secret/password.txt:ro
     logging:
       driver: local
@@ -48,9 +48,9 @@ services:
     ports:
       - 7101:80
     volumes:
-      - ./data/wallet/:/app/data/:Z
-      - ./conf.local/wallet/wallet.conf:/app/data/wallet.conf:ro
-      - ./data/lnd/:/lnd/:Z
+      - ./data/wallet/:/app/apibtc/:Z
+      - ./conf.local/wallet/wallet.conf:/app/apibtc/wallet.conf:ro
+      - ./data/lnd/:/app/lnd/:Z
     logging:
       driver: local
       options:

@@ -34,7 +34,7 @@ Run lightning node
 - On linux:
 
 ```bash
-docker run -it --rm --name api_btc_lnd -e INIT=1 -v $(pwd)/data/lnd:/app/data:Z -v $(pwd)/../conf.local/lnd/lnd.conf:/app/data/lnd.conf:ro --network apibtc apibtc-lnd:latest
+docker run -it --rm --name api_btc_lnd -e INIT=1 -v $(pwd)/data/lnd:/app/lnd:Z -v $(pwd)/../conf.local/lnd/lnd.conf:/app/lnd/lnd.conf:ro --network apibtc apibtc-lnd:latest
 ```
 
 - On Windows:
