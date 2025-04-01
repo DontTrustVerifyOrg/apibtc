@@ -19,7 +19,7 @@ Software:
 docker compose build
 ```
 
-2. Run stack
+2. Run stack (do not worry about the `apibtc-api-1` container restarting, it is expected. It will start up successfully after finishing the step 4.)
 
 ```bash
 docker compose up -d
@@ -31,7 +31,7 @@ docker compose up -d
 docker compose logs -f
 ```
 
-4. Create lightning wallet, provided password has to be the same as in `conf.local/lnd/password.txt`, then generate or provide a mnemonic according to the instructions.
+4. Create lightning wallet, provided password has to be the same as in `conf.local/lnd/password.txt`, then generate or provide a mnemonic according to the instructions
 
 ```bash
 docker exec -it apibtc-lnd-1 lncli -n regtest --lnddir=/app/lnd --rpcserver=localhost:11009 create
@@ -50,25 +50,25 @@ docker compose down
 # Synchronize the Lightning Node
 
 ```bash
-docker exec -it bitcoin bitcoin-cli -datadir=/app/data -generate 10
+docker exec -it apibtc-btc-1 bitcoin-cli -datadir=/app/data -generate 10
 ```
 
 # Bitcon node management
 
 ```bash
-docker exec -it bitcoin bitcoin-cli -datadir=/app/data <command>
+docker exec -it apibtc-btc-1 bitcoin-cli -datadir=/app/data <command>
 ```
 
 #### List of commands
 
 ```bash
-docker exec -it bitcoin bitcoin-cli -datadir=/app/data help
+docker exec -it apibtc-btc-1 bitcoin-cli -datadir=/app/data help
 ```
 
 #### More efficient way to interact with bitcoin management
 
 ```bash
-alias bcli="docker exec -it bitcoin bitcoin-cli -datadir=/app/data"
+alias bcli="docker exec -it apibtc-btc-1 bitcoin-cli -datadir=/app/data"
 bcli <command>
 ```
 
@@ -76,19 +76,19 @@ bcli <command>
 # Lightning node management
 
 ```bash
-docker exec -it lightning_node lncli -n regtest --lnddir=/app/data --rpcserver=localhost:11009 <command>
+docker exec -it apibtc-lnd-1 lncli -n regtest --lnddir=/app/data --rpcserver=localhost:11009 <command>
 ```
 
 #### List of commands
 
 ```bash
-docker exec -it lightning_node lncli -n regtest --lnddir=/app/data --rpcserver=localhost:11009 help
+docker exec -it apibtc-lnd-1 lncli -n regtest --lnddir=/app/data --rpcserver=localhost:11009 help
 ```
 
 #### More efficient way to interact with lightning node management
 
 ```bash
-alias lcli="docker exec -it lightning_node lncli -n regtest --lnddir=/app/data --rpcserver=localhost:11009"
+alias lcli="docker exec -it apibtc-lnd-1 lncli -n regtest --lnddir=/app/data --rpcserver=localhost:11009"
 lcli <command>
 ```
 
