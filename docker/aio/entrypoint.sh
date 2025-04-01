@@ -102,6 +102,13 @@ while ! lncli -n regtest --lnddir=/app/lnd --rpcserver=localhost:11009 getinfo >
     sleep 5
 done
 
+# Check if PostgreSQL is ready with our database and user
+echo "Checking if PostgreSQL database is ready..."
+while ! PGPASSWORD=$POSTGRES_PASSWORD psql -h localhost -U $POSTGRES_USER -d $POSTGRES_DB -c "SELECT 1" > /dev/null 2>&1; do
+    echo "Waiting for PostgreSQL database to be ready with user $POSTGRES_USER and database $POSTGRES_DB..."
+    sleep 5
+done
+echo "PostgreSQL database is ready!"
 
 echo "Starting API..."
 cd /app/api
