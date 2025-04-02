@@ -3,30 +3,32 @@
 set -e
 
 docker-entrypoint.sh postgres &
+POSTGRES_PID=$!
 
-if [ -e /app/btc/bitcoin.conf ]; then
-    echo "Using existing configuration file"
+if [ -f /app/btc/bitcoin.conf ]; then
+    echo "Using provided bitcoin configuration file"
 else
-    echo "Creating configuration file from template and environment variables"
-    envsubst < /app/bitcoin.conf.template > /app/btc/bitcoin.conf
+    echo "Bitcoin configuration file not provided, exiting..."
+    exit 1
 fi
 
-if [ -e /app/lnd/lnd.conf ]; then
-    echo "Using existing configuration file"
+if [ -f /app/lnd/lnd.conf ]; then
+    echo "Using provided lightning node configuration file"
 else
-    echo "Creating configuration file from template and environment variables"
-    envsubst < /app/lnd.conf.template > /app/lnd/lnd.conf
+    echo "Lightning node configuration file not provided, exiting..."
+    exit 1
 fi
 
-if [ -e /app/apibtc/wallet.conf ]; then
-    echo "Using existing configuration file"
+if [ -f /app/apibtc/wallet.conf ]; then
+    echo "Using provided wallet configuration file"
 else
-    echo "Creating configuration file from template and environment variables"
-    envsubst < /app/wallet.conf.template > /app/apibtc/wallet.conf
+    echo "Wallet configuration file not provided, exiting..."
+    exit 1
 fi
 
 echo "Starting: bitcoind -datadir=/app/btc -printtoconsole"
 bitcoind -datadir=/app/btc -printtoconsole &
+BTC_PID=$!
 
 echo "Checking if wallet exists..."
 
@@ -78,6 +80,7 @@ fi
 
 echo "Starting lightning node with unlocked wallet..."
 lnd --lnddir=/app/lnd --wallet-unlock-password-file=/secret/password.txt &
+LND_PID=$!
 
 while ! lncli -n regtest --lnddir=/app/lnd --rpcserver=localhost:11009 getinfo > /dev/null 2>&1; do
     echo "Waiting for lightning node to be ready..."
@@ -94,5 +97,10 @@ echo "PostgreSQL database is ready!"
 
 echo "Starting API..."
 cd /usr/local/walletapi
-/root/.dotnet/dotnet WalletAPI.dll --basedir=/app/apibtc
+/root/.dotnet/dotnet WalletAPI.dll --basedir=/app/apibtc &
+DOTNET_PID=$!
+
+# Wait for all processes to complete
+echo "All services started. Waiting for processes to complete..."
+wait $POSTGRES_PID $BTC_PID $LND_PID $DOTNET_PID
 

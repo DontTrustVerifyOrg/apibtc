@@ -30,7 +30,7 @@ jobs:
         uses: docker/build-push-action@v4
         with:
           context: ./
-          file: ./docker/api/build_api_btc.Dockerfile
+          file: ./docker/apibtc/build_apibtc.Dockerfile
           push: true
           tags: awazcognitum/apibtc:latest
 
