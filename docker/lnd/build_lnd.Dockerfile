@@ -21,7 +21,7 @@ RUN apt-get update && apt-get install -y gettext jq curl procps
 
 WORKDIR /app
 
-RUN mkdir -p /app/$APP_DIR
+RUN mkdir -p /app/$APP_DIR /secret
 
 COPY --from=build /app/lnd/* /usr/local/bin/
 COPY ./docker/lnd/lnd.conf.template /app/${APP_CFG}.template
