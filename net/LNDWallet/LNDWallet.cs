@@ -1109,7 +1109,7 @@ public class LNDAccountManager
                               where inv.PaymentHash == paymentHash
                               select inv).FirstOrDefault();
 
-            if (selfHodlInvoice == null)
+            if (selfClsInv == null)
                 throw new LNDWalletException(LNDWalletErrorCode.UnknownInvoice);
 
             var internalPayment = (from pay in walletContext.InternalPayments
