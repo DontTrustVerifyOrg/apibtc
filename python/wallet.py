@@ -8,10 +8,6 @@ import uuid
 import base64
 from enum import Enum
 from typing import Any, Dict, Optional, Union
-import logging
-import sys
-from signalrcore.hub_connection_builder import HubConnectionBuilder
-import urllib.parse
 
 class LNDWalletErrorCode(Enum):
     Ok = 0
@@ -99,26 +95,6 @@ class ResolutionOutcome(Enum):
     FirstStage = 4
     Timeout = 5
 
-        
-class WalletUpdateStream:
-    def __init__(self, w, hub_connection):
-        self.hub_connection = hub_connection
-        self.w = w
-
-    def stop(self):
-        """
-        Stops the invoice update stream and closes the connection.
-        """
-        self.hub_connection.stop()
-
-    def stream(self,next,bye):
-        self.hub_connection.stream(
-            "StreamAsync",
-            [self.w._create_authtoken().decode('utf-8')]).subscribe({
-                "next": next,
-                "complete": lambda x: bye(False, x),
-                "error": lambda x: bye(True, x)
-            })
             
 class Wallet:
     def __init__(self, base_url: str, privkey: str):
@@ -535,61 +511,3 @@ class Wallet:
             error_message = response_json.get('errorMessage', 'An error occurred')
             raise Exception(f"{error_code.name}: {error_message}")
         return response_json.get('value')
-
-    def _start_hub(self, method):
-        """
-        Initiates a stream of updates related to the state of invoices. This allows users to receive real-time notifications about changes in invoice status, such as payments received or cancellations.
-
-        Returns:
-            HubConnection object for managing the connection and receiving updates
-        """
-        handler = logging.StreamHandler()
-        handler.setLevel(logging.DEBUG)
-        hub_connection = HubConnectionBuilder()\
-            .with_url(self.base_url + "/" + method + "?authtoken="+urllib.parse.quote(self._create_authtoken().decode('utf-8')), options={"verify_ssl": True}) \
-            .configure_logging(logging.DEBUG, socket_trace=True, handler=handler) \
-            .with_automatic_reconnect({
-                    "type": "interval",
-                    "keep_alive_interval": 10,
-                    "intervals": [1, 3, 5, 6, 7, 87, 3]
-                }).build()
-        hub_connection.start()
-        hub_connection.on_open(lambda: print("connection opened and handshake received ready to send messages"))
-        hub_connection.on_close(lambda: print("connection closed"))
-        return hub_connection
-
-    def invoicestateupdates(self):
-        """
-        Starts a stream of updates related to the state of invoices. This allows users to receive real-time notifications about changes in invoice status, such as payments received or cancellations.
-
-        Returns:
-            HubConnection object for managing the connection and receiving updates
-        """
-        return WalletUpdateStream(self,self._start_hub("invoicestateupdates"))
-
-    def paymentstatusupdates(self):
-        """
-        Starts a stream of updates related to the state of invoices. This allows users to receive real-time notifications about changes in invoice status, such as payments received or cancellations.
-
-        Returns:
-            HubConnection object for managing the connection and receiving updates
-        """
-        return WalletUpdateStream(self,self._start_hub("paymentstatusupdates"))    
-
-    def transactionupdates(self):
-        """
-        Starts a stream of updates related to the state of invoices. This allows users to receive real-time notifications about changes in invoice status, such as payments received or cancellations.
-
-        Returns:
-            HubConnection object for managing the connection and receiving updates
-        """
-        return WalletUpdateStream(self,self._start_hub("transactionupdates"))    
-    
-    def payoutstateupdates(self):
-        """
-        Starts a stream of updates related to the state of invoices. This allows users to receive real-time notifications about changes in invoice status, such as payments received or cancellations.
-
-        Returns:
-            HubConnection object for managing the connection and receiving updates
-        """
-        return WalletUpdateStream(self,self._start_hub("payoutstateupdates"))    
