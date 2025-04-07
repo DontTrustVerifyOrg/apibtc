@@ -1,9 +1,8 @@
 name: Build NuGet Packages
 
 on:
-  workflow_dispatch:
-  # push:
-    # branches: [ "main" ]
+  push:
+    branches: [ "main" ]
 
 env:
   DOTNET_SKIP_FIRST_TIME_EXPERIENCE: 1
