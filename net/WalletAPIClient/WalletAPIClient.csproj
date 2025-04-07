@@ -1,8 +1,8 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <PackageId>GigGossip.WalletApi.Client</PackageId>
-    <Version>2.2.2</Version>
+    <PackageId>ApiBtc.Client</PackageId>
+    <Version>0.0.1</Version>
     <Authors>TheHyperlabs</Authors>
     <Company>TheHyperlabs</Company>
     <TargetFramework>net8.0</TargetFramework>
