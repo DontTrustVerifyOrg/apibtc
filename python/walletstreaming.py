@@ -26,10 +26,11 @@ class WalletUpdateStream:
         
 
 class WalletStreaming:
-    def __init__(self, wallet):
+    def __init__(self, wallet, debug=False):
         self.wallet = wallet
         self.base_url = wallet.base_url
         self.pubkey = wallet.pubkey
+        self.debug = debug
 
     def _start_hub(self, method):
         """
@@ -38,11 +39,12 @@ class WalletStreaming:
         Returns:
             HubConnection object for managing the connection and receiving updates
         """
-        handler = logging.StreamHandler()
-        handler.setLevel(logging.DEBUG)
+        if self.debug:
+            handler = logging.StreamHandler()
+            handler.setLevel(logging.DEBUG)
         hub_connection = HubConnectionBuilder()\
             .with_url(self.base_url + "/" + method + "?authtoken="+urllib.parse.quote(self.wallet._create_authtoken().decode('utf-8')), options={"verify_ssl": True}) \
-            .configure_logging(logging.DEBUG, socket_trace=True, handler=handler) \
+            .configure_logging(logging.DEBUG if self.debug else logging.CRITICAL, socket_trace=True, handler=handler if self.debug else None) \
             .with_automatic_reconnect({
                     "type": "interval",
                     "keep_alive_interval": 10,
