@@ -16,7 +16,6 @@
   },
   "dependencies": {
     "@microsoft/signalr": "^8.0.7",
-    "@thehyperlabs/apibtc": "^1.0.0",
     "assert": "^2.1.0",
     "axios": "^1.7.7",
     "bip-schnorr": "^0.6.7",
