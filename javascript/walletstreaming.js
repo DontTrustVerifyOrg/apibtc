@@ -1,4 +1,4 @@
-const signalR = require("@microsoft/signalr");
+import * as signalR from "@microsoft/signalr";
 
 class WalletUpdateStream {
     constructor(wallet, hubConnection) {
@@ -14,7 +14,7 @@ class WalletUpdateStream {
     }
 
     stream(next, bye) {
-        this.hubConnection.stream("StreamAsync", [this.wallet.createAuthtoken()])
+        this.hubConnection.stream("StreamAsync", [this.wallet.create_authtoken()])
             .subscribe({
                 next: next,
                 complete: (x) => bye(false, x),
@@ -26,18 +26,16 @@ class WalletUpdateStream {
 class WalletStreaming {
     constructor(wallet, debug = false) {
         this.wallet = wallet;
-        this.baseUrl = wallet.baseUrl;
+        this.baseUrl = wallet.base_url;
         this.pubkey = wallet.pubkey;
         this.debug = debug;
     }
 
     _startHub(method) {
         /**
-         * Initiates a stream of updates related to the state of invoices. This allows users to receive real-time notifications about changes in invoice status, such as payments received or cancellations.
-         * 
-         * @returns {signalR.HubConnection} HubConnection object for managing the connection and receiving updates
+         * Initiates a stream of updates related to the state of invoices.
          */
-        const authToken = encodeURIComponent(this.wallet.createAuthtoken());
+        const authToken = encodeURIComponent(this.wallet.create_authtoken());
         const url = `${this.baseUrl}/${method}?authtoken=${authToken}`;
 
         const hubConnection = new signalR.HubConnectionBuilder()
@@ -60,39 +58,31 @@ class WalletStreaming {
 
     invoicestateupdates() {
         /**
-         * Starts a stream of updates related to the state of invoices. This allows users to receive real-time notifications about changes in invoice status, such as payments received or cancellations.
-         * 
-         * @returns {WalletUpdateStream} object for managing the connection and receiving updates
+         * Starts a stream of updates related to the state of invoices.
          */
         return new WalletUpdateStream(this.wallet, this._startHub("invoicestateupdates"));
     }
 
     paymentstatusupdates() {
         /**
-         * Starts a stream of updates related to the state of invoices. This allows users to receive real-time notifications about changes in invoice status, such as payments received or cancellations.
-         * 
-         * @returns {WalletUpdateStream} object for managing the connection and receiving updates
+         * Starts a stream of updates related to payment status.
          */
         return new WalletUpdateStream(this.wallet, this._startHub("paymentstatusupdates"));
     }
 
     transactionupdates() {
         /**
-         * Starts a stream of updates related to the state of invoices. This allows users to receive real-time notifications about changes in invoice status, such as payments received or cancellations.
-         * 
-         * @returns {WalletUpdateStream} object for managing the connection and receiving updates
+         * Starts a stream of updates related to transactions.
          */
         return new WalletUpdateStream(this.wallet, this._startHub("transactionupdates"));
     }
 
     payoutstateupdates() {
         /**
-         * Starts a stream of updates related to the state of invoices. This allows users to receive real-time notifications about changes in invoice status, such as payments received or cancellations.
-         * 
-         * @returns {WalletUpdateStream} object for managing the connection and receiving updates
+         * Starts a stream of updates related to payouts.
          */
         return new WalletUpdateStream(this.wallet, this._startHub("payoutstateupdates"));
     }
 }
 
-module.exports = { WalletUpdateStream, WalletStreaming };
+export { WalletUpdateStream, WalletStreaming };
