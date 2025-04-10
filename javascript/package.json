@@ -1,5 +1,21 @@
 {
+  "name": "@thehyperlabs/apibtc",
+  "version": "1.0.0",
+  "main": "wallet.js",
+  "author": "thehyperlabs",
+  "license": "MIT",
+  "description": "",
+  "readme": "README.md",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/DontTrustVerifyOrg/apibtc.git"
+  },
+  "publishConfig": {
+    "registry": "https://registry.npmjs.org/",
+    "access": "public"
+  },
   "dependencies": {
+    "@microsoft/signalr": "^8.0.7",
     "assert": "^2.1.0",
     "axios": "^1.7.7",
     "bip-schnorr": "^0.6.7",

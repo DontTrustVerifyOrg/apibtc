@@ -1,5 +1,4 @@
 import logging
-import sys
 import urllib.parse
 
 from signalrcore.hub_connection_builder import HubConnectionBuilder

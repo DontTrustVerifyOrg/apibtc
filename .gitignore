@@ -414,3 +414,5 @@ launchSettings.json
 
 #secrets
 *.secret
+
+docker/local_runner/data/

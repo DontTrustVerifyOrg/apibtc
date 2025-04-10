@@ -1,9 +1,19 @@
 import os
+import sys
+import time
 import json
 import requests
+
+from prompt_toolkit import PromptSession
+from prompt_toolkit.patch_stdout import patch_stdout
+from prompt_toolkit.styles import Style
+from prompt_toolkit.formatted_text import FormattedText
+from prompt_toolkit.shortcuts import print_formatted_text
+
+from walletstreaming import WalletStreaming
+from termcolor import colored
 from wallet import Wallet
 from openai import OpenAI
-from termcolor import colored
 
 from rich.console import Console
 from rich.markdown import Markdown
@@ -58,7 +68,7 @@ class ChatAgent:
             "30. Get payment: Check specific payment details. "
             "You should guide users through these operations, provide relevant information, and handle any errors or issues that may arise. "
             "For any unclear commands or additional information needed, you should ask the user for clarification. Ensure all operations maintain security and accuracy."
-            "Output in markdown format. Use tables to display data. Dont use markdown inside tables."
+            # "Output in markdown format. Use tables to display data. Dont use markdown inside tables."
         )}
     ]
     tools = [
@@ -537,28 +547,141 @@ class ChatAgent:
     def __init__(self, privkey):
         self.theard = self.client.beta.threads.create()
         self.wallet = Wallet(os.environ["BASE_URL"], privkey)
+        self.wallet_streaming = WalletStreaming(self.wallet)
+        self.active_streams = {}
+        self.expected_streams = 4
+        self.start_all_streams()
+
+    def start_invoice_updates(self):
+        if 'invoice_updates' in self.active_streams:
+            return "The invoice update stream is already active"
+        
+        stream = self.wallet_streaming.invoicestateupdates()
+        
+        def on_next(update):
+            print_event("INVOICE UPDATE", update, "ansiyellow")
+
+        def on_complete(is_error, message):
+            if is_error:
+                print(colored(f"\n[INVOICE STREAM ERROR] {message}", "red"))
+            else:
+                print(colored(f"\n[INVOICE STREAM COMPLETED] {message}", "yellow"))
+            if 'invoice_updates' in self.active_streams:
+                del self.active_streams['invoice_updates']
+        
+        stream.stream(on_next, on_complete)
+        self.active_streams['invoice_updates'] = stream
+        return "Invoice update stream started successfully."
+
+    def start_payment_updates(self):
+        if 'payment_updates' in self.active_streams:
+            return "The payment update stream is already active"
+        
+        stream = self.wallet_streaming.paymentstatusupdates()
+        
+        def on_next(update):
+            print_event("PAYMENT UPDATE", update, "ansiyellow")
+
+        def on_complete(is_error, message):
+            if is_error:
+                print(colored(f"\n[PAYMENT STREAM ERROR] {message}", "red"))
+            else:
+                print(colored(f"\n[PAYMENT STREAM COMPLETED] {message}", "yellow"))
+            if 'payment_updates' in self.active_streams:
+                del self.active_streams['payment_updates']
+    
+        stream.stream(on_next, on_complete)
+        self.active_streams['payment_updates'] = stream
+        return "Payment update stream started successfully."
+
+    def start_transaction_updates(self):
+        if 'transaction_updates' in self.active_streams:
+            return "The transaction update stream is already active"
+        
+        stream = self.wallet_streaming.transactionupdates()
+        
+        def on_next(update):
+            print_event("TRANSACTION UPDATE", update, "ansiyellow")
+
+        def on_complete(is_error, message):
+            if is_error:
+                print(colored(f"\n[TRANSACTION STREAM ERROR] {message}", "red"))
+            else:
+                print(colored(f"\n[TRANSACTION STREAM COMPLETED] {message}", "yellow"))
+            if 'transaction_updates' in self.active_streams:
+                del self.active_streams['transaction_updates']
+        
+        stream.stream(on_next, on_complete)
+        self.active_streams['transaction_updates'] = stream
+        return "Transaction update stream started successfully."
+
+    def start_payout_updates(self):
+        if 'payout_updates' in self.active_streams:
+            return "The payout update stream is already active"
+        
+        stream = self.wallet_streaming.payoutstateupdates()
+        
+        def on_next(update):
+            print_event("PAYOUT UPDATE", update, "ansiyellow")
+
+        def on_complete(is_error, message):
+            if is_error:
+                print(colored(f"\n[PAYOUT STREAM ERROR] {message}", "red"))
+            else:
+                print(colored(f"\n[PAYOUT STREAM COMPLETED] {message}", "yellow"))
+            if 'payout_updates' in self.active_streams:
+                del self.active_streams['payout_updates']
+        
+        stream.stream(on_next, on_complete)
+        self.active_streams['payout_updates'] = stream
+        return "Payout update stream started successfully."
+
+    def stop_all_streams(self):
+        if not self.active_streams:
+            return "No active streams to stop"
+        
+        for stream_name, stream in list(self.active_streams.items()):
+            stream.stop()
+            del self.active_streams[stream_name]
+        
+        return "All update streams stopped successfully."
+
+    def start_all_streams(self):
+        streams = []
+        
+        streams.append(self.start_invoice_updates())
+        streams.append(self.start_payment_updates())
+        streams.append(self.start_transaction_updates())
+        streams.append(self.start_payout_updates())
+        
+        return "\n\n".join(streams).join("\n")
+    
+    def wait_for_connections(self, timeout=10):
+        start_time = time.time()
+        while time.time() - start_time < timeout:
+            time.sleep(0.5)
+            if len(self.active_streams) == self.expected_streams:
+                return True
+        
+        print(colored(f"Connection timeout after {timeout} seconds. Some streams may not be active.", "yellow"))
+        return False
 
     def prompt(self, prompt):
         self.messages.append({"role": "user", "content": prompt})
-
         response = self.client.chat.completions.create(
             model = self.GPT_MODEL,
             messages = self.messages,
             tools = self.tools
         )
-
         response_message = response.choices[0].message 
         self.messages.append(response_message)
         tool_calls = response_message.tool_calls
-
         if tool_calls:
             for tool_call in tool_calls: 
                 tool_call_id = tool_call.id
                 tool_function_name = tool_call.function.name
                 tool_query_args = json.loads(tool_call.function.arguments)
-
                 print(">", tool_call)
-
                 if tool_function_name == 'topupandmine6blocks':
                     function_result = self.wallet.topupandmine6blocks(
                         bitcoinAddr = tool_query_args['bitcoinAddr'],
@@ -676,9 +799,7 @@ class ChatAgent:
                     )
                 else:
                     function_result = 'Unknown function.'
-
                 print(">", function_result)
-
                 self.messages.append({
                     "role": "tool", 
                     "tool_call_id": tool_call_id, 
@@ -741,30 +862,44 @@ def print_markdown(markdown_text):
             
         i += 1
 
+def print_event(prefix, update, color="ansiyellow"):
+    print_formatted_text(FormattedText([(color, f"[{prefix}] "),("", str(update)+"\n")]))
 
+def input_with_refresh(session: PromptSession):
+    with patch_stdout():
+        return session.prompt([('class:prompt', 'Prompt: ')], style=Style.from_dict({'prompt': 'ansimagenta'}))
 
 def main():
     try:
+        session = PromptSession()
+
+        os.system('cls' if os.name == 'nt' else 'clear')
         healthcheck = requests.get(url=f"{os.environ['BASE_URL']}/health")
         healthcheck.raise_for_status()
 
-        global privkey
-        if privkey is None:
-            print(colored(f"\nWelcome to the Cryptocurrency Wallet Management Console!\n", "cyan"))
-            privkey = input(colored("Enter your private key: ", "cyan"))
+        # global privkey
+        # if privkey is None:
+        print(colored(f"\nWelcome to the Cryptocurrency Wallet Management Console!\n", "cyan"))
+        privkey = input(colored("Enter your private key: ", "cyan"))
 
+        print(colored("\nInitializing connections...", "cyan"))
         chat_agent = ChatAgent(privkey)
+        chat_agent.wait_for_connections()
+        print(colored("All connections established successfully!\n", "green"))
 
-        while True:
-            user_input = input(colored("\nPrompt:\n", "magenta"))
-            
-            if user_input.lower() in ['exit', 'quit']:
-                print(colored("Exiting the chat. Goodbye!", "red"))
-                break
-            
-            response = chat_agent.prompt(user_input)
-            print(colored("\nAgent:", "green"))
-            print_markdown(response)
+        try:
+            while True:
+                user_input = input_with_refresh(session)
+                
+                if user_input.lower() in ['exit', 'quit']:
+                    print(colored("\nExiting the chat. Goodbye!", "red"))
+                    break
+                
+                response = chat_agent.prompt(user_input)
+                print(colored("\nAgent:", "green"))
+                print(response + "\n")
+        finally:
+            chat_agent.stop_all_streams()
             
     except Exception as e:
         print(colored(f"Could not connect to the server. Please make sure the server is running and accessible.\n{e}", "red"))
