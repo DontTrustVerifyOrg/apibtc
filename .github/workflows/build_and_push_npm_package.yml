@@ -4,6 +4,9 @@ on:
   push:
     branches: [ "main" ]
 
+env:
+  RepoDirectory: ${{ github.workspace }}
+
 jobs:
   build:
     runs-on: ubuntu-latest
