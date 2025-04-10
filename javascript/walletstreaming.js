@@ -1,4 +1,4 @@
-import * as signalR from "@microsoft/signalr";
+const signalR = require("@microsoft/signalr");
 
 class WalletUpdateStream {
     constructor(wallet, hubConnection) {
@@ -95,5 +95,4 @@ class WalletStreaming {
     }
 }
 
-// Eksport klas, aby mogły być używane w innych modułach
-export { WalletUpdateStream, WalletStreaming };
+module.exports = { WalletUpdateStream, WalletStreaming };
