@@ -1,0 +1,39 @@
+[build-system]
+requires = ["setuptools==75.6.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "apibtc"
+version = "1.0.5"
+description = "Python client for interacting with the Hyperlabs Bitcoin API"
+readme = "python/README.md"
+license = { file = "LICENSE" }
+authors = [
+    { name = "thehyperlabs", email = "info@thehyperlabs.com" }
+]
+requires-python = ">=3.8"
+dependencies = [
+    "requests>=2.31.0",
+    "protobuf>=4.25.2",
+    "bip_utils>=2.6.0",
+    "pyschnorr>=0.1.2",
+    "pandas>=2.2.0",
+    "signalrcore>=0.10.0",
+    "prompt_toolkit>=3.0.43",
+    "termcolor>=2.4.0",
+    "openai>=1.17.0",
+    "rich>=13.7.1"
+]
+
+[project.urls]
+Homepage = "https://apibtc.org/"
+Repository = "https://github.com/DontTrustVerifyOrg/apibtc.git"
+
+[tool.setuptools]
+package-dir = { "" = "python" }
+
+[tool.setuptools.packages.find]
+where = ["python"]
+
+[tool.pytest.ini_options]
+python_files = ["wallet_test.py"]

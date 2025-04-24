@@ -1,15 +1,16 @@
 {
   "name": "@thehyperlabs/apibtc",
-  "version": "1.0.2",
+  "version": "1.0.5",
   "main": "index.js",
   "author": "thehyperlabs",
-  "license": "MIT",
+  "license": "Apache-2.0",
   "description": "",
   "readme": "README.md",
   "repository": {
     "type": "git",
-    "url": "https://github.com/DontTrustVerifyOrg/apibtc.git"
+    "url": "git+https://github.com/DontTrustVerifyOrg/apibtc.git"
   },
+  "homepage": "https://apibtc.org/",
   "publishConfig": {
     "registry": "https://registry.npmjs.org/",
     "access": "public"
