@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "apibtc"
-version = "1.0.7"
+version = "1.0.8"
 description = "Python client for interacting with the Hyperlabs Bitcoin API"
 readme = "python/README.md"
 license = { file = "LICENSE" }
@@ -34,6 +34,4 @@ package-dir = { "" = "python" }
 
 [tool.setuptools.packages.find]
 where = ["python"]
-
-[tool.pytest.ini_options]
-python_files = ["wallet_test.py"]
+include = ["apibtc*"]
