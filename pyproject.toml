@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "apibtc"
-version = "1.0.8"
+version = "1.0.9"
 description = "Python client for interacting with the Hyperlabs Bitcoin API"
 readme = "python/README.md"
 license = { file = "LICENSE" }

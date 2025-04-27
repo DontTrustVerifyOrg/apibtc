@@ -1,3 +1,13 @@
+# APIBTC - Current Status
+
+**Please Note:** Currently, our publicly hosted API endpoint is available **exclusively** on the Bitcoin **`regtest`** network for development and testing purposes.
+
+*   **API Documentation (Swagger):** The `regtest` API documentation is available via Swagger [here](https://regtest.apibtc.org/apibtc/swagger/index.html).
+*   **Mainnet Environment:** We do not provide a publicly hosted `mainnet` API endpoint. You can run your own `mainnet` instance using the provided Docker image.
+*   **More Information:** For further details about the project, Docker images, and setup instructions, please visit the main [project website](https://apibtc.org/).
+
+**⚠️ Important:** The public API operates on `regtest`. Do **not** send real Bitcoin (BTC) to any addresses generated or used via this public `regtest` endpoint.
+
 ```python
 from apibtc import Wallet
 from mnemonic import Mnemonic
