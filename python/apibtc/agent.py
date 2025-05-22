@@ -10,9 +10,9 @@ from prompt_toolkit.styles import Style
 from prompt_toolkit.formatted_text import FormattedText
 from prompt_toolkit.shortcuts import print_formatted_text
 
-from walletstreaming import WalletStreaming
+from apibtc.walletstreaming import WalletStreaming
 from termcolor import colored
-from wallet import Wallet
+from apibtc.wallet import Wallet
 from openai import OpenAI
 
 from rich.console import Console

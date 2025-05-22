@@ -1,8 +1,8 @@
 import requests
 from random import randbytes
-import frames_pb2 as frames_pb2
+import apibtc.frames_pb2 as frames_pb2
 import hashlib
-from schnorr_lib import pubkey_gen, schnorr_sign
+from apibtc.schnorr_lib import pubkey_gen, schnorr_sign
 from datetime import datetime
 import uuid
 import base64
