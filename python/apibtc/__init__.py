@@ -1,0 +1,1 @@
+from apibtc.wallet import Wallet
