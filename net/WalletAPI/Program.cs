@@ -15,6 +15,9 @@ using Swashbuckle.AspNetCore.SwaggerGen;
 using TraceExColor;
 using Enum = System.Enum;
 using Type = System.Type;
+using NetworkToolkit;
+using System.Text;
+using System.Threading;
 
 ConsoleLoggerFactory.Initialize(true);
 
@@ -105,27 +108,91 @@ Singlethon.LNDWalletManager = new LNDWalletManager(
 
 Singlethon.LNDWalletManager.OnInvoiceStateChanged += (sender, e) =>
 {
-    foreach (var asyncCom in Singlethon.InvoiceAsyncComQueue4ConnectionId.Values)
-        asyncCom.Enqueue(e);
+    if (Singlethon.InvoiceAsyncComQueue4ConnectionId.TryGetValue(e.PublicKey, out var acomQue))
+        foreach (var asyncCom in acomQue.Values)
+            asyncCom.Enqueue(e);
+
+    if (Singlethon.InvoiceWebhookAsyncComQueue.TryGetValue(new(e.PublicKey, e.InvoiceStateChange.PaymentHash), out var webhook))
+    {
+        webhook.que.Enqueue(e);
+        if (e.InvoiceStateChange.NewState == InvoiceState.Cancelled || e.InvoiceStateChange.NewState == InvoiceState.Settled)
+            Singlethon.InvoiceWebhookAsyncComQueue.TryRemove(new(e.PublicKey, e.InvoiceStateChange.PaymentHash), out _);
+    }
 };
+
+Thread webhookThread = new Thread(async () =>
+{
+    TraceEx.TraceInformation("Webhook Thread Starting");
+    while (true)
+    {
+        TraceEx.TraceInformation("Webhook Loop Starting");
+        try
+        {
+            foreach (var entry in Singlethon.InvoiceWebhookAsyncComQueue)
+            {
+                var (webhookUrl, asyncComQueue) = entry.Value;
+
+                await foreach (var invoiceStateChangedEventArgs in asyncComQueue.DequeueAsync(CancellationToken.None))
+                {
+                    try
+                    {
+                        using var httpClient = new HttpClient();
+                        var payload = JsonSerializer.Serialize(invoiceStateChangedEventArgs);
+                        var content = new StringContent(payload, Encoding.UTF8, "application/json");
+
+                        var response = await httpClient.PostAsync(webhookUrl, content);
+                        if (!response.IsSuccessStatusCode)
+                        {
+                            TraceEx.TraceWarning($"Failed to execute webhook for {entry.Key}. Status: {response.StatusCode}");
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        TraceEx.TraceException(ex);
+                        TraceEx.TraceWarning($"Error executing webhook for {entry.Key}: {ex.Message}");
+                    }
+                }
+            }
+        }
+        catch (Exception ex)
+        {
+            TraceEx.TraceException(ex);
+            TraceEx.TraceWarning($"Error in InvoiceWebhookAsyncComQueue processing: {ex.Message}");
+        }
+
+        await Task.Delay(1000); // Avoid busy looping
+ 
+    }
+    TraceEx.TraceInformation("TrackPayments Thread Joining");
+});
+
 
 Singlethon.LNDWalletManager.OnPaymentStatusChanged += (sender, e) =>
 {
-    foreach (var asyncCom in Singlethon.PaymentAsyncComQueue4ConnectionId.Values)
-        asyncCom.Enqueue(e);
+    if (Singlethon.PaymentAsyncComQueue4ConnectionId.TryGetValue(e.PublicKey, out var acomQue))
+        foreach (var asyncCom in acomQue.Values)
+            asyncCom.Enqueue(e);
 };
 
 Singlethon.LNDWalletManager.OnNewTransactionFound += (sender, e) =>
 {
-    foreach (var asyncCom in Singlethon.TransactionAsyncComQueue4ConnectionId.Values)
-        asyncCom.Enqueue(e);
+    if (Singlethon.TransactionAsyncComQueue4ConnectionId.TryGetValue(e.PublicKey, out var acomQue))
+        foreach (var asyncCom in acomQue.Values)
+            asyncCom.Enqueue(e);
 };
 
 Singlethon.LNDWalletManager.OnPayoutStateChanged += (sender, e) =>
 {
-    foreach (var asyncCom in Singlethon.PayoutAsyncComQueue4ConnectionId.Values)
-        asyncCom.Enqueue(e);
+    if (Singlethon.PayoutAsyncComQueue4ConnectionId.TryGetValue(e.PublicKey, out var acomQue))
+        foreach (var asyncCom in acomQue.Values)
+            asyncCom.Enqueue(e);
 };
+
+
+void SetInvoiceStateWebhook(string pubkey, string paymentHash, string webhook)
+{
+    var hook = Singlethon.InvoiceWebhookAsyncComQueue.GetOrAdd(new(pubkey, paymentHash), (key) => (webhook, new AsyncComQueue<InvoiceStateChangedEventArgs>()));
+}
 
 Singlethon.LNDWalletManager.Start();
 
@@ -200,7 +267,7 @@ app.MapGet("/sendtoaddress", (string authToken, string bitcoinAddr, long satoshi
     {
         if (satoshis <= 0)
             throw new InvalidOperationException("Satoshis must be greater than 0");
-        Singlethon.LNDWalletManager.ValidateAuthToken(authToken, !Singlethon.LNDWalletManager.BitcoinNode.IsRegTest);
+        Singlethon.LNDWalletManager.ValidateAuthToken(authToken, Singlethon.LNDWalletManager.BitcoinNode.IsRegTest ? TokenType.Normal:TokenType.Admin);
         Singlethon.LNDWalletManager.BitcoinNode.SendToAddress(bitcoinAddr, satoshis);
         return new Result();
     }
@@ -259,7 +326,7 @@ app.MapGet("/newbitcoinaddress", (string authToken) =>
 {
     try
     {
-        Singlethon.LNDWalletManager.ValidateAuthToken(authToken, !Singlethon.LNDWalletManager.BitcoinNode.IsRegTest);
+        Singlethon.LNDWalletManager.ValidateAuthToken(authToken, Singlethon.LNDWalletManager.BitcoinNode.IsRegTest ? TokenType.Normal : TokenType.Admin);
         return new Result<string>(Singlethon.LNDWalletManager.BitcoinNode.NewAddress());
     }
     catch (Exception ex)
@@ -285,7 +352,7 @@ app.MapGet("/getbitcoinwalletbalance", (string authToken, int minConf) =>
     {
         if (minConf < 0)
             throw new InvalidOperationException("Blucknum must be greater equal 0");
-        Singlethon.LNDWalletManager.ValidateAuthToken(authToken,!Singlethon.LNDWalletManager.BitcoinNode.IsRegTest);
+        Singlethon.LNDWalletManager.ValidateAuthToken(authToken,Singlethon.LNDWalletManager.BitcoinNode.IsRegTest ? TokenType.Normal : TokenType.Admin);
         return new Result<long>(Singlethon.LNDWalletManager.BitcoinNode.WalletBalance(minConf));
     }
     catch (Exception ex)
@@ -310,7 +377,7 @@ app.MapGet("/getlndwalletbalance", (string authToken) =>
 {
     try
     {
-        Singlethon.LNDWalletManager.ValidateAuthToken(authToken,!Singlethon.LNDWalletManager.BitcoinNode.IsRegTest);
+        Singlethon.LNDWalletManager.ValidateAuthToken(authToken,Singlethon.LNDWalletManager.BitcoinNode.IsRegTest ? TokenType.Normal : TokenType.Admin);
         var ret = Singlethon.LNDWalletManager.GetWalletBalance();
         return new Result<LndWalletBalanceRet>(
             new LndWalletBalanceRet
@@ -345,7 +412,7 @@ app.MapGet("/openreserve", (string authToken, long satoshis) =>
     {
         if (satoshis <= 0)
             throw new InvalidOperationException("Satoshis must be greater than 0");
-        Singlethon.LNDWalletManager.ValidateAuthToken(authToken,!Singlethon.LNDWalletManager.BitcoinNode.IsRegTest);
+        Singlethon.LNDWalletManager.ValidateAuthToken(authToken,Singlethon.LNDWalletManager.BitcoinNode.IsRegTest ? TokenType.Normal : TokenType.Admin);
         return new Result<Guid>(Singlethon.LNDWalletManager.OpenReserve(satoshis));
     }
     catch (Exception ex)
@@ -369,7 +436,7 @@ app.MapGet("/closereserve", (string authToken, Guid reserveId) =>
 {
     try
     {
-        Singlethon.LNDWalletManager.ValidateAuthToken(authToken,!Singlethon.LNDWalletManager.BitcoinNode.IsRegTest);
+        Singlethon.LNDWalletManager.ValidateAuthToken(authToken,Singlethon.LNDWalletManager.BitcoinNode.IsRegTest ? TokenType.Normal : TokenType.Admin);
         Singlethon.LNDWalletManager.CloseReserve(reserveId);
         return new Result();
     }
@@ -395,7 +462,7 @@ app.MapGet("/listorphanedreserves", (string authToken) =>
 {
     try
     {
-        Singlethon.LNDWalletManager.ValidateAuthToken(authToken, !Singlethon.LNDWalletManager.BitcoinNode.IsRegTest);
+        Singlethon.LNDWalletManager.ValidateAuthToken(authToken, Singlethon.LNDWalletManager.BitcoinNode.IsRegTest ? TokenType.Normal : TokenType.Admin);
         return new Result<Guid[]>(Singlethon.LNDWalletManager.ListOrphanedReserves().ToArray());
     }
     catch (Exception ex)
@@ -419,7 +486,7 @@ app.MapGet("/listchannels", (string authToken, bool activeOnly) =>
 {
     try
     {
-        Singlethon.LNDWalletManager.ValidateAuthToken(authToken, !Singlethon.LNDWalletManager.BitcoinNode.IsRegTest);
+        Singlethon.LNDWalletManager.ValidateAuthToken(authToken, Singlethon.LNDWalletManager.BitcoinNode.IsRegTest ? TokenType.Normal : TokenType.Admin);
         return new Result<Lnrpc.Channel[]>(Singlethon.LNDWalletManager.ListChannels(activeOnly).Channels.ToArray());
     }
     catch (Exception ex)
@@ -444,7 +511,7 @@ app.MapGet("/listclosedchannels", (string authToken) =>
 {
     try
     {
-        Singlethon.LNDWalletManager.ValidateAuthToken(authToken, !Singlethon.LNDWalletManager.BitcoinNode.IsRegTest);
+        Singlethon.LNDWalletManager.ValidateAuthToken(authToken, Singlethon.LNDWalletManager.BitcoinNode.IsRegTest ? TokenType.Normal : TokenType.Admin);
         return new Result<Lnrpc.ChannelCloseSummary[]>(Singlethon.LNDWalletManager.ClosedChannels().Channels.ToArray());
     }
     catch (Exception ex)
@@ -643,7 +710,7 @@ app.MapGet("/addinvoice", (string authToken, long satoshis, string memo, long ex
             throw new InvalidOperationException("Satoshis must be greater equal 0");
         if (expiry < 0)
             throw new InvalidOperationException("Expiry must be greater equal 0");
-        return new Result<InvoiceRecord>(Singlethon.LNDWalletManager.ValidateAuthTokenAndGetAccount(authToken).CreateNewClassicInvoice(satoshis, memo, expiry));
+        return new Result<InvoiceRecord>(Singlethon.LNDWalletManager.ValidateAuthTokenAndGetAccount(authToken, TokenType.LongTerm).CreateNewClassicInvoice(satoshis, memo, expiry));
     }
     catch (Exception ex)
     {
@@ -656,7 +723,7 @@ app.MapGet("/addinvoice", (string authToken, long satoshis, string memo, long ex
 .WithDescription("Creates and returns a new Lightning Network invoice for receiving payments. This endpoint allows users to generate payment requests with customizable amount, memo, and expiration time. The created invoice can be shared with payers to facilitate Lightning Network transactions.")
 .WithOpenApi(g =>
 {
-    g.Parameters[0].Description = "Authorization token for authentication and access control. This token, generated using Schnorr Signatures for secp256k1, encodes the user's public key and session identifier from the GetToken function.";
+    g.Parameters[0].Description = "Authorization token for authentication and access control. This token, generated using Schnorr Signatures for secp256k1, encodes the user's public key and session identifier from the GetToken function. This call supports long living tokens.";
     g.Parameters[1].Description = "The amount of the invoice in satoshis (1 BTC = 100,000,000 satoshis). Must be a positive integer representing the exact payment amount requested.";
     g.Parameters[2].Description = "An optional memo or description for the invoice. This can be used to provide additional context or details about the payment to the payer. The memo will be included in the encoded payment request.";
     g.Parameters[3].Description = "The expiration time for the payment request, in seconds. After this duration, the invoice will no longer be valid for payment.";
@@ -672,7 +739,7 @@ app.MapGet("/addhodlinvoice", (string authToken, long satoshis, string hash, str
             throw new InvalidOperationException("Satoshis must be greater equal 0");
         if (expiry < 0)
             throw new InvalidOperationException("Expiry must be greater equal 0");
-        return new Result<InvoiceRecord>(Singlethon.LNDWalletManager.ValidateAuthTokenAndGetAccount(authToken).CreateNewHodlInvoice(satoshis, memo, hash.AsBytes(), expiry));
+        return new Result<InvoiceRecord>(Singlethon.LNDWalletManager.ValidateAuthTokenAndGetAccount(authToken, TokenType.LongTerm ).CreateNewHodlInvoice(satoshis, memo, hash.AsBytes(), expiry));
     }
     catch (Exception ex)
     {
@@ -685,7 +752,7 @@ app.MapGet("/addhodlinvoice", (string authToken, long satoshis, string hash, str
 .WithDescription("Creates and returns a new Lightning Network HODL invoice. HODL invoices enable escrow-like functionalities by allowing the recipient to claim the payment only when a specific preimage is revealed using the SettleInvoice method. This preimage must be provided by the payer or a trusted third party. This mechanism provides an additional layer of security and enables conditional payments in the Lightning Network, making it suitable for implementing escrow accounts and other advanced payment scenarios.")
 .WithOpenApi(g =>
 {
-    g.Parameters[0].Description = "Authorization token for authentication and access control. This token, generated using Schnorr Signatures for secp256k1, encodes the user's public key and session identifier from the GetToken function.";
+    g.Parameters[0].Description = "Authorization token for authentication and access control. This token, generated using Schnorr Signatures for secp256k1, encodes the user's public key and session identifier from the GetToken function. This call supports long living tokens.";
     g.Parameters[1].Description = "The amount of the invoice in satoshis (1 BTC = 100,000,000 satoshis). Must be a positive integer representing the exact payment amount requested.";
     g.Parameters[2].Description = "The SHA-256 hash of the preimage. The payer or a trusted third party must provide the corresponding preimage, which will be used with the SettleInvoice method to claim the payment, enabling escrow-like functionality.";
     g.Parameters[3].Description = "An optional memo or description for the invoice. This can be used to provide additional context or details about the payment or escrow conditions to the payer. The memo will be included in the encoded payment request.";
@@ -698,7 +765,7 @@ app.MapGet("/decodeinvoice", (string authToken, string paymentRequest) =>
 {
     try
     {
-        return new Result<PaymentRequestRecord>(Singlethon.LNDWalletManager.ValidateAuthTokenAndGetAccount(authToken).DecodeInvoice(paymentRequest));
+        return new Result<PaymentRequestRecord>(Singlethon.LNDWalletManager.ValidateAuthTokenAndGetAccount(authToken, TokenType.LongTerm).DecodeInvoice(paymentRequest));
     }
     catch (Exception ex)
     {
@@ -711,7 +778,7 @@ app.MapGet("/decodeinvoice", (string authToken, string paymentRequest) =>
 .WithDescription("This endpoint decodes a Lightning Network invoice (also known as a payment request) and returns detailed information about its contents. It provides insights into the payment amount, recipient, expiry time, and other relevant metadata encoded in the invoice.")
 .WithOpenApi(g =>
 {
-    g.Parameters[0].Description = "Authorization token for authentication and access control. This token, generated using Schnorr Signatures for secp256k1, encodes the user's public key and session identifier from the GetToken function.";
+    g.Parameters[0].Description = "Authorization token for authentication and access control. This token, generated using Schnorr Signatures for secp256k1, encodes the user's public key and session identifier from the GetToken function. This call supports long living tokens.";
     g.Parameters[1].Description = "The Lightning Network invoice string to be decoded. This is typically a long string starting with 'lnbc' for mainnet or 'lntb' for testnet.";
     return g;
 })
@@ -753,7 +820,7 @@ app.MapGet("/estimateroutefee", (string authToken, string paymentrequest, int ti
     {
         if (timeout < 0)
             throw new InvalidOperationException("Timeout must be greater equal 0");
-        return new Result<RouteFeeRecord>(Singlethon.LNDWalletManager.ValidateAuthTokenAndGetAccount(authToken).EstimateRouteFee(paymentrequest, walletSettings.SendPaymentFee, timeout));
+        return new Result<RouteFeeRecord>(Singlethon.LNDWalletManager.ValidateAuthTokenAndGetAccount(authToken, TokenType.LongTerm).EstimateRouteFee(paymentrequest, walletSettings.SendPaymentFee, timeout));
     }
     catch (Exception ex)
     {
@@ -766,7 +833,7 @@ app.MapGet("/estimateroutefee", (string authToken, string paymentrequest, int ti
 .WithDescription("This endpoint calculates and returns an estimated fee for routing a Lightning Network payment based on the provided payment request. It helps users anticipate the cost of sending a payment before actually initiating the transaction.")
 .WithOpenApi(g =>
 {
-    g.Parameters[0].Description = "Authorization token for authentication and access control. This token, generated using Schnorr Signatures for secp256k1, encodes the user's public key and session identifier from the GetToken function.";
+    g.Parameters[0].Description = "Authorization token for authentication and access control. This token, generated using Schnorr Signatures for secp256k1, encodes the user's public key and session identifier from the GetToken function. This call supports long living tokens.";
     g.Parameters[1].Description = "The Lightning Network payment request (invoice) for which the route fee is to be estimated. This encoded string contains necessary details such as the payment amount and recipient.";
     g.Parameters[2].Description = "Maximum probing time (in seconds) allowed for finding a routing fee for the payment.";
     return g;
@@ -777,7 +844,7 @@ app.MapGet("/settleinvoice", (string authToken, string preimage) =>
 {
     try
     {
-        Singlethon.LNDWalletManager.ValidateAuthTokenAndGetAccount(authToken).SettleInvoice(preimage.AsBytes());
+        Singlethon.LNDWalletManager.ValidateAuthTokenAndGetAccount(authToken, TokenType.LongTerm).SettleInvoice(preimage.AsBytes());
         return new Result();
     }
     catch (Exception ex)
@@ -791,7 +858,7 @@ app.MapGet("/settleinvoice", (string authToken, string preimage) =>
 .WithDescription("Settles a previously accepted hold invoice using the provided preimage. This action finalizes the payment process for a hold invoice, releasing the funds to the invoice creator.")
 .WithOpenApi(g =>
 {
-    g.Parameters[0].Description = "Authorization token for authentication and access control. This token, generated using Schnorr Signatures for secp256k1, encodes the user's public key and session identifier from the GetToken function.";
+    g.Parameters[0].Description = "Authorization token for authentication and access control. This token, generated using Schnorr Signatures for secp256k1, encodes the user's public key and session identifier from the GetToken function. This call supports long living tokens.";
     g.Parameters[1].Description = "The preimage (32-byte hash preimage) that corresponds to the payment hash of the hold invoice to be settled. This preimage serves as proof of payment.";
     return g;
 })
@@ -801,7 +868,7 @@ app.MapGet("/cancelinvoice", (string authToken, string paymenthash) =>
 {
     try
     {
-        Singlethon.LNDWalletManager.ValidateAuthTokenAndGetAccount(authToken).CancelInvoice(paymenthash);
+        Singlethon.LNDWalletManager.ValidateAuthTokenAndGetAccount(authToken, TokenType.LongTerm).CancelInvoice(paymenthash);
         return new Result();
     }
     catch (Exception ex)
@@ -815,7 +882,7 @@ app.MapGet("/cancelinvoice", (string authToken, string paymenthash) =>
 .WithDescription("Cancels an open Lightning Network invoice. This endpoint allows users to cancel an invoice that hasn't been paid yet. If the invoice is already canceled, the operation succeeds. However, if the invoice has been settled, the cancellation will fail.")
 .WithOpenApi(g =>
 {
-    g.Parameters[0].Description = "Authorization token for authentication and access control. This token, generated using Schnorr Signatures for secp256k1, encodes the user's public key and session identifier from the GetToken function.";
+    g.Parameters[0].Description = "Authorization token for authentication and access control. This token, generated using Schnorr Signatures for secp256k1, encodes the user's public key and session identifier from the GetToken function. This call supports long living tokens.";
     g.Parameters[1].Description = "The payment hash of the invoice to be canceled. This unique identifier is used to locate the specific invoice in the system.";
     return g;
 })
@@ -825,7 +892,7 @@ app.MapGet("/getinvoice", async (string authToken, string paymenthash) =>
 {
     try
     {
-        return new Result<InvoiceRecord>(await Singlethon.LNDWalletManager.ValidateAuthTokenAndGetAccount(authToken).GetInvoiceAsync(paymenthash));
+        return new Result<InvoiceRecord>(await Singlethon.LNDWalletManager.ValidateAuthTokenAndGetAccount(authToken, TokenType.LongTerm).GetInvoiceAsync(paymenthash));
     }
     catch (Exception ex)
     {
@@ -838,7 +905,7 @@ app.MapGet("/getinvoice", async (string authToken, string paymenthash) =>
 .WithDescription("Fetches and returns detailed information about a specific Lightning Network invoice identified by its payment hash. This endpoint allows users to access invoice details such as amount, status, and creation date.")
 .WithOpenApi(g =>
 {
-    g.Parameters[0].Description = "Authorization token for authentication and access control. This token, generated using Schnorr Signatures for secp256k1, encodes the user's public key and session identifier from the GetToken function.";
+    g.Parameters[0].Description = "Authorization token for authentication and access control. This token, generated using Schnorr Signatures for secp256k1, encodes the user's public key and session identifier from the GetToken function. This call supports long living tokens.";
     g.Parameters[1].Description = "The payment hash of the invoice to retrieve. This unique identifier is used to locate the specific invoice in the system.";
     return g;
 })
@@ -919,6 +986,34 @@ app.MapGet("/health", () =>
 .WithSummary("Health check endpoint")
 .WithDescription("This endpoint returns a status 200 and 'ok' to indicate that the service is running properly.")
 .DisableAntiforgery();
+
+
+app.MapGet("/setinvoicestatewebhook", async (string authToken, string paymenthash, string webhook) =>
+{
+    try
+    {
+        var pubkey = Singlethon.LNDWalletManager.ValidateAuthToken(authToken, TokenType.LongTerm);
+        SetInvoiceStateWebhook(pubkey, paymenthash, webhook);
+        return new Result();
+    }
+    catch (Exception ex)
+    {
+        TraceEx.TraceException(ex);
+        return new Result(ex);
+    }
+})
+.WithName("SetInvoiceStateWebhook")
+.WithSummary("Set webhook for invoice state changes")
+.WithDescription("This endpoint allows setting a webhook URL to receive real-time updates about the state changes of a specific invoice. The webhook will be triggered whenever the state of the invoice changes, such as when it is paid, expired, or canceled.")
+.WithOpenApi(g =>
+{
+    g.Parameters[0].Description = "Authorization token for authentication and access control. This token, generated using Schnorr Signatures for secp256k1, encodes the user's public key and session identifier from the GetToken function.";
+    g.Parameters[1].Description = "The payment hash of the invoice for which the webhook is being set. This unique identifier is used to locate the specific invoice in the system.";
+    g.Parameters[2].Description = "The webhook URL to be called when the state of the invoice changes. This URL should be accessible and capable of handling POST requests with the state change details.";
+    return g;
+})
+.DisableAntiforgery();
+
 
 // Map the InvoiceStateUpdatesHub to the "/invoicestateupdates" endpoint
 // This hub allows real-time updates on invoice state changes

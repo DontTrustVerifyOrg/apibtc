@@ -33,8 +33,9 @@ public partial class AuthToken
     {
         AuthToken timedToken = Crypto.BinaryDeserializeObject<AuthToken>(Convert.FromBase64String(authTokenBase64));
 
-        if ((DateTimeOffset.UtcNow - timedToken.Header.Timestamp.AsUtcDateTime()).Seconds > seconds)
-            return null;
+        if (seconds > 0)
+            if ((DateTimeOffset.UtcNow - timedToken.Header.Timestamp.AsUtcDateTime()).Seconds > seconds)
+                return null;
 
         return timedToken.Header.Verify(
             timedToken.Signature,

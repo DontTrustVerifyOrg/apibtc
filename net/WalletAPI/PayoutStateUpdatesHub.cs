@@ -11,15 +11,17 @@ public class PayoutStateUpdatesHub : Hub
     public override async Task OnConnectedAsync()
     {
         var authToken = Context?.GetHttpContext()?.Request.Query["authtoken"].First();
-        var account = Singlethon.LNDWalletManager.ValidateAuthTokenAndGetAccount(authToken, false);
+        var account = Singlethon.LNDWalletManager.ValidateAuthTokenAndGetAccount(authToken);
         Context.Items["publicKey"] = account.PublicKey;
-        Singlethon.PayoutAsyncComQueue4ConnectionId.TryAdd(Context.ConnectionId, new AsyncComQueue<PayoutStateChangedEventArgs>());
+        var comq = Singlethon.PayoutAsyncComQueue4ConnectionId.GetOrAdd(account.PublicKey, (key) => new());
+        comq.TryAdd(Context.ConnectionId, new AsyncComQueue<PayoutStateChangedEventArgs>());
         await base.OnConnectedAsync();
     }
 
     public override async Task OnDisconnectedAsync(Exception? exception)
     {
-        Singlethon.PayoutAsyncComQueue4ConnectionId.TryRemove(Context.ConnectionId, out _);
+        if (Singlethon.InvoiceAsyncComQueue4ConnectionId.TryGetValue((string)Context.Items["publicKey"], out var comq))
+            comq.TryRemove(Context.ConnectionId, out _);
         await base.OnDisconnectedAsync(exception);
     }
 
@@ -29,17 +31,14 @@ public class PayoutStateUpdatesHub : Hub
         lock (Singlethon.LNDWalletManager)
             account = Singlethon.LNDWalletManager.ValidateAuthTokenAndGetAccount(authToken);
 
-        AsyncComQueue<PayoutStateChangedEventArgs> asyncCom;
-        if (Singlethon.PayoutAsyncComQueue4ConnectionId.TryGetValue(Context.ConnectionId, out asyncCom))
-        {
-            await foreach (var ic in asyncCom.DequeueAsync(cancellationToken))
+        if (Singlethon.PayoutAsyncComQueue4ConnectionId.TryGetValue(account.PublicKey, out var comq))
+            if (comq.TryGetValue(Context.ConnectionId, out var asyncCom))
             {
-                if (ic.PublicKey == account.PublicKey)
+                await foreach (var ic in asyncCom.DequeueAsync(cancellationToken))
                 {
-                    Trace.TraceInformation(ic.PublicKey + "|" +ic.PayoutStateChanged.PayoutId + "|" + ic.PayoutStateChanged.NewState.ToString() + "|" + ic.PayoutStateChanged.PayoutFee.ToString() + (ic.PayoutStateChanged.Tx==null?"": ("|" + ic.PayoutStateChanged.Tx)));
+                    Trace.TraceInformation(ic.PublicKey + "|" + ic.PayoutStateChanged.PayoutId + "|" + ic.PayoutStateChanged.NewState.ToString() + "|" + ic.PayoutStateChanged.PayoutFee.ToString() + (ic.PayoutStateChanged.Tx == null ? "" : ("|" + ic.PayoutStateChanged.Tx)));
                     yield return ic.PayoutStateChanged;
                 }
             }
-        }
     }
 }

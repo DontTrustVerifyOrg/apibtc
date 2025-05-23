@@ -368,6 +368,13 @@ public abstract class LNDEventSource
     public virtual void CancelSingleInvoiceTracking(string paymentHash) { }
 }
 
+public enum TokenType
+{
+    Normal,
+    LongTerm,
+    Admin,
+}
+
 public class LNDAccountManager
 {
     public GigDebugLoggerAPIClient.LogWrapper<LNDAccountManager> TRACE = GigDebugLoggerAPIClient.ConsoleLoggerFactory.Trace<LNDAccountManager>();
@@ -1802,7 +1809,21 @@ public class LNDWalletManager : LNDEventSource
         TraceEx.TraceInformation("...Stopped");
     }
 
-    private string ValidateAuthToken(string authTokenBase64)
+    private string ValidateAuthTokenNoTimeout(string authTokenBase64)
+    {
+        var timedToken = ApiBtc.AuthToken.Verify(authTokenBase64, -1);
+        if (timedToken == null)
+            throw new LNDWalletException(LNDWalletErrorCode.InvalidToken);
+
+        using var walletContext = walletContextFactory.Create();
+
+        var tk = (from token in walletContext.Tokens where token.PublicKey == ApiBtc.ProtoBufExtensions.AsHex(timedToken.Header.PublicKey) && token.Id == ApiBtc.ProtoBufExtensions.AsGuid(timedToken.Header.TokenId) select token).FirstOrDefault();
+        if (tk == null)
+            throw new LNDWalletException(LNDWalletErrorCode.InvalidToken);
+        return tk.PublicKey;
+    }
+
+    private string ValidateAuthTokenTimeout(string authTokenBase64)
     {
         var timedToken = ApiBtc.AuthToken.Verify(authTokenBase64, 120.0);
         if (timedToken == null)
@@ -1816,24 +1837,23 @@ public class LNDWalletManager : LNDEventSource
         return tk.PublicKey;
     }
 
-    public string ValidateAuthToken(string authTokenBase64, bool admin = false)
+
+    public string ValidateAuthToken(string authTokenBase64, TokenType tokenType = TokenType.Normal)
     {
-        var pubkey = ValidateAuthToken(authTokenBase64);
-        if (admin)
+        var pubkey = (tokenType == TokenType.LongTerm) ?
+            ValidateAuthTokenNoTimeout(authTokenBase64) :
+            ValidateAuthTokenTimeout(authTokenBase64);
+        if (tokenType == TokenType.Admin)
             if (!HasAdminRights(pubkey))
                 throw new LNDWalletException(LNDWalletErrorCode.AccessDenied);
         return pubkey;
     }
 
-    public LNDAccountManager ValidateAuthTokenAndGetAccount(string authTokenBase64)
+    public LNDAccountManager ValidateAuthTokenAndGetAccount(string authTokenBase64, TokenType tokenType = TokenType.Normal)
     {
-        return GetAccount(ValidateAuthToken(authTokenBase64).AsECXOnlyPubKey());
+        return GetAccount(ValidateAuthToken(authTokenBase64, tokenType).AsECXOnlyPubKey());
     }
 
-    public LNDAccountManager ValidateAuthTokenAndGetAccount(string authTokenBase64, bool admin)
-    {
-        return GetAccount(ValidateAuthToken(authTokenBase64, admin).AsECXOnlyPubKey());
-    }
 
     public LNDAccountManager GetAccount(ECXOnlyPubKey pubkey)
     {

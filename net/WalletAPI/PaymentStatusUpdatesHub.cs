@@ -11,15 +11,17 @@ public class PaymentStatusUpdatesHub : Hub
     public override async Task OnConnectedAsync()
     {
         var authToken = Context?.GetHttpContext()?.Request.Query["authtoken"].First();
-        var account = Singlethon.LNDWalletManager.ValidateAuthTokenAndGetAccount(authToken, false);
+        var account = Singlethon.LNDWalletManager.ValidateAuthTokenAndGetAccount(authToken);
         Context.Items["publicKey"] = account.PublicKey;
-        Singlethon.PaymentAsyncComQueue4ConnectionId.TryAdd(Context.ConnectionId, new AsyncComQueue<PaymentStatusChangedEventArgs>());
+        var comq = Singlethon.PaymentAsyncComQueue4ConnectionId.GetOrAdd(account.PublicKey, (key) => new());
+        comq.TryAdd(Context.ConnectionId, new AsyncComQueue<PaymentStatusChangedEventArgs>());
         await base.OnConnectedAsync();
     }
 
     public override async Task OnDisconnectedAsync(Exception? exception)
     {
-        Singlethon.PaymentAsyncComQueue4ConnectionId.TryRemove(Context.ConnectionId, out _);
+        if (Singlethon.PaymentAsyncComQueue4ConnectionId.TryGetValue((string)Context.Items["publicKey"], out var comq))
+            comq.TryRemove(Context.ConnectionId, out _);
         await base.OnDisconnectedAsync(exception);
     }
 
@@ -29,17 +31,14 @@ public class PaymentStatusUpdatesHub : Hub
         lock (Singlethon.LNDWalletManager)
             account = Singlethon.LNDWalletManager.ValidateAuthTokenAndGetAccount(authToken);
 
-        AsyncComQueue<PaymentStatusChangedEventArgs> asyncCom;
-        if (Singlethon.PaymentAsyncComQueue4ConnectionId.TryGetValue(Context.ConnectionId, out asyncCom))
-        {
-            await foreach (var ic in asyncCom.DequeueAsync(cancellationToken))
+        if (Singlethon.PaymentAsyncComQueue4ConnectionId.TryGetValue(account.PublicKey, out var comq))
+            if (comq.TryGetValue(Context.ConnectionId, out var asyncCom))
             {
-                if (ic.PublicKey == account.PublicKey)
+                await foreach (var ic in asyncCom.DequeueAsync(cancellationToken))
                 {
-                    Trace.TraceInformation(ic.PublicKey + "|" +ic.PaymentStatusChanged.PaymentHash + "|" + ic.PaymentStatusChanged.NewStatus.ToString() + "|" + ic.PaymentStatusChanged.FailureReason.ToString());
+                    Trace.TraceInformation(ic.PublicKey + "|" + ic.PaymentStatusChanged.PaymentHash + "|" + ic.PaymentStatusChanged.NewStatus.ToString() + "|" + ic.PaymentStatusChanged.FailureReason.ToString());
                     yield return ic.PaymentStatusChanged;
                 }
             }
-        }
     }
 }
