@@ -34,7 +34,7 @@ wallet2 = Wallet(base_url=BASE_URL, privkey=private_key2)
 invoice = wallet1.addinvoice(satoshis=1000, memo="Payment from wallet2", expiry=3600)
 
 # Pay invoice with wallet2
-wallet2.sendpayment(paymentrequest=invoice['payment_request'], timeout=30, feelimit=100)
+wallet2.sendpayment(paymentrequest=invoice['paymentRequest'], timeout=30, feelimit=100)
 
 # Check balances after payment
 print("Wallet1 balance:", wallet1.getbalance())
