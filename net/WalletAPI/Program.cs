@@ -1,23 +1,25 @@
-﻿using System.Text.Json;
-using System.Text.Json.Nodes;
+﻿using ApiBtc;
+using ApiBtc;
 using GigDebugLoggerAPIClient;
-using ApiBtc;
-using ApiBtc;
 using LNDClient;
 using LNDWallet;
+using Lnrpc;
 using Microsoft.OpenApi;
 using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Interfaces;
 using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Writers;
+using NetworkToolkit;
+using Newtonsoft.Json.Linq;
 using Spectre.Console;
 using Swashbuckle.AspNetCore.SwaggerGen;
+using System.Text;
+using System.Text.Json;
+using System.Text.Json.Nodes;
+using System.Threading;
 using TraceExColor;
 using Enum = System.Enum;
 using Type = System.Type;
-using NetworkToolkit;
-using System.Text;
-using System.Threading;
 
 ConsoleLoggerFactory.Initialize(true);
 
@@ -118,7 +120,7 @@ Singlethon.LNDWalletManager.OnInvoiceStateChanged += (sender, e) =>
 
 Thread webhookThread = new Thread(async () =>
 {
-    TraceEx.TraceInformation("Webhook Thread Starting");
+TraceEx.TraceInformation("Webhook Thread Starting");
     while (true)
     {
         TraceEx.TraceInformation("Webhook Loop Starting");
@@ -144,7 +146,7 @@ Thread webhookThread = new Thread(async () =>
                         else
                         {
                             if (invoiceStateChangedEventArgs.InvoiceStateChange.NewState == InvoiceState.Cancelled || invoiceStateChangedEventArgs.InvoiceStateChange.NewState == InvoiceState.Settled)
-                                Singlethon.InvoiceWebhookAsyncComQueue.TryRemove(new(invoiceStateChangedEventArgs.PublicKey, invoiceStateChangedEventArgs.InvoiceStateChange.PaymentHash), out _);
+                                Singlethon.InvoiceWebhookAsyncComQueue.TryRemove(entry.Key, out _);
                         }
                     }
                     catch (Exception ex)
@@ -161,8 +163,31 @@ Thread webhookThread = new Thread(async () =>
             TraceEx.TraceWarning($"Error in InvoiceWebhookAsyncComQueue processing: {ex.Message}");
         }
 
+        try
+        {
+            foreach (var entry in Singlethon.InvoiceWebhookAsyncComQueue.ToList())
+            {
+                try
+                {
+                    var inv = await Singlethon.LNDWalletManager.GetAccount(entry.Key.pubkey.AsECXOnlyPubKey()).GetInvoiceAsync(entry.Key.paymentHash);
+                    if (inv.State == InvoiceState.Cancelled)
+                        entry.Value.que.Enqueue(new InvoiceStateChangedEventArgs() { PublicKey = entry.Key.pubkey, InvoiceStateChange = new InvoiceStateChange() { NewState = inv.State, PaymentHash = inv.PaymentHash } });
+                }
+                catch (Exception ex)
+                {
+                    TraceEx.TraceException(ex);
+                    TraceEx.TraceWarning($"Error executing webhook for {entry.Key}: {ex.Message}");
+                }
+            }
+        }
+        catch (Exception ex)
+        {
+            TraceEx.TraceException(ex);
+            TraceEx.TraceWarning($"Error in InvoiceWebhookAsyncComQueue processing: {ex.Message}");
+        }
+
         await Task.Delay(1000); // Avoid busy looping
- 
+
     }
     TraceEx.TraceInformation("TrackPayments Thread Joining");
 });

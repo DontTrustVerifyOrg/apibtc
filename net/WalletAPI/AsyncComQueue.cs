@@ -24,7 +24,7 @@ public class AsyncComQueue<T>
 
     public async IAsyncEnumerable<T> DequeueAsync([EnumeratorCancellation] CancellationToken cancellationToken)
     {
-        while (true)
+        while (!cancellationToken.IsCancellationRequested)
         {
             using (await asyncRevealMonitor.EnterAsync(cancellationToken))
             {
