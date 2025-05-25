@@ -12,6 +12,6 @@ public static class Singlethon
     public static ConcurrentDictionary<string, ConcurrentDictionary<string, AsyncComQueue<NewTransactionFoundEventArgs>>> TransactionAsyncComQueue4ConnectionId = new();
     public static ConcurrentDictionary<string, ConcurrentDictionary<string, AsyncComQueue<PayoutStateChangedEventArgs>>> PayoutAsyncComQueue4ConnectionId = new();
 
-    public static ConcurrentDictionary<(string pubkey, string paymentHash), (string webhook, AsyncComQueue<InvoiceStateChangedEventArgs> que)> InvoiceWebhookAsyncComQueue = new();
+    public static ConcurrentDictionary<(string pubkey, string paymentHash), (string webhook, ConcurrentQueue<InvoiceStateChangedEventArgs> que)> InvoiceWebhookAsyncComQueue = new();
 }
 

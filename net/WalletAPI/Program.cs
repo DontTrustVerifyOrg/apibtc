@@ -128,7 +128,7 @@ Thread webhookThread = new Thread(async () =>
             {
                 var (webhookUrl, asyncComQueue) = entry.Value;
 
-                await foreach (var invoiceStateChangedEventArgs in asyncComQueue.DequeueAsync(CancellationToken.None))
+                while (asyncComQueue.TryDequeue(out var invoiceStateChangedEventArgs))
                 {
                     try
                     {
@@ -192,7 +192,7 @@ Singlethon.LNDWalletManager.OnPayoutStateChanged += (sender, e) =>
 
 void SetInvoiceStateWebhook(string pubkey, string paymentHash, string webhook)
 {
-    var hook = Singlethon.InvoiceWebhookAsyncComQueue.GetOrAdd(new(pubkey, paymentHash), (key) => (webhook, new AsyncComQueue<InvoiceStateChangedEventArgs>()));
+    var hook = Singlethon.InvoiceWebhookAsyncComQueue.GetOrAdd(new(pubkey, paymentHash), (key) => (webhook, new ()));
 }
 
 Singlethon.LNDWalletManager.Start();
