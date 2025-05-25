@@ -204,6 +204,8 @@ LNDChannelManager channelManager = new LNDChannelManager(
     walletSettings.MaxChannelCloseFeePerVByte);
 channelManager.Start();
 
+webhookThread.Start();
+
 
 TraceEx.TraceInformation("... Running");
 
@@ -1007,7 +1009,7 @@ app.MapGet("/setinvoicestatewebhook", async (string authToken, string paymenthas
 .WithDescription("This endpoint allows setting a webhook URL to receive real-time updates about the state changes of a specific invoice. The webhook will be triggered whenever the state of the invoice changes, such as when it is paid, expired, or canceled.")
 .WithOpenApi(g =>
 {
-    g.Parameters[0].Description = "Authorization token for authentication and access control. This token, generated using Schnorr Signatures for secp256k1, encodes the user's public key and session identifier from the GetToken function.";
+    g.Parameters[0].Description = "Authorization token for authentication and access control. This token, generated using Schnorr Signatures for secp256k1, encodes the user's public key and session identifier from the GetToken function.This call supports long living tokens.";
     g.Parameters[1].Description = "The payment hash of the invoice for which the webhook is being set. This unique identifier is used to locate the specific invoice in the system.";
     g.Parameters[2].Description = "The webhook URL to be called when the state of the invoice changes. This URL should be accessible and capable of handling POST requests with the state change details.";
     return g;
