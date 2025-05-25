@@ -113,11 +113,7 @@ Singlethon.LNDWalletManager.OnInvoiceStateChanged += (sender, e) =>
             asyncCom.Enqueue(e);
 
     if (Singlethon.InvoiceWebhookAsyncComQueue.TryGetValue(new(e.PublicKey, e.InvoiceStateChange.PaymentHash), out var webhook))
-    {
         webhook.que.Enqueue(e);
-        if (e.InvoiceStateChange.NewState == InvoiceState.Cancelled || e.InvoiceStateChange.NewState == InvoiceState.Settled)
-            Singlethon.InvoiceWebhookAsyncComQueue.TryRemove(new(e.PublicKey, e.InvoiceStateChange.PaymentHash), out _);
-    }
 };
 
 Thread webhookThread = new Thread(async () =>
@@ -144,6 +140,11 @@ Thread webhookThread = new Thread(async () =>
                         if (!response.IsSuccessStatusCode)
                         {
                             TraceEx.TraceWarning($"Failed to execute webhook for {entry.Key}. Status: {response.StatusCode}");
+                        }
+                        else
+                        {
+                            if (invoiceStateChangedEventArgs.InvoiceStateChange.NewState == InvoiceState.Cancelled || invoiceStateChangedEventArgs.InvoiceStateChange.NewState == InvoiceState.Settled)
+                                Singlethon.InvoiceWebhookAsyncComQueue.TryRemove(new(invoiceStateChangedEventArgs.PublicKey, invoiceStateChangedEventArgs.InvoiceStateChange.PaymentHash), out _);
                         }
                     }
                     catch (Exception ex)
