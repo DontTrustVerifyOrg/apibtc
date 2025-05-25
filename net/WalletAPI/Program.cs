@@ -124,7 +124,7 @@ Thread webhookThread = new Thread(async () =>
         TraceEx.TraceInformation("Webhook Loop Starting");
         try
         {
-            foreach (var entry in Singlethon.InvoiceWebhookAsyncComQueue)
+            foreach (var entry in Singlethon.InvoiceWebhookAsyncComQueue.ToList())
             {
                 var (webhookUrl, asyncComQueue) = entry.Value;
 
