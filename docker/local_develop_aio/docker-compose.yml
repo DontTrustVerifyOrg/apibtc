@@ -12,6 +12,7 @@ services:
       - POSTGRES_USER=apibtc
       - POSTGRES_DB=apibtc
       - PGDATA=/var/lib/postgresql/data/pgdata
+      - BTC_NETWORK=regtest
     ports:
       - 18332:18332
       - 28332:28332
