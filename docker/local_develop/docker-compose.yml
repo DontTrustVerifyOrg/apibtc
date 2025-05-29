@@ -8,6 +8,8 @@ services:
       dockerfile: docker/btc/build_btc.Dockerfile
 
     restart: on-failure
+    environment:
+      - BTC_NETWORK=regtest
     ports:
       - 18332:18332
       - 28332:28332
@@ -26,6 +28,8 @@ services:
       dockerfile: docker/lnd/build_lnd.Dockerfile
 
     restart: on-failure
+    environment:
+      - BTC_NETWORK=regtest
     ports:
       - 9734:9734
       - 11009:11009
@@ -45,6 +49,8 @@ services:
       dockerfile: docker/apibtc/build_apibtc.Dockerfile
 
     restart: on-failure
+    environment:
+      - BTC_NETWORK=regtest
     ports:
       - 7101:80
     volumes:

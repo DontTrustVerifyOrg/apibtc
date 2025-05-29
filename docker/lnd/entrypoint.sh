@@ -11,7 +11,12 @@ else
     exit 1
 fi
 
-if [ ! -f "/app/lnd/data/chain/bitcoin/regtest/wallet.db" ]; then
+if [ -z "$BTC_NETWORK" ]; then
+    echo "BTC network is not defined, exiting..."
+    exit 1
+fi
+
+if [ ! -f "/app/lnd/data/chain/bitcoin/$BTC_NETWORK/wallet.db" ]; then
     echo "Starting in init mode: lnd --lnddir=/app/lnd"
     lnd --lnddir=/app/lnd &
 
@@ -21,12 +26,12 @@ if [ ! -f "/app/lnd/data/chain/bitcoin/regtest/wallet.db" ]; then
         sleep 2
     done
 
-    while ! lncli -n regtest --lnddir=/app/lnd --rpcserver=localhost:11009 state > /dev/null 2>&1; do
+    while ! lncli -n $BTC_NETWORK --lnddir=/app/lnd --rpcserver=localhost:11009 state > /dev/null 2>&1; do
         echo "Waiting for lightning node to start..."
         sleep 5
     done
 
-    while ! lncli -n regtest --lnddir=/app/lnd --rpcserver=localhost:11009 getinfo > /dev/null 2>&1; do
+    while ! lncli -n $BTC_NETWORK --lnddir=/app/lnd --rpcserver=localhost:11009 getinfo > /dev/null 2>&1; do
         echo "Make sure the lightning node is initialized - check README.md for more information. Waiting for it to be ready..."
         sleep 5
     done

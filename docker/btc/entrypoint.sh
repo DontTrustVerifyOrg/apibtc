@@ -15,7 +15,7 @@ echo "Starting: bitcoind -datadir=/app/btc -printtoconsole"
 bitcoind -datadir=/app/btc -printtoconsole &
 BITCOIND_PID=$!
 
-echo "Checking if wallet exists..."
+echo "Starting up BTC node..."
 
 # Wait for bitcoin node to be ready
 while ! bitcoin-cli -datadir=/app/btc getblockchaininfo > /dev/null 2>&1; do
@@ -23,15 +23,20 @@ while ! bitcoin-cli -datadir=/app/btc getblockchaininfo > /dev/null 2>&1; do
     sleep 5
 done
 
-sleep 10
+echo "BTC node is ready"
 
-# Check if wallet already exists
-if [ -d "/app/btc/regtest/wallets/testwallet" ]; then
-    echo "Wallet 'testwallet' already exists"
-    bitcoin-cli -datadir=/app/btc loadwallet "testwallet" > /dev/null 2>&1 || true
-else
-    echo "Creating wallet 'testwallet'..."
-    bitcoin-cli -datadir=/app/btc createwallet "testwallet"
+if [ "$BTC_NETWORK" = "regtest" ]; then
+    echo "Checking if wallet exists..."
+
+    sleep 10
+    # Check if wallet already exists
+    if [ -d "/app/btc/regtest/wallets/testwallet" ]; then
+        echo "Wallet 'testwallet' already exists"
+        bitcoin-cli -datadir=/app/btc loadwallet "testwallet" > /dev/null 2>&1 || true
+    else
+        echo "Creating wallet 'testwallet'..."
+        bitcoin-cli -datadir=/app/btc createwallet "testwallet"
+    fi
 fi
 
 wait $BITCOIND_PID
