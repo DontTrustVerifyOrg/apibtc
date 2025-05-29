@@ -100,7 +100,8 @@ class Wallet:
     def __init__(self, base_url: str, privkey: str):
         self.base_url = base_url
         self.privkey = privkey
-        self.pubkey = pubkey_gen(bytes.fromhex(privkey)).hex()
+        if self.privkey:
+            self.pubkey = pubkey_gen(bytes.fromhex(privkey)).hex()
         self.manual_token = None
 
     def setmanualtoken(self, token: str):
@@ -119,7 +120,7 @@ class Wallet:
         return uuid.UUID(response.json()["value"]).bytes
 
     def _create_authtoken(self) -> str:
-        if self.privkey==None:
+        if self.manual_token!=None:
             return self.manual_token
 
         token = self._get_token()
