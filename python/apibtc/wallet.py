@@ -101,6 +101,16 @@ class Wallet:
         self.base_url = base_url
         self.privkey = privkey
         self.pubkey = pubkey_gen(bytes.fromhex(privkey)).hex()
+        self.manual_token = None
+
+    def setmanualtoken(self, token: str):
+        """
+        Sets a manual token for authentication. This is useful when the automatic token generation is not desired.
+        
+        Args:
+            token: The token to be used for authentication.
+        """
+        self.manual_token = token
         
     def _get_token(self) -> bytes:
         api_url = f"{self.base_url}/gettoken?pubkey=" + self.pubkey
@@ -109,6 +119,9 @@ class Wallet:
         return uuid.UUID(response.json()["value"]).bytes
 
     def _create_authtoken(self) -> str:
+        if self.privkey==None:
+            return self.manual_token
+
         token = self._get_token()
         authTok = frames_pb2.AuthToken()
         authTok.Header.PublicKey.Value = bytes.fromhex(self.pubkey)
