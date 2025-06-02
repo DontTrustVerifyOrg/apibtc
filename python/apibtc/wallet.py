@@ -112,6 +112,10 @@ class Wallet:
             token: The token to be used for authentication.
         """
         self.manual_token = token
+        decoded_token = base64.b64decode(token)
+        auth_token = frames_pb2.AuthToken()
+        auth_token.ParseFromString(decoded_token)
+        return auth_token.Header.PublicKey.Value.hex()
         
     def _get_token(self) -> bytes:
         api_url = f"{self.base_url}/gettoken?pubkey=" + self.pubkey
