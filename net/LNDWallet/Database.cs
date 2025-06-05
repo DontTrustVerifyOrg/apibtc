@@ -321,7 +321,7 @@ public class WaletContext : DbContext, IDisposable
         base.Dispose();
     }
 
-    public Microsoft.EntityFrameworkCore.Storage.IDbContextTransaction BEGIN_TRANSACTION(System.Data.IsolationLevel isolationLevel= System.Data.IsolationLevel.ReadCommitted)
+    public Microsoft.EntityFrameworkCore.Storage.IDbContextTransaction BEGIN_TRANSACTION(System.Data.IsolationLevel isolationLevel = System.Data.IsolationLevel.ReadCommitted)
     {
         if (provider == DBProvider.Sqlite)
             return new NullTransaction();
@@ -377,7 +377,7 @@ public class WaletContext : DbContext, IDisposable
         else if (provider == DBProvider.PostgreSQL)
             optionsBuilder.UseNpgsql(connectionString);
         else if (provider == DBProvider.MySQL)
-            optionsBuilder.UseMySql(connectionString,ServerVersion.AutoDetect(connectionString));
+            optionsBuilder.UseMySql(connectionString, ServerVersion.AutoDetect(connectionString));
         else if (provider == DBProvider.Oracle)
             optionsBuilder.UseOracle(connectionString);
         else
@@ -389,47 +389,108 @@ public class WaletContext : DbContext, IDisposable
     public WaletContext UPDATE<T>(T obj) where T : class
     {
         var set = this.Set<T>();
-        set.Update(obj);
-        return this;
+        try
+        {
+            set.Update(obj);
+            return this;
+        }
+        catch
+        {
+            ChangeTracker.Clear();
+            throw;
+        }
     }
-
     public WaletContext UPDATE_IF_EXISTS<T>(IQueryable<T> qs, Func<T, T> update) where T : class
     {
-        var e = qs.FirstOrDefault();
-        if (e != null)
+        try
         {
-            var obj = update(e);
-            UPDATE(obj);
+            var e = qs.FirstOrDefault();
+            if (e != null)
+            {
+                var obj = update(e);
+                UPDATE(obj);
+            }
+            return this;
         }
-        return this;
+        catch
+        {
+            ChangeTracker.Clear();
+            throw;
+        }
     }
 
-    public WaletContext INSERT<T>(T obj) where T:class
+    public WaletContext INSERT<T>(T obj) where T : class
     {
-        var set = this.Set<T>();
-        set.Add(obj);
-        return this;
+        try
+        {
+            var set = this.Set<T>();
+            set.Add(obj);
+            return this;
+        }
+        catch
+        {
+            ChangeTracker.Clear();
+            throw;
+        }
+    }
+
+    public WaletContext INSERT_IF_NOT_EXISTS<T>(IQueryable<T> qs, T obj) where T : class
+    {
+        try
+        {
+            var e = qs.FirstOrDefault();
+            if (e == null)
+                INSERT(obj);
+            return this;
+        }
+        catch
+        {
+            ChangeTracker.Clear();
+            throw;
+        }
     }
 
     public WaletContext DELETE<T>(T obj) where T : class
     {
-        var set = this.Set<T>();
-        set.Remove(obj);
-        return this;
+        try
+        {
+            var set = this.Set<T>();
+            set.Remove(obj);
+            return this;
+        }
+        catch
+        {
+            ChangeTracker.Clear();
+            throw;
+        }
     }
 
     public WaletContext DELETE_IF_EXISTS<T>(IQueryable<T> qs) where T : class
     {
-        var e = qs.FirstOrDefault();
-        if (e != null)
-            DELETE(e);
-        return this;
+        try
+        {
+            var e = qs.FirstOrDefault();
+            if (e != null)
+                DELETE(e);
+            return this;
+        }
+        catch
+        {
+            ChangeTracker.Clear();
+            throw;
+        }
     }
 
     public void SAVE()
     {
-        this.SaveChanges();
-        this.ChangeTracker.Clear();
+        try
+        {
+            this.SaveChanges();
+        }
+        finally
+        {
+            ChangeTracker.Clear();
+        }
     }
 
 }

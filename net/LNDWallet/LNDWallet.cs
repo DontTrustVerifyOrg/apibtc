@@ -1,14 +1,15 @@
-﻿using NBitcoin.Secp256k1;
-using System.Data;
+﻿using ApiBtc;
+using Grpc.Core;
+using LNDClient;
+using Lnrpc;
 using Microsoft.EntityFrameworkCore;
 using NBitcoin;
-using LNDClient;
-using Grpc.Core;
-using Lnrpc;
-using System.Collections.Concurrent;
-using TraceExColor;
+using NBitcoin.Secp256k1;
 using Spectre.Console;
-using ApiBtc;
+using System.Collections.Concurrent;
+using System.Data;
+using TraceExColor;
+using Walletrpc;
 
 namespace LNDWallet;
 
@@ -1618,9 +1619,9 @@ public class LNDWalletManager : LNDEventSource
 
             try
             {
-                walletContext.INSERT(new TrackingIndex { Id = TackingIndexId.StartTransactions, Value = 0 }).SAVE();
-                walletContext.INSERT(new TrackingIndex { Id = TackingIndexId.AddInvoice, Value = 0 }).SAVE();
-                walletContext.INSERT(new TrackingIndex { Id = TackingIndexId.SettleInvoice, Value = 0 }).SAVE();
+                walletContext.INSERT_IF_NOT_EXISTS(from t in walletContext.TrackingIndexes where t.Id == TackingIndexId.StartTransactions select t, new TrackingIndex { Id = TackingIndexId.StartTransactions, Value = 0 }).SAVE();
+                walletContext.INSERT_IF_NOT_EXISTS(from t in walletContext.TrackingIndexes where t.Id == TackingIndexId.AddInvoice select t, new TrackingIndex { Id = TackingIndexId.AddInvoice, Value = 0 }).SAVE();
+                walletContext.INSERT_IF_NOT_EXISTS(from t in walletContext.TrackingIndexes where t.Id == TackingIndexId.SettleInvoice select t, new TrackingIndex { Id = TackingIndexId.SettleInvoice, Value = 0 }).SAVE();
             }
             catch (DbUpdateException)
             {
@@ -1752,7 +1753,7 @@ public class LNDWalletManager : LNDEventSource
             while (!Stopping)
             {
                 using var walletContext = walletContextFactory.Create();
-                var trackIdxes = new Dictionary<TackingIndexId, ulong>(from idx in walletContext.TrackingIndexes
+                var trackIdxes = new Dictionary<TackingIndexId, ulong>(from idx in walletContext.TrackingIndexes.AsNoTracking()
                                                                        select KeyValuePair.Create(idx.Id, idx.Value));
                 TraceEx.TraceInformation("SubscribeTransactions Loop Starting");
                 try

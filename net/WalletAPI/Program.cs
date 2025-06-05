@@ -123,7 +123,7 @@ Thread webhookThread = new Thread(async () =>
 TraceEx.TraceInformation("Webhook Thread Starting");
     while (true)
     {
-        TraceEx.TraceInformation("Webhook Loop Starting");
+        //TraceEx.TraceInformation("Webhook Loop Starting");
         try
         {
             foreach (var entry in Singlethon.InvoiceWebhookAsyncComQueue.ToList())
