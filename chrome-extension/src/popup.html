@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <link rel="icon" href="./favicon.ico" type="image/x-icon">
+  <title>APIBTC Schnorr Signer</title>
+    <style>
+        body {
+            font-family: 'Söhne', ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, Arial, sans-serif;
+            background: #f7fafc;
+            color: #222;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+        #pin-box {
+            background: #fff;
+            padding: 24px 30px;
+            border-radius: 10px;
+            box-shadow: 0 2px 24px rgba(0,0,0,0.08);
+            max-width: 200px;
+            min-width: 200px;
+            width: 100%;
+        }
+        #login-box {
+            background: #fff;
+            padding: 24px 30px;
+            border-radius: 10px;
+            box-shadow: 0 2px 24px rgba(0,0,0,0.08);
+            max-width: 600px;
+            min-width: 600px;
+            width: 100%;
+        }
+        h2 {
+            margin-top: 0;
+            margin-bottom: 24px;
+            text-align: center;
+        }
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+        }
+        input{
+            width: calc(100% - 24px);
+            padding: 12px 12px 12px 12px;
+            border-radius: 6px;
+            border: 1px solid #ccc;
+            font-size: 12px;
+            font-family: monospace;
+            margin-bottom: 10px;
+
+        }
+        button {
+            width: 100%;
+            padding: 12px;
+            border-radius: 6px;
+            border: none;
+            background: #0077FF;
+            color: #fff;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            margin-bottom: 10px;
+        }
+        button:hover {
+            background: #0056b3;
+        }
+        button:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+        }
+        .button-right {
+            width: auto;            
+            float: right;
+            margin-left: 10px;
+        }
+        .error {
+            color: #c00;
+            margin-bottom: 12px;
+            text-align: center;
+        }
+        #generate-key {
+            background: #83a598;
+        }
+        #generate-key:hover {
+            background: #6d8a8c;
+        }
+        #mnemonic-box {
+            display: none;
+            margin: 20px 0;
+            padding: 15px;
+            border-radius: 6px;
+            background: #FE7235;
+            color: #fff;
+            border: 1px solid #ddd;
+        }
+        #auth-qrcode-box {
+            display: none;
+            margin: 20px 0;
+            padding: 15px;
+            border-radius: 6px;
+            background: #f0f4f8;
+            border: 1px solid #ddd;
+        }
+        #mnemonic-words {
+            color: #fff;
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 15px;
+            word-spacing: 5px;
+            line-height: 1.6;
+        }
+        #private-key {
+            font-size: 14px;
+            word-break: break-all;
+            margin-top: 10px;
+            font-family: monospace;
+        }
+        #setup-key {
+            font-size: 14px;
+            word-break: break-all;
+            margin-top: 10px;
+            font-family: monospace;
+        }
+        .info {
+            font-size: 12px;
+            color: #000;
+            margin-top: 10px;
+        }
+        #qrcode-address-action{
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div id="pin-box">
+        <h2>APIBTC Schnorr Signer</h2>
+        <label for="pin">Enter 6-digit PIN</label>
+        <input type="password" id="pin" placeholder="6-digit PIN" maxlength="6" pattern="[0-9]{6}" inputmode="numeric" autocomplete="off">
+        <div class="error" id="pin-error"></div>
+        <button id="setPin" hidden>Set PIN</button>
+        <button id="verifyPin" hidden>Verify PIN</button>
+    </div>
+    <div id="login-box" hidden>
+        <h2>APIBTC Schnorr Signer</h2>
+        <label for="publicKey">Public Key (hex)</label>
+        <input id="publicKey" required readonly style="border: none;"/>
+        <label for="privateKey">Private Key (hex)</label>
+        <input type="password" id="privateKey" style="width: calc(100% - 110px)" autocomplete="off" required placeholder="Enter your private key"/>
+        <button class="button-right" id="importKey">Import</button>
+        <hr/>
+        <button id="generateKey" disabled>Generate New Private Key</button>
+        
+        <div id="mnemonic-box">
+            <h3>Your Mnemonic Phrase</h3>
+            <div id="mnemonic-words"></div>
+            <div id="private-key"></div>
+            <div class="info">Important: Save these words and private key in a secure location. They cannot be recovered if lost!</div>
+        </div>
+
+        <div class="error" id="error"></div>
+        <pre id="output"></pre>
+    </div>
+  <script src="popup.js"></script>
+</body>
+</html>

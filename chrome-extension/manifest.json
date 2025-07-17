@@ -1,0 +1,31 @@
+{
+  "manifest_version": 3,
+  "name": "APIBTC Schnorr Signer",
+  "version": "1.0",
+  "icons": {
+    "16": "favicon16.png",
+    "32": "favicon32.png",
+    "64": "favicon32.png",
+    "128": "favicon32.png"
+  },
+  "permissions": ["storage", "activeTab"],
+  "externally_connectable": {
+    "matches": [
+      "http://127.0.0.1:5000/*",
+      "https://127.0.0.1:5000/*"
+    ]
+  },
+  "optional_host_permissions": ["https://*/*", "http://*/*"],
+  "action": {
+    "default_popup": "popup.html"
+  },
+  "background": {
+    "service_worker": "background.js"
+  },
+  "content_scripts": [
+    {
+      "matches": ["<all_urls>"],
+      "js": ["content.js"]
+    }
+  ]
+}

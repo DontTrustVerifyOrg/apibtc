@@ -1,0 +1,33 @@
+{
+  "name": "apibtc-extension",
+  "version": "1.0.0",
+  "scripts": {
+    "build": "webpack",
+    "dev": "webpack --watch"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "dependencies": {
+    "assert": "^2.1.0",
+    "bip-schnorr": "^0.6.7",
+    "bip39": "^3.1.0",
+    "buffer": "^6.0.3",
+    "crypto": "^1.0.1",
+    "dotenv": "^16.5.0",
+    "elliptic": "^6.6.1",
+    "lodash": "^4.17.21",
+    "protobufjs": "^7.5.3",
+    "qrcode": "^1.5.1",
+    "stream": "^0.0.3",
+    "webextension-polyfill": "^0.12.0"
+  },
+  "devDependencies": {
+    "copy-webpack-plugin": "^13.0.0",
+    "process": "^0.11.10",
+    "webpack": "^5.100.1",
+    "webpack-cli": "^6.0.1",
+    "webpack-dev-server": "^5.2.2"
+  }
+}
