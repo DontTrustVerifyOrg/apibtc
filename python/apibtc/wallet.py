@@ -138,7 +138,7 @@ class Wallet:
             randbytes(32))
         return base64.b64encode(authTok.SerializeToString())
 
-    def validate(selft) -> Any:
+    def validate(self) -> Any:
         """
         Validates the provided authorization token for authentication and access control. Returns a success result if the token is valid, or an error result if the token is invalid or expired.
         Returns:
