@@ -137,7 +137,18 @@ class Wallet:
             bytes.fromhex(self.privkey),
             randbytes(32))
         return base64.b64encode(authTok.SerializeToString())
-    
+
+    def validate(selft) -> Any:
+        """
+        Validates the provided authorization token for authentication and access control. Returns a success result if the token is valid, or an error result if the token is invalid or expired.
+        Returns:
+            Result object indicating success or failure
+        """
+        api_url = f"{self.base_url}/validate"
+        response = requests.get(url=api_url, params={"authToken": self._create_authtoken()})
+        response.raise_for_status()
+        return self.parse_response(response.json())
+        
     def topupandmine6blocks(self, bitcoinAddr: str, satoshis: int) -> Any:
         """
         In RegTest mode only: Sends the specified amount of satoshis from the local Bitcoin wallet to the provided Bitcoin address, then automatically mines 6 blocks to ensure transaction confirmation. This function is useful for testing and development purposes in a controlled environment.
