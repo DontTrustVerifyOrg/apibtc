@@ -12,7 +12,7 @@ async function hashPIN(pin) {
 chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
   (async () => {
     try {
-        console.log("Received request B:", request);
+//        console.log("Received request B:", request);
       switch (request.action) {
         
         case "setup": {
@@ -81,13 +81,13 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
         }
 
         case "saveKey": {
-          console.log('Private Key:', request.privateKey);
+ //         console.log('Private Key:', request.privateKey);
           if (!pinVerified) {
             sendResponse({ success: false, error: "PIN verification required" });
             break;
           }
           const publicKey = await getPublicKey(request.privateKey);
-          console.log('Public Key:', publicKey);
+   //       console.log('Public Key:', publicKey);
           await chrome.storage.local.set({ privateKey: request.privateKey, publicKey });
           sendResponse({ success: true });
           break;
@@ -126,7 +126,7 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
         }
 
         case "ping": {
-            console.log("Ping received");
+ //           console.log("Ping received");
           sendResponse({ success: true, message: "pong" });
           break;
         }

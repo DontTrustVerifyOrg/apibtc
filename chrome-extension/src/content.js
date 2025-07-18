@@ -1,7 +1,7 @@
-console.log( 'Content script loaded');
+//console.log( 'Content script loaded');
 
 window.addEventListener('message', (event) => {
-  console.log('Received message:', event.data);
+ // console.log('Received message:', event.data);
 
   if (event.data.type === 'APIBTC_EXTENSION_PING') {
       window.postMessage({ type: 'APIBTC_EXTENSION_PONG'}, event.origin);

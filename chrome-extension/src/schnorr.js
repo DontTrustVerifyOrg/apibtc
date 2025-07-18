@@ -60,7 +60,7 @@ async function fromMasterSeed(seedBuffer) {
    // Perform the HMAC operation
    const signature = await crypto.subtle.sign('HMAC', key, dataBuffer);
    const I = Buffer.from(signature);
-   console.log('I:', I.toString('hex'));
+  // console.log('I:', I.toString('hex'));
    
    // Split the result
    return {
@@ -84,7 +84,7 @@ export async function getPublicKey(privkey) {
 
 export async function createAuthToken(token,pubkey,privkey) {
    const dt = Math.floor(Date.now() / 1000); // Current timestamp in seconds
-   console.log('Current Timestamp:', dt);
+   //console.log('Current Timestamp:', dt);
    const header = {
       PublicKey: { Value: Buffer.from(pubkey, 'hex') },
       Timestamp: { Value: dt },
@@ -93,13 +93,13 @@ export async function createAuthToken(token,pubkey,privkey) {
    const authTok = apibtc.AuthToken.create({ Header: header });
    const headerSerialized = Buffer.from(apibtc.AuthTokenHeader.encode(authTok.Header).finish());
    const hash = await createHash('sha256').update(headerSerialized).digest();
-   console.log('Token ID:', token.toString('hex'));
-   console.log('Header Serialized:', headerSerialized.toString('hex'));
-   console.log('Hash:', hash.toString('hex'));
+   //console.log('Token ID:', token.toString('hex'));
+   //console.log('Header Serialized:', headerSerialized.toString('hex'));
+   //console.log('Hash:', hash.toString('hex'));
    const rnd = randomBytes(32);
-   console.log('Random Bytes:', rnd.toString('hex'));
+   //console.log('Random Bytes:', rnd.toString('hex'));
    const sgn = sign(privkey,hash,rnd);
-   console.log('Signature:', sgn.toString('hex'));
+   //console.log('Signature:', sgn.toString('hex'));
    authTok.Signature = {Value: sgn};
    
    return Buffer.from(apibtc.AuthToken.encode(authTok).finish()).toString('base64');

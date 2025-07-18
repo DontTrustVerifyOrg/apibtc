@@ -1,21 +1,17 @@
 {
   "manifest_version": 3,
   "name": "APIBTC Schnorr Signer",
+  "description": "Securely sign BIP-39 tokens (Schnorr signatures) for APIBTC.",
   "version": "1.0",
   "icons": {
     "16": "favicon16.png",
     "32": "favicon32.png",
-    "64": "favicon32.png",
-    "128": "favicon32.png"
+    "48": "favicon48.png",
+    "64": "favicon64.png",
+    "128": "favicon128.png",
+    "256": "favicon256.png"
   },
-  "permissions": ["storage", "activeTab"],
-  "externally_connectable": {
-    "matches": [
-      "http://127.0.0.1:5000/*",
-      "https://127.0.0.1:5000/*"
-    ]
-  },
-  "optional_host_permissions": ["https://*/*", "http://*/*"],
+  "permissions": ["storage"],
   "action": {
     "default_popup": "popup.html"
   },

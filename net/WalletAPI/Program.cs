@@ -258,6 +258,30 @@ app.MapGet("/gettoken", (string pubkey) =>
 })
 .DisableAntiforgery();
 
+app.MapGet("/validate", (string authToken) =>
+{
+    try
+    {
+        Singlethon.LNDWalletManager.ValidateAuthToken(authToken);
+        return new Result();
+    }
+    catch (Exception ex)
+    {
+        TraceEx.TraceException(ex);
+        return new Result(ex);
+    }
+})
+.WithName("Validate")
+.WithSummary("Validate Authorization Token")
+.WithDescription("Validates the provided authorization token for authentication and access control. Returns a success result if the token is valid, or an error result if the token is invalid or expired.")
+.WithOpenApi(g =>
+{
+    g.Parameters[0].Description = "Authorization token for authentication and access control. This token is generated using Schnorr Signatures for secp256k1 and encodes the user's public key along with the session identifier obtained from the GetToken function.";
+    return g;
+})
+.DisableAntiforgery();
+
+
 app.MapGet("/topupandmine6blocks", (string authToken, string bitcoinAddr, long satoshis) =>
 {
     try
