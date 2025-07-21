@@ -1796,17 +1796,17 @@ public class LNDWalletManager : LNDEventSource
         walletContext.Database.EnsureCreated();
 
         var createSql = @"
-IF OBJECT_ID('TwoFactorAuth', 'U') IS NULL
+IF OBJECT_ID('TwoFactorAuths', 'U') IS NULL
 BEGIN
-    CREATE TABLE TwoFactorAuth (
+    CREATE TABLE TwoFactorAuths (
         PublicKey NVARCHAR(450) NOT NULL PRIMARY KEY,
         SecretKey NVARCHAR(450) NOT NULL
     );
 END
 
-IF OBJECT_ID('SingleUseCode', 'U') IS NULL
+IF OBJECT_ID('SingleUseCodes', 'U') IS NULL
 BEGIN
-    CREATE TABLE SingleUseCode (
+    CREATE TABLE SingleUseCodes (
         PublicKey NVARCHAR(450) NOT NULL,
         Code NVARCHAR(450) NOT NULL,
         PRIMARY KEY (PublicKey, Code)
