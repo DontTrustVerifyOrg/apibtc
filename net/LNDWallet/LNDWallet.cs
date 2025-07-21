@@ -10,6 +10,7 @@ using System.Collections.Concurrent;
 using System.Data;
 using TraceExColor;
 using Walletrpc;
+using OtpNet;
 
 namespace LNDWallet;
 
@@ -149,6 +150,14 @@ public class TransactionRecord
     public required string Tx { get; set; }
     public required int NumConfirmations { get; set; }
     public required DateTime CreationTime { get; set; }
+}
+
+[Serializable]
+public class TwoFactorAuthSetup
+{
+    public required string SecretKey { get; set; }
+    public required string TwoFactorAuthUri { get; set; }
+    public string[] SingleUseCodes { get; set; }
 }
 
 [Serializable]
@@ -385,13 +394,250 @@ public class LNDAccountManager
     public string PublicKey;
     private LNDEventSource eventSource;
     private CancellationTokenSource trackPaymentsCancallationTokenSource = new();
+    private bool enforceTwoFactorAuthentication;
 
-    internal LNDAccountManager(LND.NodeSettings conf, DBProvider provider, string connectionString, ECXOnlyPubKey pubKey, LNDEventSource eventSource)
+
+    internal LNDAccountManager(LND.NodeSettings conf, DBProvider provider, string connectionString, ECXOnlyPubKey pubKey, LNDEventSource eventSource, bool enforceTwoFactorAuthentication)
     {
         this.lndConf = conf;
         this.PublicKey = pubKey.AsHex();
         this.walletContextFactory = new WaletContextFactory(provider, connectionString);
         this.eventSource = eventSource;
+        this.enforceTwoFactorAuthentication = enforceTwoFactorAuthentication;
+    }
+
+    public TwoFactorAuthSetup EnableTwoFactor(string issuer)
+    {
+        using var TL = TRACE.Log();
+        try
+        {
+            using var walletContext = walletContextFactory.Create();
+
+            if ((from tfa in walletContext.TwoFactorAuths where tfa.PublicKey == PublicKey select tfa).FirstOrDefault() != null)
+                throw new LNDWalletException(LNDWalletErrorCode.TwoFactorAlreadyEnabled);
+
+            var base32String = Base32Encoding.ToString(RandomUtils.GetBytes(32));
+            
+            walletContext.INSERT(new TwoFactorAuth()
+            {
+                PublicKey = PublicKey,
+                SecretKey = base32String,
+            });
+
+            var singleUseCodes = new HashSet<string>();
+            while(singleUseCodes.Count < 16)
+            {
+                var code = RandomUtils.GetBytes(5).AsHex();
+                if (!singleUseCodes.Contains(code))
+                {
+                    singleUseCodes.Add(code);
+                    walletContext.INSERT(new SingleUseCode()
+                    {
+                        PublicKey = PublicKey,
+                        Code = Crypto.ComputeSha256(code.AsBytes()).AsHex(),
+                    });
+                }
+            }
+            walletContext.SAVE();
+            return TL.Ret(new TwoFactorAuthSetup()
+            {
+                TwoFactorAuthUri = new OtpUri(OtpType.Totp, base32String, PublicKey, issuer).ToString(),
+                SecretKey = base32String,
+                SingleUseCodes = singleUseCodes.ToArray()
+            });
+        }
+        catch (Exception ex)
+        {
+            TL.Exception(ex);
+            throw;
+        }
+    }
+
+    public bool IsTwoFactorEnabled()
+    {
+        using var TL = TRACE.Log();
+        try
+        {
+            using var walletContext = walletContextFactory.Create();
+            return (from tfa in walletContext.TwoFactorAuths where tfa.PublicKey == PublicKey select tfa).FirstOrDefault() != null;
+        }
+        catch (Exception ex)
+        {
+            TL.Exception(ex);
+            throw;
+        }
+    }
+
+    public LNDAccountManager VerifyTotp(string code)
+    {         
+        using var TL = TRACE.Log().Args(code);
+        try
+        {
+            using var walletContext = walletContextFactory.Create();
+            // Find the TFA entry for this user
+            var tfaEntry = (from tfa in walletContext.TwoFactorAuths
+                            where tfa.PublicKey == PublicKey
+                            select tfa).FirstOrDefault();
+            if (tfaEntry == null)
+                if (enforceTwoFactorAuthentication)
+                    throw new LNDWalletException(LNDWalletErrorCode.TwoFactorNotEnabled);
+                else
+                    return this; // If not enforced, we can skip verification
+            // Verify the TOTP code
+
+            var base32Bytes = Base32Encoding.ToBytes(tfaEntry.SecretKey);
+            var totp = new Totp(base32Bytes);
+            if(!totp.VerifyTotp(code, out _))
+                throw new LNDWalletException(LNDWalletErrorCode.InvalidTwoFactorCode);
+            return this;
+        }
+        catch (Exception ex)
+        {
+            TL.Exception(ex);
+            throw;
+        }
+    }
+
+    public string[] RegenerateSingleUseCodes(string providedCode)
+    {
+        using var TL = TRACE.Log().Args(providedCode);
+        try
+        {
+            using var walletContext = walletContextFactory.Create();
+
+            var shaCode = Crypto.ComputeSha256(providedCode.AsBytes()).AsHex();
+
+            // Find the code and ensure it belongs to this user and is not used
+            var codeEntry = (from c in walletContext.SingleUseCodes
+                             where c.PublicKey == PublicKey && c.Code == shaCode
+                             select c).FirstOrDefault();
+
+            if (codeEntry == null)
+                throw new LNDWalletException(LNDWalletErrorCode.InvalidSingleUseToken);
+
+            // Invalidate all old codes for this user
+            var oldCodes = from c in walletContext.SingleUseCodes
+                           where c.PublicKey == PublicKey
+                           select c;
+            foreach (var c in oldCodes)
+                walletContext.DELETE(c);
+
+            var singleUseCodes = new HashSet<string>();
+            while (singleUseCodes.Count < 16)
+            {
+                var code = RandomUtils.GetBytes(5).AsHex();
+                if (!singleUseCodes.Contains(code))
+                {
+                    singleUseCodes.Add(code);
+                    walletContext.INSERT(new SingleUseCode()
+                    {
+                        PublicKey = PublicKey,
+                        Code = Crypto.ComputeSha256(code.AsBytes()).AsHex(),
+                    });
+                }
+            }
+            walletContext.SAVE();
+            return singleUseCodes.ToArray();
+        }
+        catch (Exception ex)
+        {
+            TL.Exception(ex);
+            throw;
+        }
+    }
+
+    public TwoFactorAuthSetup ResetTwoFactor(string providedCode, string issuer)
+    {
+        using var TL = TRACE.Log().Args(providedCode);
+        try
+        {
+            using var walletContext = walletContextFactory.Create();
+
+            var shaCode = Crypto.ComputeSha256(providedCode.AsBytes()).AsHex();
+
+            // Find the code and ensure it belongs to this user and is not used
+            var codeEntry = (from c in walletContext.SingleUseCodes
+                             where c.PublicKey == PublicKey && c.Code == shaCode
+                             select c).FirstOrDefault();
+
+            if (codeEntry == null)
+                throw new LNDWalletException(LNDWalletErrorCode.InvalidSingleUseToken);
+
+            walletContext.DELETE(codeEntry);
+
+            // Update the secret to a new one
+            var tfaEntry = (from tfa in walletContext.TwoFactorAuths
+                            where tfa.PublicKey == PublicKey
+                            select tfa).FirstOrDefault();
+
+            if (tfaEntry == null)
+                throw new LNDWalletException(LNDWalletErrorCode.TwoFactorNotEnabled);
+
+            var base32String = Base32Encoding.ToString(RandomUtils.GetBytes(32));
+            tfaEntry.SecretKey = base32String;
+            walletContext.UPDATE(tfaEntry);
+
+            walletContext.SAVE();
+            return TL.Ret(new TwoFactorAuthSetup()
+            {
+                TwoFactorAuthUri = new OtpUri(OtpType.Totp, base32String, PublicKey, issuer).ToString(),
+                SecretKey = base32String,
+            });
+        }
+        catch (Exception ex)
+        {
+            TL.Exception(ex);
+            throw;
+        }
+    }
+
+    public void DisableTwoFactor(string providedCode)
+    {
+        using var TL = TRACE.Log().Args(providedCode);
+        try
+        {
+            if (enforceTwoFactorAuthentication)
+                throw new LNDWalletException(LNDWalletErrorCode.AccessDenied);
+
+            using var walletContext = walletContextFactory.Create();
+
+            // Find the TFA entry for this user
+            var tfaEntry = (from tfa in walletContext.TwoFactorAuths
+                            where tfa.PublicKey == PublicKey
+                            select tfa).FirstOrDefault();
+
+            if (tfaEntry == null)
+                return; // 2FA already disabled
+
+            var shaCode = Crypto.ComputeSha256(providedCode.AsBytes()).AsHex();
+            // Find the code and ensure it belongs to this user and is not used
+            var codeEntry = (from c in walletContext.SingleUseCodes
+                             where c.PublicKey == PublicKey && c.Code == shaCode
+                             select c).FirstOrDefault();
+
+            if (codeEntry == null)
+                throw new LNDWalletException(LNDWalletErrorCode.InvalidSingleUseToken);
+
+            // Remove the TFA secret
+            walletContext.DELETE(from tfa in walletContext.TwoFactorAuths
+                                           where tfa.PublicKey == PublicKey
+                                           select tfa);
+
+            // Invalidate all old single use codes
+            var codes = from c in walletContext.SingleUseCodes
+                        where c.PublicKey == PublicKey
+                        select c;
+
+            foreach (var c in codes)
+                walletContext.DELETE(c);
+
+            walletContext.SAVE();
+        }
+        catch (Exception ex)
+        {
+            TL.Exception(ex);
+            throw;
+        }
     }
 
     public string CreateNewTopupAddress()
@@ -1535,8 +1781,9 @@ public class LNDWalletManager : LNDEventSource
     private Thread subscribeTransactionsThread;
     private ConcurrentDictionary<string, bool> alreadySubscribedSingleInvoices = new();
     private ConcurrentDictionary<string, CancellationTokenSource> alreadySubscribedSingleInvoicesTokenSources = new();
+    private bool enforceTwoFactorAuthentication;
 
-    public LNDWalletManager(DBProvider provider, string connectionString, BitcoinNode bitcoinNode, LND.NodeSettings lndConf, string adminPubkey)
+    public LNDWalletManager(DBProvider provider, string connectionString, BitcoinNode bitcoinNode, LND.NodeSettings lndConf, string adminPubkey, bool enforceTwoFactorAuthentication)
     {
         this.provider = provider;
         this.connectionString = connectionString;
@@ -1544,9 +1791,33 @@ public class LNDWalletManager : LNDEventSource
         this.BitcoinNode = bitcoinNode;
         this.lndConf = lndConf;
         this.adminPubkey = adminPubkey;
+        this.enforceTwoFactorAuthentication = enforceTwoFactorAuthentication;
         using var walletContext = walletContextFactory.Create();
         walletContext.Database.EnsureCreated();
+
+        var createSql = @"
+IF OBJECT_ID('TwoFactorAuth', 'U') IS NULL
+BEGIN
+    CREATE TABLE TwoFactorAuth (
+        PublicKey NVARCHAR(450) NOT NULL PRIMARY KEY,
+        SecretKey NVARCHAR(450) NOT NULL
+    );
+END
+
+IF OBJECT_ID('SingleUseCode', 'U') IS NULL
+BEGIN
+    CREATE TABLE SingleUseCode (
+        PublicKey NVARCHAR(450) NOT NULL,
+        Code NVARCHAR(450) NOT NULL,
+        PRIMARY KEY (PublicKey, Code)
+    );
+END
+";
+
+        walletContext.Database.ExecuteSqlRaw(createSql);
     }
+
+
 
     public ListPeersResponse ListPeers()
     {
@@ -1850,6 +2121,35 @@ public class LNDWalletManager : LNDEventSource
         return pubkey;
     }
 
+    public void VerifyTotp(string pubkey, string code)
+    {
+        using var TL = TRACE.Log().Args(code);
+        try
+        {
+            using var walletContext = walletContextFactory.Create();
+            // Find the TFA entry for this user
+            var tfaEntry = (from tfa in walletContext.TwoFactorAuths
+                            where tfa.PublicKey == pubkey
+                            select tfa).FirstOrDefault();
+            if (tfaEntry == null)
+                if (enforceTwoFactorAuthentication)
+                    throw new LNDWalletException(LNDWalletErrorCode.TwoFactorNotEnabled);
+                else
+                    return; // If not enforced, we can skip verification
+            // Verify the TOTP code
+
+            var base32Bytes = Base32Encoding.ToBytes(tfaEntry.SecretKey);
+            var totp = new Totp(base32Bytes);
+            if (!totp.VerifyTotp(code, out _))
+                throw new LNDWalletException(LNDWalletErrorCode.InvalidTwoFactorCode);
+        }
+        catch (Exception ex)
+        {
+            TL.Exception(ex);
+            throw;
+        }
+    }
+
     public LNDAccountManager ValidateAuthTokenAndGetAccount(string authTokenBase64, TokenType tokenType = TokenType.Normal)
     {
         return GetAccount(ValidateAuthToken(authTokenBase64, tokenType).AsECXOnlyPubKey());
@@ -1858,7 +2158,7 @@ public class LNDWalletManager : LNDEventSource
 
     public LNDAccountManager GetAccount(ECXOnlyPubKey pubkey)
     {
-        return new LNDAccountManager(lndConf, this.provider, this.connectionString, pubkey, this);
+        return new LNDAccountManager(lndConf, this.provider, this.connectionString, pubkey, this, this.enforceTwoFactorAuthentication);
     }
 
     public bool HasAdminRights(string pubkey)
@@ -1880,6 +2180,7 @@ public class LNDWalletManager : LNDEventSource
         }
         return t.Id;
     }
+
 
     public string SendCoins(string address, long satoshis, string memo)
     {

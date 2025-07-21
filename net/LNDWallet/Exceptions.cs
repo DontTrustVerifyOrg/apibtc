@@ -51,6 +51,11 @@ public enum LNDWalletErrorCode
     /// Fee limit is smaller than our fee
     /// </summary>
     FeeLimitTooSmall = 14,
+
+    TwoFactorAlreadyEnabled = 15,
+    InvalidSingleUseToken = 16,
+    TwoFactorNotEnabled = 17,
+    InvalidTwoFactorCode = 18,
 }
 
 /// <summary>
@@ -73,6 +78,11 @@ public static class Extensions
         "Payout is already completed",
         "Operation failed",
         "Access Denied",
+        "Fee limit is smaller than our fee",
+        "Two factor is already enabled",
+        "Invalid single use token",
+        "Two factor is not enabled",
+        "Invalid two factor code",
      };
 
     /// <summary>

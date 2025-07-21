@@ -106,7 +106,8 @@ Singlethon.LNDWalletManager = new LNDWalletManager(
     walletSettings.ConnectionString.Replace("$HOME", Environment.GetFolderPath(Environment.SpecialFolder.UserProfile)),
     bitcoinNode,
     lndConf,
-    walletSettings.AdminPublicKey);
+    walletSettings.AdminPublicKey,
+    walletSettings.EnforceTwoFactorAuthentication);
 
 Singlethon.LNDWalletManager.OnInvoiceStateChanged += (sender, e) =>
 {
@@ -282,6 +283,125 @@ app.MapGet("/validate", (string authToken) =>
 .DisableAntiforgery();
 
 
+app.MapGet("/enabletwofactor", (string authToken, string issuer) =>
+{
+    try
+    {
+        return new Result<TwoFactorAuthSetup>(Singlethon.LNDWalletManager.ValidateAuthTokenAndGetAccount(authToken).EnableTwoFactor(issuer));
+    }
+    catch (Exception ex)
+    {
+        TraceEx.TraceException(ex);
+        return new Result<TwoFactorAuthSetup>(ex);
+    }
+})
+.WithName("EnableTwoFactor")
+.WithSummary("Enable Two-Factor Authentication")
+.WithDescription("Enables Two-Factor Authentication (2FA) for the user. This function generates a setup object containing a secret key that the user can use to configure their TOTP application. The user must scan the QR code with their 2FA app to complete the setup process. This endpoint is available only to users who have not yet enabled 2FA.")
+.WithOpenApi(g =>
+{
+    g.Parameters[0].Description = "Authorization token for authentication and access control. This token is generated using Schnorr Signatures for secp256k1 and encodes the user's public key along with the session identifier obtained from the GetToken function.";
+    g.Parameters[1].Description = "The issuer name for the TOTP application. This is typically the name of the application or service that the user is setting up 2FA for.";
+    return g;
+})
+.DisableAntiforgery();
+
+app.MapGet("/istwofactorenabled", (string authToken) =>
+{
+    try
+    {
+        return new Result<bool>(Singlethon.LNDWalletManager.ValidateAuthTokenAndGetAccount(authToken).IsTwoFactorEnabled());
+    }
+    catch (Exception ex)
+    {
+        TraceEx.TraceException(ex);
+        return new Result<bool>(ex);
+    }
+})
+.WithName("IsTwoFactorEnabled")
+.WithSummary("Check if Two-Factor Authentication is enabled")
+.WithDescription("Checks if Two-Factor Authentication (2FA) is enabled for the user. This function returns a boolean value indicating whether 2FA is currently active for the user's account. It is useful for determining if the user needs to set up or disable 2FA.")
+.WithOpenApi(g =>
+{
+    g.Parameters[0].Description = "Authorization token for authentication and access control. This token is generated using Schnorr Signatures for secp256k1 and encodes the user's public key along with the session identifier obtained from the GetToken function.";
+    return g;
+})
+.DisableAntiforgery();
+
+app.MapGet("/disabletwofactor", (string authToken, string code) =>
+{
+    try
+    {
+        Singlethon.LNDWalletManager.ValidateAuthTokenAndGetAccount(authToken).DisableTwoFactor(code);
+        return new Result();
+    }
+    catch (Exception ex)
+    {
+        TraceEx.TraceException(ex);
+        return new Result(ex);
+    }
+})
+.WithName("DisableTwoFactor")
+.WithSummary("Disable Two-Factor Authentication")
+.WithDescription("Disables Two-Factor Authentication (2FA) for the user. This function requires a valid single-use code for authentication. Once 2FA is disabled, the user will no longer need to provide a TOTP code for authentication.")
+.WithOpenApi(g =>
+{
+    g.Parameters[0].Description = "Authorization token for authentication and access control. This token is generated using Schnorr Signatures for secp256k1 and encodes the user's public key along with the session identifier obtained from the GetToken function.";
+    g.Parameters[1].Description = "A valid single-use code to authenticate the disable request.";
+    return g;
+})
+.DisableAntiforgery();
+
+
+app.MapGet("/regeneratesingleusecodes", (string authToken, string code) =>
+{
+    try
+    {
+        return new Result<string[]>(Singlethon.LNDWalletManager.ValidateAuthTokenAndGetAccount(authToken).RegenerateSingleUseCodes(code));
+    }
+    catch (Exception ex)
+    {
+        TraceEx.TraceException(ex);
+        return new Result<string[]>(ex);
+    }
+})
+.WithName("RegenerateSingleUseCodes")
+.WithSummary("Regenerate Single-Use Codes")
+.WithDescription("Regenerates a set of single-use codes for Two-Factor Authentication (2FA). This function is useful if the user needs to generate new ones. The old codes are invalidated. The endpoint returns an array of new single-use codes.")
+.WithOpenApi(g =>
+{
+    g.Parameters[0].Description = "Authorization token for authentication and access control. This token is generated using Schnorr Signatures for secp256k1 and encodes the user's public key along with the session identifier obtained from the GetToken function.";
+    g.Parameters[1].Description = "The old and not yet used single-use code to regenerate single-use codes for.";
+    return g;
+})
+.DisableAntiforgery();
+
+
+app.MapGet("/resettwofactor", (string authToken, string code, string issuer) =>
+{
+    try
+    {
+        return new Result<TwoFactorAuthSetup>(Singlethon.LNDWalletManager.ValidateAuthTokenAndGetAccount(authToken).ResetTwoFactor(code, issuer));
+    }
+    catch (Exception ex)
+    {
+        TraceEx.TraceException(ex);
+        return new Result<TwoFactorAuthSetup>(ex);
+    }
+})
+.WithName("ResetTwoFactor")
+.WithSummary("Reset Two-Factor Authentication")
+.WithDescription("Resets Two-Factor Authentication TOTP for the user. This function is used to generate a new secret key that the user can use to configure their TOTP application. The endpoint requires a valid single-use code for authentication.")
+.WithOpenApi(g =>
+{
+    g.Parameters[0].Description = "Authorization token for authentication and access control. This token is generated using Schnorr Signatures for secp256k1 and encodes the user's public key along with the session identifier obtained from the GetToken function.";
+    g.Parameters[1].Description = "A valid single-use code to authenticate the reset request.";
+    g.Parameters[2].Description = "The issuer name for the TOTP application. This is typically the name of the application or service that the user is setting up 2FA for.";
+    return g;
+})
+.DisableAntiforgery();
+
+
 app.MapGet("/topupandmine6blocks", (string authToken, string bitcoinAddr, long satoshis) =>
 {
     try
@@ -313,13 +433,14 @@ app.MapGet("/topupandmine6blocks", (string authToken, string bitcoinAddr, long s
 })
 .DisableAntiforgery();
 
-app.MapGet("/sendtoaddress", (string authToken, string bitcoinAddr, long satoshis) =>
+app.MapGet("/sendtoaddress", (string authToken, string bitcoinAddr, long satoshis, string otp) =>
 {
     try
     {
         if (satoshis <= 0)
             throw new InvalidOperationException("Satoshis must be greater than 0");
-        Singlethon.LNDWalletManager.ValidateAuthToken(authToken, Singlethon.LNDWalletManager.BitcoinNode.IsRegTest ? TokenType.Normal:TokenType.Admin);
+        var pubkey= Singlethon.LNDWalletManager.ValidateAuthToken(authToken, Singlethon.LNDWalletManager.BitcoinNode.IsRegTest ? TokenType.Normal:TokenType.Admin);
+        Singlethon.LNDWalletManager.VerifyTotp(pubkey, otp);
         Singlethon.LNDWalletManager.BitcoinNode.SendToAddress(bitcoinAddr, satoshis);
         return new Result();
     }
@@ -335,8 +456,9 @@ app.MapGet("/sendtoaddress", (string authToken, string bitcoinAddr, long satoshi
 .WithOpenApi(g =>
 {
     g.Parameters[0].Description = "Authorization token for authentication and access control. This token is generated using Schnorr Signatures for secp256k1 and encodes the user's public key along with the session identifier obtained from the GetToken function. For TestNet and MainNet modes, an admin-level token is required.";
-    g.Parameters[1].Description = "bitcoin address";
-    g.Parameters[2].Description = "number of satoshis";
+    g.Parameters[1].Description = "Bitcoin address";
+    g.Parameters[2].Description = "Number of satoshis";
+    g.Parameters[3].Description = "One-Time Password (OTP) for Two-Factor Authentication. This is a time-based code generated by the user's TOTP application, used to verify the user's identity before executing the transaction.";
     return g;
 })
 .DisableAntiforgery();
@@ -458,13 +580,14 @@ app.MapGet("/getlndwalletbalance", (string authToken) =>
 .DisableAntiforgery();
 
 
-app.MapGet("/openreserve", (string authToken, long satoshis) =>
+app.MapGet("/openreserve", (string authToken, long satoshis, string otp) =>
 {
     try
     {
         if (satoshis <= 0)
             throw new InvalidOperationException("Satoshis must be greater than 0");
-        Singlethon.LNDWalletManager.ValidateAuthToken(authToken,Singlethon.LNDWalletManager.BitcoinNode.IsRegTest ? TokenType.Normal : TokenType.Admin);
+        var pubkey = Singlethon.LNDWalletManager.ValidateAuthToken(authToken,Singlethon.LNDWalletManager.BitcoinNode.IsRegTest ? TokenType.Normal : TokenType.Admin);
+        Singlethon.LNDWalletManager.VerifyTotp(pubkey, otp);
         return new Result<Guid>(Singlethon.LNDWalletManager.OpenReserve(satoshis));
     }
     catch (Exception ex)
@@ -480,15 +603,17 @@ app.MapGet("/openreserve", (string authToken, long satoshis) =>
 {
     g.Parameters[0].Description = "Authorization token for authentication and access control. This token is generated using Schnorr Signatures for secp256k1 and encodes the user's public key along with the session identifier obtained from the GetToken function. For TestNet and MainNet modes, an admin-level token is required.";
     g.Parameters[1].Description = "The amount of satoshis to allocate to the new reserve. This value must be a positive integer representing the number of satoshis (1 satoshi = 0.00000001 BTC).";
+    g.Parameters[2].Description = "One-Time Password (OTP) for Two-Factor Authentication. This is a time-based code generated by the user's TOTP application, used to verify the user's identity before executing the reserve opening.";
     return g;
 })
 .DisableAntiforgery();
 
-app.MapGet("/closereserve", (string authToken, Guid reserveId) =>
+app.MapGet("/closereserve", (string authToken, Guid reserveId, string otp) =>
 {
     try
     {
-        Singlethon.LNDWalletManager.ValidateAuthToken(authToken,Singlethon.LNDWalletManager.BitcoinNode.IsRegTest ? TokenType.Normal : TokenType.Admin);
+        var pubkey=Singlethon.LNDWalletManager.ValidateAuthToken(authToken,Singlethon.LNDWalletManager.BitcoinNode.IsRegTest ? TokenType.Normal : TokenType.Admin);
+        Singlethon.LNDWalletManager.VerifyTotp(pubkey, otp);
         Singlethon.LNDWalletManager.CloseReserve(reserveId);
         return new Result();
     }
@@ -505,6 +630,7 @@ app.MapGet("/closereserve", (string authToken, Guid reserveId) =>
 {
     g.Parameters[0].Description = "Authorization token for authentication and access control. This token is generated using Schnorr Signatures for secp256k1 and encodes the user's public key along with the session identifier obtained from the GetToken function. For TestNet and MainNet modes, an admin-level token is required.";
     g.Parameters[1].Description = "The unique identifier (GUID) of the reserve to be closed. This GUID was returned when the reserve was initially opened using the OpenReserve endpoint.";
+    g.Parameters[2].Description = "One-Time Password (OTP) for Two-Factor Authentication. This is a time-based code generated by the user's TOTP application, used to verify the user's identity before executing the reserve closing.";
     return g;
 })
 .DisableAntiforgery();
@@ -682,13 +808,13 @@ app.MapGet("/listtransactions", (string authToken) =>
 })
 .DisableAntiforgery();
 
-app.MapGet("/registerpayout", (string authToken, long satoshis, string btcAddress) =>
+app.MapGet("/registerpayout", (string authToken, long satoshis, string btcAddress, string otp) =>
 {
     try
     {
         if (satoshis < 0)
             throw new InvalidOperationException("Satoshis must be greater equal 0");
-        return new Result<Guid>(Singlethon.LNDWalletManager.ValidateAuthTokenAndGetAccount(authToken).RegisterNewPayoutForExecution(satoshis, btcAddress));
+        return new Result<Guid>(Singlethon.LNDWalletManager.ValidateAuthTokenAndGetAccount(authToken).VerifyTotp(otp).RegisterNewPayoutForExecution(satoshis, btcAddress));
     }
     catch(Exception ex) 
     {
@@ -704,6 +830,7 @@ app.MapGet("/registerpayout", (string authToken, long satoshis, string btcAddres
     g.Parameters[0].Description = "Authorization token for authentication and access control. This token, generated using Schnorr Signatures for secp256k1, encodes the user's public key and session identifier from the GetToken function.";
     g.Parameters[1].Description = "The amount to be paid out, specified in satoshis (1 satoshi = 0.00000001 BTC). Must be a positive integer representing the exact payout amount.";
     g.Parameters[2].Description = "The destination Bitcoin address where the payout will be sent. This should be a valid Bitcoin address on the blockchain.";
+    g.Parameters[3].Description = "One-Time Password (OTP) for Two-Factor Authentication. This is a time-based code generated by the user's TOTP application, used to verify the user's identity before executing the payout registration.";
     return g;
 })
 .DisableAntiforgery();
@@ -837,7 +964,7 @@ app.MapGet("/decodeinvoice", (string authToken, string paymentRequest) =>
 .DisableAntiforgery();
 
 
-app.MapGet("/sendpayment", async (string authToken, string paymentrequest, int timeout, long feelimit) =>
+app.MapGet("/sendpayment", async (string authToken, string paymentrequest, int timeout, long feelimit, string otp) =>
 {
     try
     {
@@ -845,7 +972,7 @@ app.MapGet("/sendpayment", async (string authToken, string paymentrequest, int t
             throw new InvalidOperationException("Timeout must be greater equal 0");
         if (feelimit < 0)
             throw new InvalidOperationException("Feelimit must be greater equal 0");
-        return new Result<PaymentRecord>(await Singlethon.LNDWalletManager.ValidateAuthTokenAndGetAccount(authToken).SendPaymentAsync(paymentrequest, timeout, walletSettings.SendPaymentFee, feelimit));
+        return new Result<PaymentRecord>(await Singlethon.LNDWalletManager.ValidateAuthTokenAndGetAccount(authToken).VerifyTotp(otp).SendPaymentAsync(paymentrequest, timeout, walletSettings.SendPaymentFee, feelimit));
     }
     catch (Exception ex)
     {
@@ -862,6 +989,7 @@ app.MapGet("/sendpayment", async (string authToken, string paymentrequest, int t
     g.Parameters[1].Description = "The Lightning Network payment request (invoice) to be paid. This encoded string contains all necessary details for the payment, including amount and recipient.";
     g.Parameters[2].Description = "Maximum time (in seconds) allowed for finding a route for the payment. If a route isn't found within this time, the payment attempt will be aborted.";
     g.Parameters[3].Description = "Maximum fee (in millisatoshis) that the user is willing to pay for this transaction. If the calculated fee exceeds this limit, the payment will not be sent.";
+    g.Parameters[4].Description = "One-Time Password (OTP) for Two-Factor Authentication. This is a time-based code generated by the user's TOTP application, used to verify the user's identity before executing the payment.";
     return g;
 })
 .DisableAntiforgery();
@@ -1160,6 +1288,7 @@ public class WalletSettings
     public required string ConnectionString { get; set; }
     public required long SendPaymentFee { get; set; }
     public required long MaxChannelCloseFeePerVByte { get; set; }
+    public required bool EnforceTwoFactorAuthentication { get; set; }
 }
 
 public class LndSettings : LND.NodeSettings

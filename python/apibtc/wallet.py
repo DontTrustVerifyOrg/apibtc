@@ -148,7 +148,82 @@ class Wallet:
         response = requests.get(url=api_url, params={"authToken": self._create_authtoken()})
         response.raise_for_status()
         return self.parse_response(response.json())
-        
+    
+    def istwofactorenabled(self) -> Any:
+        """
+        Checks if two-factor authentication (2FA) is enabled for the user. This endpoint returns a boolean value indicating whether 2FA is active, enhancing account security by requiring an additional verification step during login or sensitive operations.
+
+        Returns:
+            BooleanResult indicating whether two-factor authentication is enabled
+        """
+        api_url = f"{self.base_url}/istwofactorenabled"
+        response = requests.get(url=api_url, params={"authToken": self._create_authtoken()})
+        response.raise_for_status()
+        return self.parse_response(response.json())
+    
+    def enabletwofactor(self, issuer) -> Any:
+        """
+        Enables two-factor authentication (2FA) for the user. This endpoint requires the user to provide a valid issuer (e.g., a phone number or email address) for the 2FA setup.
+
+        Args:
+            issuer: The issuer to be used for two-factor authentication.
+
+        Returns:
+            Result object indicating success or failure
+        """
+        api_url = f"{self.base_url}/enabletwofactor"
+        response = requests.get(url=api_url, params={"authToken": self._create_authtoken(), "issuer": issuer})
+        response.raise_for_status()
+        return self.parse_response(response.json())
+    
+    def disabletwofactor(self, code) -> Any:
+        """
+        Disables two-factor authentication (2FA) for the user. This endpoint requires a valid 2FA code to verify the user's identity before disabling the feature.
+
+        Args:
+            code: The two-factor authentication code provided by the user.
+
+        Returns:
+            Result object indicating success or failure
+        """
+        api_url = f"{self.base_url}/disabletwofactor"
+        response = requests.get(url=api_url, params={"authToken": self._create_authtoken(), "code": code})
+        response.raise_for_status()
+        return self.parse_response(response.json())
+    
+    def regeneratesingleusecodes(self, code) -> Any:
+        """
+        Regenerates single-use codes for two-factor authentication (2FA). This endpoint allows users to obtain new single-use codes, which can be used for secure authentication in scenarios where the original codes have been compromised or lost.
+
+        Args:
+            code: The current single-use code to be regenerated.
+
+        Returns:
+            Result object indicating success or failure
+        """
+        api_url = f"{self.base_url}/regeneratesingleusecodes"
+        response = requests.get(url=api_url, params={"authToken": self._create_authtoken(), "code": code})
+        response.raise_for_status()
+        return self.parse_response(response.json())
+
+    def resettwofactor(self, code, issuer) -> Any:
+        """
+        Resets two-factor authentication (2FA) for the user. This endpoint allows users to reset their 2FA settings, which may be necessary if they have lost access to their 2FA device or need to change their 2FA configuration.
+
+        Args:
+            code: The current two-factor authentication code provided by the user.
+            issuer: The issuer to be used for resetting two-factor authentication.
+
+        Returns:
+            Result object indicating success or failure
+        """
+        api_url = f"{self.base_url}/resettwofactor"
+        response = requests.get(url=api_url, params={"authToken": self._create_authtoken(), "code": code, "issuer": issuer})
+        response.raise_for_status()
+        return self.parse_response(response.json())
+    
+
+
     def topupandmine6blocks(self, bitcoinAddr: str, satoshis: int) -> Any:
         """
         In RegTest mode only: Sends the specified amount of satoshis from the local Bitcoin wallet to the provided Bitcoin address, then automatically mines 6 blocks to ensure transaction confirmation. This function is useful for testing and development purposes in a controlled environment.
@@ -165,7 +240,7 @@ class Wallet:
         response.raise_for_status()
         return self.parse_response(response.json())
 
-    def sendtoaddress(self, bitcoinAddr: str, satoshis: int) -> Any:
+    def sendtoaddress(self, bitcoinAddr: str, satoshis: int, otp: str) -> Any:
         """
         Transfers the specified amount of satoshis from the local Bitcoin wallet to the provided Bitcoin address. In RegTest mode, this function is available to all users. In other modes (TestNet, MainNet), only administrators can use this function.
 
@@ -177,7 +252,7 @@ class Wallet:
             Result object indicating success or failure
         """
         api_url = f"{self.base_url}/sendtoaddress"
-        response = requests.get(url=api_url, params={"authToken": self._create_authtoken(), "bitcoinAddr": bitcoinAddr, "satoshis": satoshis})
+        response = requests.get(url=api_url, params={"authToken": self._create_authtoken(), "bitcoinAddr": bitcoinAddr, "satoshis": satoshis, "otp": otp})
         response.raise_for_status()
         return self.parse_response(response.json())
 
@@ -235,7 +310,7 @@ class Wallet:
         response.raise_for_status()
         return self.parse_response(response.json())
 
-    def openreserve(self, satoshis: int) -> Any:
+    def openreserve(self, satoshis: int, otp: str) -> Any:
         """
         Creates a new reserve in the LND wallet, allocating a specified amount of satoshis. This operation is useful for setting aside funds for future transactions or channel openings. The endpoint returns a unique identifier (GUID) for the newly created reserve. Access to this endpoint varies based on the network mode: in RegTest mode, it's accessible to all users, while in TestNet and MainNet modes, it's restricted to administrators only.
 
@@ -246,11 +321,11 @@ class Wallet:
             GuidResult containing the unique identifier of the new reserve
         """
         api_url = f"{self.base_url}/openreserve"
-        response = requests.get(url=api_url, params={"authToken": self._create_authtoken(), "satoshis": satoshis})
+        response = requests.get(url=api_url, params={"authToken": self._create_authtoken(), "satoshis": satoshis, "otp": otp})
         response.raise_for_status()
         return self.parse_response(response.json())
 
-    def closereserve(self, reserveId: str) -> Any:
+    def closereserve(self, reserveId: str, otp: str) -> Any:
         """
         Closes a previously opened reserve in the LND wallet, identified by its unique GUID. This operation releases the allocated funds back to the main wallet balance. Access to this endpoint varies based on the network mode: in RegTest mode, it's accessible to all users, while in TestNet and MainNet modes, it's restricted to administrators only.
 
@@ -261,7 +336,7 @@ class Wallet:
             Result object indicating success or failure
         """
         api_url = f"{self.base_url}/closereserve"
-        response = requests.get(url=api_url, params={"authToken": self._create_authtoken(), "reserveId": reserveId})
+        response = requests.get(url=api_url, params={"authToken": self._create_authtoken(), "reserveId": reserveId, "otp": otp})
         response.raise_for_status()
         return self.parse_response(response.json())
 
@@ -325,19 +400,20 @@ class Wallet:
         response.raise_for_status()
         return self.parse_response(response.json())
     
-    def registerpayout(self, satoshis: int, btcAddress: str) -> Any:
+    def registerpayout(self, satoshis: int, btcAddress: str, otp: str) -> Any:
         """
         Initiates a new payout request from the user's Lightning Network wallet to a specified Bitcoin address on the blockchain. This operation registers the payout for execution, which may involve closing Lightning channels if necessary to fulfill the requested amount. The method returns a unique identifier (GUID) for tracking the payout request.
 
         Args:
             satoshis: The amount to be paid out, specified in satoshis (1 satoshi = 0.00000001 BTC). Must be a positive integer representing the exact payout amount.
             btcAddress: The destination Bitcoin address where the payout will be sent. This should be a valid Bitcoin address on the blockchain.
+            otp: The one-time password (OTP) for two-factor authentication.
 
         Returns:
             GuidResult containing the unique identifier for the payout request
         """
         api_url = f"{self.base_url}/registerpayout"
-        response = requests.get(url=api_url, params={"authToken": self._create_authtoken(), "satoshis": satoshis, "btcAddress": btcAddress})
+        response = requests.get(url=api_url, params={"authToken": self._create_authtoken(), "satoshis": satoshis, "btcAddress": btcAddress, "otp": otp})
         response.raise_for_status()
         return self.parse_response(response.json())
     
@@ -398,7 +474,7 @@ class Wallet:
         response.raise_for_status()
         return self.parse_response(response.json())
 
-    def sendpayment(self, paymentrequest: str, timeout: int, feelimit: int) -> Any:
+    def sendpayment(self, paymentrequest: str, timeout: int, feelimit: int, otp: str) -> Any:
         """
         Initiates a Lightning Network payment based on the provided payment request. This endpoint attempts to route the payment to its final destination, handling all necessary channel operations and routing decisions.
 
@@ -411,25 +487,7 @@ class Wallet:
             PaymentRecordResult containing the payment details
         """
         api_url = f"{self.base_url}/sendpayment"
-        response = requests.get(url=api_url, params={"authToken": self._create_authtoken(), "paymentrequest": paymentrequest, "timeout": timeout, "feelimit": feelimit})
-        response.raise_for_status()
-        return self.parse_response(response.json())
-
-    def cancelinvoicesendpayment(self, paymenthash: str, paymentrequest: str, timeout: int, feelimit: int) -> Any:
-        """
-        Cancels invoice and Initiates a Lightning Network payment atomically. This endpoint attempts to route the payment to its final destination, handling all necessary channel operations and routing decisions.
-
-        Args:
-            paymenthash: The Lightning Network payment hash of the invoice to be cancelled
-            paymentrequest: The Lightning Network payment request (invoice) to be paid. This encoded string contains all necessary details for the payment, including amount and recipient.
-            timeout: Maximum time (in seconds) allowed for finding a route for the payment. If a route isn't found within this time, the payment attempt will be aborted.
-            feelimit: Maximum fee (in millisatoshis) that the user is willing to pay for this transaction. If the calculated fee exceeds this limit, the payment will not be sent.
-
-        Returns:
-            PaymentRecordResult containing the payment details
-        """
-        api_url = f"{self.base_url}/cancelinvoicesendpayment"
-        response = requests.get(url=api_url, params={"authToken": self._create_authtoken(), "paymenthash": paymenthash, "paymentrequest": paymentrequest, "timeout": timeout, "feelimit": feelimit})
+        response = requests.get(url=api_url, params={"authToken": self._create_authtoken(), "paymentrequest": paymentrequest, "timeout": timeout, "feelimit": feelimit, "otp": otp})
         response.raise_for_status()
         return self.parse_response(response.json())
 

@@ -1,7 +1,8 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using System.ComponentModel.DataAnnotations;
 using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using System.Collections.Concurrent;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace LNDWallet;
 
@@ -256,6 +257,32 @@ public class Token
     public required string PublicKey { get; set; }
 }
 
+public class TwoFactorAuth
+{
+    /// <summary>
+    /// The public key of the account.
+    /// </summary>
+    [Key]
+    public required string PublicKey { get; set; }
+    /// <summary>
+    /// The secret key used for two-factor authentication.
+    /// </summary>
+    public required string SecretKey { get; set; }
+}
+
+public class SingleUseCode
+{
+    /// <summary>
+    /// The public key of the account.
+    /// </summary>
+    [Key, Column(Order = 0)]
+    public required string PublicKey { get; set; }
+    /// <summary>
+    /// The single-use code.
+    /// </summary>
+    [Key, Column(Order = 1)] 
+    public required string Code { get; set; }
+}
 
 public class WaletContextFactory : IDisposable
 {
@@ -363,6 +390,9 @@ public class WaletContext : DbContext, IDisposable
     /// Tokens table.
     /// </summary>
     public DbSet<Token> Tokens { get; set; }
+
+    public DbSet<TwoFactorAuth> TwoFactorAuths { get; set; }
+    public DbSet<SingleUseCode> SingleUseCodes { get; set; }
 
     /// <summary>
     /// Configures the context for use with a SQLite database.
