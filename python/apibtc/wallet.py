@@ -25,6 +25,11 @@ class LNDWalletErrorCode(Enum):
     OperationFailed = 12
     AccessDenied = 13
     FeeLimitTooSmall = 14
+    TwoFactorAlreadyEnabled = 15
+    InvalidSingleUseToken = 16
+    TwoFactorNotEnabled = 17
+    InvalidTwoFactorCode = 18
+    TwoFactorNotPrepared = 19
 
 class CommitmentType(Enum):
     UnknownCommitmentType = 0
