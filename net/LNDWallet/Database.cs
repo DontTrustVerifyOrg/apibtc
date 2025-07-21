@@ -270,17 +270,18 @@ public class TwoFactorAuth
     public required string SecretKey { get; set; }
 }
 
+[PrimaryKey(nameof(PublicKey), nameof(Code))]
 public class SingleUseCode
 {
     /// <summary>
     /// The public key of the account.
     /// </summary>
-    [Key, Column(Order = 0)]
+    [Column(Order = 0)]
     public required string PublicKey { get; set; }
     /// <summary>
     /// The single-use code.
     /// </summary>
-    [Key, Column(Order = 1)] 
+    [Column(Order = 1)] 
     public required string Code { get; set; }
 }
 
