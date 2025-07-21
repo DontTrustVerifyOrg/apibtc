@@ -1,8 +1,8 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <PackageId>ApiBtc.Client</PackageId>
-    <Version>1.0.2</Version>
+    <Version>1.0.3</Version>
     <Authors>TheHyperlabs</Authors>
     <Company>TheHyperlabs</Company>
     <TargetFramework>net8.0</TargetFramework>

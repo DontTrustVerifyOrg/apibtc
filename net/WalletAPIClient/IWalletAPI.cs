@@ -10,7 +10,8 @@ public interface IWalletAPI
     Task<GuidResult> GetTokenAsync(string pubkey, System.Threading.CancellationToken cancellationToken);
     Task<Result> ValidateAsync(string authToken, System.Threading.CancellationToken cancellationToken);
     Task<BooleanResult> IsTwoFactorEnabledAsync(string authToken, System.Threading.CancellationToken cancellationToken);
-    Task<TwoFactorAuthSetupResult> EnableTwoFactorAsync(string authToken, string issuer, System.Threading.CancellationToken cancellationToken);
+    Task<TwoFactorAuthSetupResult> PrepareTwoFactorAsync(string authToken, string issuer, System.Threading.CancellationToken cancellationToken);
+    Task<Result> EnableTwoFactorAsync(string authToken, string code, System.Threading.CancellationToken cancellationToken);
     Task<Result> DisableTwoFactorAsync(string authToken, string code, System.Threading.CancellationToken cancellationToken);
     Task<StringArrayResult> RegenerateSingleUseCodesAsync(string authToken, string code, System.Threading.CancellationToken cancellationToken);
     Task<Result> TopUpAndMine6BlocksAsync(string authToken, string bitcoinAddr, long satoshis, System.Threading.CancellationToken cancellationToken);
@@ -118,9 +119,14 @@ public class WalletAPIRetryWrapper : IWalletAPI
         return await RetryPolicy.WithRetryPolicy(() => api.IsTwoFactorEnabledAsync(authToken, cancellationToken));
     }
 
-    public async Task<TwoFactorAuthSetupResult> EnableTwoFactorAsync(string authToken, string issuer, CancellationToken cancellationToken)
+    public async Task<TwoFactorAuthSetupResult> PrepareTwoFactorAsync(string authToken, string issuer, CancellationToken cancellationToken)
     {
-        return await RetryPolicy.WithRetryPolicy(() => api.EnableTwoFactorAsync(authToken, issuer, cancellationToken));
+        return await RetryPolicy.WithRetryPolicy(() => api.PrepareTwoFactorAsync(authToken, issuer, cancellationToken));
+    }
+
+    public async Task<Result> EnableTwoFactorAsync(string authToken, string code, CancellationToken cancellationToken)
+    {
+        return await RetryPolicy.WithRetryPolicy(() => api.EnableTwoFactorAsync(authToken, code, cancellationToken));
     }
 
     public async Task<Result> DisableTwoFactorAsync(string authToken, string code, CancellationToken cancellationToken)

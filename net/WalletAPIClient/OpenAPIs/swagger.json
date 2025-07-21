@@ -71,14 +71,14 @@
         }
       }
     },
-    "/enabletwofactor": {
+    "/preparetwofactor": {
       "get": {
         "tags": [
           "WalletAPI"
         ],
-        "summary": "Enable Two-Factor Authentication",
-        "description": "Enables Two-Factor Authentication (2FA) for the user. This function generates a setup object containing a secret key that the user can use to configure their TOTP application. The user must scan the QR code with their 2FA app to complete the setup process. This endpoint is available only to users who have not yet enabled 2FA.",
-        "operationId": "EnableTwoFactor",
+        "summary": "Prepare Two-Factor Authentication",
+        "description": "Prepares Two-Factor Authentication (2FA) for the user. This function generates a setup object containing a secret key that the user can use to configure their TOTP application. The user must scan the QR code with their 2FA app to complete the setup process. This endpoint is available only to users who have not yet enabled 2FA.",
+        "operationId": "PrepareTwoFactor",
         "parameters": [
           {
             "name": "authToken",
@@ -106,6 +106,48 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/TwoFactorAuthSetupResult"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/enabletwofactor": {
+      "get": {
+        "tags": [
+          "WalletAPI"
+        ],
+        "summary": "Enable Two-Factor Authentication",
+        "description": "Enables Two-Factor Authentication (2FA) for the user. This function requires a valid single-use code for authentication. Once 2FA is enabled, the user will need to provide a TOTP code for authentication in addition to their regular credentials.",
+        "operationId": "EnableTwoFactor",
+        "parameters": [
+          {
+            "name": "authToken",
+            "in": "query",
+            "description": "Authorization token for authentication and access control. This token is generated using Schnorr Signatures for secp256k1 and encodes the user's public key along with the session identifier obtained from the GetToken function.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "code",
+            "in": "query",
+            "description": "A valid TOTP code to authenticate the enable request.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Result"
                 }
               }
             }
@@ -209,7 +251,7 @@
           {
             "name": "code",
             "in": "query",
-            "description": "The old and not yet used single-use code to regenerate single-use codes for.",
+            "description": "A valid TOTP code to authenticate the enable request.",
             "required": true,
             "schema": {
               "type": "string"
@@ -1771,7 +1813,8 @@
               "TwoFactorAlreadyEnabled",
               "InvalidSingleUseToken",
               "TwoFactorNotEnabled",
-              "InvalidTwoFactorCode"
+              "InvalidTwoFactorCode",
+              "TwoFactorNotPrepared"
             ],
             "x-ms-enum": {
               "name": "LNDWalletErrorCode",
@@ -1852,6 +1895,10 @@
                 {
                   "value": 18,
                   "name": "InvalidTwoFactorCode"
+                },
+                {
+                  "value": 19,
+                  "name": "TwoFactorNotPrepared"
                 }
               ]
             }
@@ -1894,7 +1941,8 @@
               "TwoFactorAlreadyEnabled",
               "InvalidSingleUseToken",
               "TwoFactorNotEnabled",
-              "InvalidTwoFactorCode"
+              "InvalidTwoFactorCode",
+              "TwoFactorNotPrepared"
             ],
             "x-ms-enum": {
               "name": "LNDWalletErrorCode",
@@ -1975,6 +2023,10 @@
                 {
                   "value": 18,
                   "name": "InvalidTwoFactorCode"
+                },
+                {
+                  "value": 19,
+                  "name": "TwoFactorNotPrepared"
                 }
               ]
             }
@@ -2228,7 +2280,8 @@
               "TwoFactorAlreadyEnabled",
               "InvalidSingleUseToken",
               "TwoFactorNotEnabled",
-              "InvalidTwoFactorCode"
+              "InvalidTwoFactorCode",
+              "TwoFactorNotPrepared"
             ],
             "x-ms-enum": {
               "name": "LNDWalletErrorCode",
@@ -2309,6 +2362,10 @@
                 {
                   "value": 18,
                   "name": "InvalidTwoFactorCode"
+                },
+                {
+                  "value": 19,
+                  "name": "TwoFactorNotPrepared"
                 }
               ]
             }
@@ -2533,7 +2590,8 @@
               "TwoFactorAlreadyEnabled",
               "InvalidSingleUseToken",
               "TwoFactorNotEnabled",
-              "InvalidTwoFactorCode"
+              "InvalidTwoFactorCode",
+              "TwoFactorNotPrepared"
             ],
             "x-ms-enum": {
               "name": "LNDWalletErrorCode",
@@ -2614,6 +2672,10 @@
                 {
                   "value": 18,
                   "name": "InvalidTwoFactorCode"
+                },
+                {
+                  "value": 19,
+                  "name": "TwoFactorNotPrepared"
                 }
               ]
             }
@@ -2808,7 +2870,8 @@
               "TwoFactorAlreadyEnabled",
               "InvalidSingleUseToken",
               "TwoFactorNotEnabled",
-              "InvalidTwoFactorCode"
+              "InvalidTwoFactorCode",
+              "TwoFactorNotPrepared"
             ],
             "x-ms-enum": {
               "name": "LNDWalletErrorCode",
@@ -2889,6 +2952,10 @@
                 {
                   "value": 18,
                   "name": "InvalidTwoFactorCode"
+                },
+                {
+                  "value": 19,
+                  "name": "TwoFactorNotPrepared"
                 }
               ]
             }
@@ -2936,7 +3003,8 @@
               "TwoFactorAlreadyEnabled",
               "InvalidSingleUseToken",
               "TwoFactorNotEnabled",
-              "InvalidTwoFactorCode"
+              "InvalidTwoFactorCode",
+              "TwoFactorNotPrepared"
             ],
             "x-ms-enum": {
               "name": "LNDWalletErrorCode",
@@ -3017,6 +3085,10 @@
                 {
                   "value": 18,
                   "name": "InvalidTwoFactorCode"
+                },
+                {
+                  "value": 19,
+                  "name": "TwoFactorNotPrepared"
                 }
               ]
             }
@@ -3060,7 +3132,8 @@
               "TwoFactorAlreadyEnabled",
               "InvalidSingleUseToken",
               "TwoFactorNotEnabled",
-              "InvalidTwoFactorCode"
+              "InvalidTwoFactorCode",
+              "TwoFactorNotPrepared"
             ],
             "x-ms-enum": {
               "name": "LNDWalletErrorCode",
@@ -3141,6 +3214,10 @@
                 {
                   "value": 18,
                   "name": "InvalidTwoFactorCode"
+                },
+                {
+                  "value": 19,
+                  "name": "TwoFactorNotPrepared"
                 }
               ]
             }
@@ -3259,7 +3336,8 @@
               "TwoFactorAlreadyEnabled",
               "InvalidSingleUseToken",
               "TwoFactorNotEnabled",
-              "InvalidTwoFactorCode"
+              "InvalidTwoFactorCode",
+              "TwoFactorNotPrepared"
             ],
             "x-ms-enum": {
               "name": "LNDWalletErrorCode",
@@ -3340,6 +3418,10 @@
                 {
                   "value": 18,
                   "name": "InvalidTwoFactorCode"
+                },
+                {
+                  "value": 19,
+                  "name": "TwoFactorNotPrepared"
                 }
               ]
             }
@@ -3474,7 +3556,8 @@
               "TwoFactorAlreadyEnabled",
               "InvalidSingleUseToken",
               "TwoFactorNotEnabled",
-              "InvalidTwoFactorCode"
+              "InvalidTwoFactorCode",
+              "TwoFactorNotPrepared"
             ],
             "x-ms-enum": {
               "name": "LNDWalletErrorCode",
@@ -3555,6 +3638,10 @@
                 {
                   "value": 18,
                   "name": "InvalidTwoFactorCode"
+                },
+                {
+                  "value": 19,
+                  "name": "TwoFactorNotPrepared"
                 }
               ]
             }
@@ -3602,7 +3689,8 @@
               "TwoFactorAlreadyEnabled",
               "InvalidSingleUseToken",
               "TwoFactorNotEnabled",
-              "InvalidTwoFactorCode"
+              "InvalidTwoFactorCode",
+              "TwoFactorNotPrepared"
             ],
             "x-ms-enum": {
               "name": "LNDWalletErrorCode",
@@ -3683,6 +3771,10 @@
                 {
                   "value": 18,
                   "name": "InvalidTwoFactorCode"
+                },
+                {
+                  "value": 19,
+                  "name": "TwoFactorNotPrepared"
                 }
               ]
             }
@@ -3801,7 +3893,8 @@
           15,
           16,
           17,
-          18
+          18,
+          19
         ],
         "type": "integer",
         "format": "int32",
@@ -3824,7 +3917,8 @@
           "TwoFactorAlreadyEnabled",
           "InvalidSingleUseToken",
           "TwoFactorNotEnabled",
-          "InvalidTwoFactorCode"
+          "InvalidTwoFactorCode",
+          "TwoFactorNotPrepared"
         ],
         "x-ms-enum": {
           "name": "LNDWalletErrorCode",
@@ -3905,6 +3999,10 @@
             {
               "value": 18,
               "name": "InvalidTwoFactorCode"
+            },
+            {
+              "value": 19,
+              "name": "TwoFactorNotPrepared"
             }
           ]
         }
@@ -3970,7 +4068,8 @@
               "TwoFactorAlreadyEnabled",
               "InvalidSingleUseToken",
               "TwoFactorNotEnabled",
-              "InvalidTwoFactorCode"
+              "InvalidTwoFactorCode",
+              "TwoFactorNotPrepared"
             ],
             "x-ms-enum": {
               "name": "LNDWalletErrorCode",
@@ -4051,6 +4150,10 @@
                 {
                   "value": 18,
                   "name": "InvalidTwoFactorCode"
+                },
+                {
+                  "value": 19,
+                  "name": "TwoFactorNotPrepared"
                 }
               ]
             }
@@ -4373,7 +4476,8 @@
               "TwoFactorAlreadyEnabled",
               "InvalidSingleUseToken",
               "TwoFactorNotEnabled",
-              "InvalidTwoFactorCode"
+              "InvalidTwoFactorCode",
+              "TwoFactorNotPrepared"
             ],
             "x-ms-enum": {
               "name": "LNDWalletErrorCode",
@@ -4454,6 +4558,10 @@
                 {
                   "value": 18,
                   "name": "InvalidTwoFactorCode"
+                },
+                {
+                  "value": 19,
+                  "name": "TwoFactorNotPrepared"
                 }
               ]
             }
@@ -4501,7 +4609,8 @@
               "TwoFactorAlreadyEnabled",
               "InvalidSingleUseToken",
               "TwoFactorNotEnabled",
-              "InvalidTwoFactorCode"
+              "InvalidTwoFactorCode",
+              "TwoFactorNotPrepared"
             ],
             "x-ms-enum": {
               "name": "LNDWalletErrorCode",
@@ -4582,6 +4691,10 @@
                 {
                   "value": 18,
                   "name": "InvalidTwoFactorCode"
+                },
+                {
+                  "value": 19,
+                  "name": "TwoFactorNotPrepared"
                 }
               ]
             }
@@ -4667,7 +4780,8 @@
               "TwoFactorAlreadyEnabled",
               "InvalidSingleUseToken",
               "TwoFactorNotEnabled",
-              "InvalidTwoFactorCode"
+              "InvalidTwoFactorCode",
+              "TwoFactorNotPrepared"
             ],
             "x-ms-enum": {
               "name": "LNDWalletErrorCode",
@@ -4748,6 +4862,10 @@
                 {
                   "value": 18,
                   "name": "InvalidTwoFactorCode"
+                },
+                {
+                  "value": 19,
+                  "name": "TwoFactorNotPrepared"
                 }
               ]
             }
@@ -5036,7 +5154,8 @@
               "TwoFactorAlreadyEnabled",
               "InvalidSingleUseToken",
               "TwoFactorNotEnabled",
-              "InvalidTwoFactorCode"
+              "InvalidTwoFactorCode",
+              "TwoFactorNotPrepared"
             ],
             "x-ms-enum": {
               "name": "LNDWalletErrorCode",
@@ -5117,6 +5236,10 @@
                 {
                   "value": 18,
                   "name": "InvalidTwoFactorCode"
+                },
+                {
+                  "value": 19,
+                  "name": "TwoFactorNotPrepared"
                 }
               ]
             }
@@ -5164,7 +5287,8 @@
               "TwoFactorAlreadyEnabled",
               "InvalidSingleUseToken",
               "TwoFactorNotEnabled",
-              "InvalidTwoFactorCode"
+              "InvalidTwoFactorCode",
+              "TwoFactorNotPrepared"
             ],
             "x-ms-enum": {
               "name": "LNDWalletErrorCode",
@@ -5245,6 +5369,10 @@
                 {
                   "value": 18,
                   "name": "InvalidTwoFactorCode"
+                },
+                {
+                  "value": 19,
+                  "name": "TwoFactorNotPrepared"
                 }
               ]
             }
@@ -5581,7 +5709,8 @@
               "TwoFactorAlreadyEnabled",
               "InvalidSingleUseToken",
               "TwoFactorNotEnabled",
-              "InvalidTwoFactorCode"
+              "InvalidTwoFactorCode",
+              "TwoFactorNotPrepared"
             ],
             "x-ms-enum": {
               "name": "LNDWalletErrorCode",
@@ -5662,6 +5791,10 @@
                 {
                   "value": 18,
                   "name": "InvalidTwoFactorCode"
+                },
+                {
+                  "value": 19,
+                  "name": "TwoFactorNotPrepared"
                 }
               ]
             }
@@ -5803,7 +5936,8 @@
               "TwoFactorAlreadyEnabled",
               "InvalidSingleUseToken",
               "TwoFactorNotEnabled",
-              "InvalidTwoFactorCode"
+              "InvalidTwoFactorCode",
+              "TwoFactorNotPrepared"
             ],
             "x-ms-enum": {
               "name": "LNDWalletErrorCode",
@@ -5884,6 +6018,10 @@
                 {
                   "value": 18,
                   "name": "InvalidTwoFactorCode"
+                },
+                {
+                  "value": 19,
+                  "name": "TwoFactorNotPrepared"
                 }
               ]
             }
@@ -5930,7 +6068,8 @@
               "TwoFactorAlreadyEnabled",
               "InvalidSingleUseToken",
               "TwoFactorNotEnabled",
-              "InvalidTwoFactorCode"
+              "InvalidTwoFactorCode",
+              "TwoFactorNotPrepared"
             ],
             "x-ms-enum": {
               "name": "LNDWalletErrorCode",
@@ -6011,6 +6150,10 @@
                 {
                   "value": 18,
                   "name": "InvalidTwoFactorCode"
+                },
+                {
+                  "value": 19,
+                  "name": "TwoFactorNotPrepared"
                 }
               ]
             }
@@ -6054,7 +6197,8 @@
               "TwoFactorAlreadyEnabled",
               "InvalidSingleUseToken",
               "TwoFactorNotEnabled",
-              "InvalidTwoFactorCode"
+              "InvalidTwoFactorCode",
+              "TwoFactorNotPrepared"
             ],
             "x-ms-enum": {
               "name": "LNDWalletErrorCode",
@@ -6135,6 +6279,10 @@
                 {
                   "value": 18,
                   "name": "InvalidTwoFactorCode"
+                },
+                {
+                  "value": 19,
+                  "name": "TwoFactorNotPrepared"
                 }
               ]
             }
@@ -6214,7 +6362,8 @@
               "TwoFactorAlreadyEnabled",
               "InvalidSingleUseToken",
               "TwoFactorNotEnabled",
-              "InvalidTwoFactorCode"
+              "InvalidTwoFactorCode",
+              "TwoFactorNotPrepared"
             ],
             "x-ms-enum": {
               "name": "LNDWalletErrorCode",
@@ -6295,6 +6444,10 @@
                 {
                   "value": 18,
                   "name": "InvalidTwoFactorCode"
+                },
+                {
+                  "value": 19,
+                  "name": "TwoFactorNotPrepared"
                 }
               ]
             }
@@ -6367,7 +6520,8 @@
               "TwoFactorAlreadyEnabled",
               "InvalidSingleUseToken",
               "TwoFactorNotEnabled",
-              "InvalidTwoFactorCode"
+              "InvalidTwoFactorCode",
+              "TwoFactorNotPrepared"
             ],
             "x-ms-enum": {
               "name": "LNDWalletErrorCode",
@@ -6448,6 +6602,10 @@
                 {
                   "value": 18,
                   "name": "InvalidTwoFactorCode"
+                },
+                {
+                  "value": 19,
+                  "name": "TwoFactorNotPrepared"
                 }
               ]
             }
