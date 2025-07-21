@@ -419,7 +419,7 @@ public class LNDAccountManager
             if ((from tfa in walletContext.TwoFactorAuths where tfa.PublicKey == PublicKey select tfa).FirstOrDefault() != null)
                 throw new LNDWalletException(LNDWalletErrorCode.TwoFactorAlreadyEnabled);
 
-            var base32String = Base32Encoding.ToString(RandomUtils.GetBytes(32));
+            var base32String = Base32Encoding.ToString(RandomUtils.GetBytes(20));
 
             var singleUseCodes = new HashSet<string>();
             while (singleUseCodes.Count < 16)
@@ -610,7 +610,7 @@ public class LNDAccountManager
             if (tfaEntry == null)
                 throw new LNDWalletException(LNDWalletErrorCode.TwoFactorNotEnabled);
 
-            var base32String = Base32Encoding.ToString(RandomUtils.GetBytes(32));
+            var base32String = Base32Encoding.ToString(RandomUtils.GetBytes(20));
             tfaEntry.SecretKey = base32String;
             walletContext.UPDATE(tfaEntry);
 
