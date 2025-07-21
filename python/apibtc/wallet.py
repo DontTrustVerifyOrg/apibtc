@@ -160,10 +160,10 @@ class Wallet:
         response = requests.get(url=api_url, params={"authToken": self._create_authtoken()})
         response.raise_for_status()
         return self.parse_response(response.json())
-    
-    def enabletwofactor(self, issuer) -> Any:
+
+    def preparetwofactor(self, issuer) -> Any:
         """
-        Enables two-factor authentication (2FA) for the user. This endpoint requires the user to provide a valid issuer (e.g., a phone number or email address) for the 2FA setup.
+        Prepares two-factor authentication (2FA) for the user. This endpoint requires the user to provide a valid issuer (e.g., a phone number or email address) for the 2FA setup.
 
         Args:
             issuer: The issuer to be used for two-factor authentication.
@@ -171,8 +171,23 @@ class Wallet:
         Returns:
             Result object indicating success or failure
         """
-        api_url = f"{self.base_url}/enabletwofactor"
+        api_url = f"{self.base_url}/preparetwofactor"
         response = requests.get(url=api_url, params={"authToken": self._create_authtoken(), "issuer": issuer})
+        response.raise_for_status()
+        return self.parse_response(response.json())
+
+    def enabletwofactor(self, code) -> Any:
+        """
+        Enables two-factor authentication (2FA) for the user. This endpoint requires the user to provide a valid 2FA code to complete the setup.
+
+        Args:
+            code: The two-factor authentication code provided by the user.
+
+        Returns:
+            Result object indicating success or failure
+        """
+        api_url = f"{self.base_url}/enabletwofactor"
+        response = requests.get(url=api_url, params={"authToken": self._create_authtoken(), "code": code})
         response.raise_for_status()
         return self.parse_response(response.json())
     
@@ -181,7 +196,7 @@ class Wallet:
         Disables two-factor authentication (2FA) for the user. This endpoint requires a valid 2FA code to verify the user's identity before disabling the feature.
 
         Args:
-            code: The two-factor authentication code provided by the user.
+            code: The single use code provided by the user.
 
         Returns:
             Result object indicating success or failure
@@ -196,7 +211,7 @@ class Wallet:
         Regenerates single-use codes for two-factor authentication (2FA). This endpoint allows users to obtain new single-use codes, which can be used for secure authentication in scenarios where the original codes have been compromised or lost.
 
         Args:
-            code: The current single-use code to be regenerated.
+            code: The two-factor authentication code provided by the user.
 
         Returns:
             Result object indicating success or failure
@@ -211,7 +226,7 @@ class Wallet:
         Resets two-factor authentication (2FA) for the user. This endpoint allows users to reset their 2FA settings, which may be necessary if they have lost access to their 2FA device or need to change their 2FA configuration.
 
         Args:
-            code: The current two-factor authentication code provided by the user.
+            code: The current single-use code provided by the user.
             issuer: The issuer to be used for resetting two-factor authentication.
 
         Returns:
@@ -229,8 +244,8 @@ class Wallet:
         In RegTest mode only: Sends the specified amount of satoshis from the local Bitcoin wallet to the provided Bitcoin address, then automatically mines 6 blocks to ensure transaction confirmation. This function is useful for testing and development purposes in a controlled environment.
 
         Args:
-            bitcoinAddr: Bitcoin address to receive the funds
-            satoshis: Amount of satoshis to send
+            bitcoinAddr (str): Bitcoin address to receive the funds
+            satoshis (int): Amount of satoshis to send
 
         Returns:
             Result object indicating success or failure

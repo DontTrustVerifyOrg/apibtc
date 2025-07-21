@@ -56,6 +56,7 @@ public enum LNDWalletErrorCode
     InvalidSingleUseToken = 16,
     TwoFactorNotEnabled = 17,
     InvalidTwoFactorCode = 18,
+    TwoFactorNotPrepared = 19,
 }
 
 /// <summary>
@@ -83,6 +84,7 @@ public static class Extensions
         "Invalid single use token",
         "Two factor is not enabled",
         "Invalid two factor code",
+        "Two factor is not prepared",
      };
 
     /// <summary>
