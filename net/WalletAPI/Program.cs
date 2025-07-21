@@ -1289,6 +1289,7 @@ public class WalletSettings
     public required long SendPaymentFee { get; set; }
     public required long MaxChannelCloseFeePerVByte { get; set; }
     public required bool EnforceTwoFactorAuthentication { get; set; }
+
 }
 
 public class LndSettings : LND.NodeSettings
