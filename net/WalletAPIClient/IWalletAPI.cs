@@ -8,23 +8,29 @@ public interface IWalletAPI
     string BaseUrl { get; }
     IRetryPolicy RetryPolicy { get; }
     Task<GuidResult> GetTokenAsync(string pubkey, System.Threading.CancellationToken cancellationToken);
+    Task<Result> ValidateAsync(string authToken, System.Threading.CancellationToken cancellationToken);
+    Task<BooleanResult> IsTwoFactorEnabledAsync(string authToken, System.Threading.CancellationToken cancellationToken);
+    Task<TwoFactorAuthSetupResult> EnableTwoFactorAsync(string authToken, string issuer, System.Threading.CancellationToken cancellationToken);
+    Task<Result> DisableTwoFactorAsync(string authToken, string code, System.Threading.CancellationToken cancellationToken);
+    Task<StringArrayResult> RegenerateSingleUseCodesAsync(string authToken, string code, System.Threading.CancellationToken cancellationToken);
     Task<Result> TopUpAndMine6BlocksAsync(string authToken, string bitcoinAddr, long satoshis, System.Threading.CancellationToken cancellationToken);
-    Task<Result> SendToAddressAsync(string authToken, string bitcoinAddr, long satoshis, System.Threading.CancellationToken cancellationToken);
+    Task<TwoFactorAuthSetupResult> ResetTwoFactorAsync(string authToken, string code, string issuer, System.Threading.CancellationToken cancellationToken);
+    Task<Result> SendToAddressAsync(string authToken, string bitcoinAddr, long satoshis, string otp, System.Threading.CancellationToken cancellationToken);
     Task<Result> GenerateBlocksAsync(string authToken, int blocknum, System.Threading.CancellationToken cancellationToken);
     Task<StringResult> NewBitcoinAddressAsync(string authToken, System.Threading.CancellationToken cancellationToken);
     Task<Int64Result> GetBitcoinWalletBalanceAsync(string authToken, int minConf, System.Threading.CancellationToken cancellationToken);
     Task<LndWalletBalanceRetResult> GetLndWalletBalanceAsync(string authToken, System.Threading.CancellationToken cancellationToken);
-    Task<GuidResult> OpenReserveAsync(string authToken, long satoshis, System.Threading.CancellationToken cancellationToken);
-    Task<Result> CloseReserveAsync(string authToken, System.Guid reserveId, System.Threading.CancellationToken cancellationToken);
+    Task<GuidResult> OpenReserveAsync(string authToken, long satoshis, string otp, System.Threading.CancellationToken cancellationToken);
+    Task<Result> CloseReserveAsync(string authToken, System.Guid reserveId, string otp, System.Threading.CancellationToken cancellationToken);
     Task<FeeEstimateRetResult> EstimateFeeAsync(string authToken, string address, long satoshis, System.Threading.CancellationToken cancellationToken);
     Task<AccountBalanceDetailsResult> GetBalanceAsync(string authToken, System.Threading.CancellationToken cancellationToken);
     Task<StringResult> NewAddressAsync(string authToken, System.Threading.CancellationToken cancellationToken);
-    Task<GuidResult> RegisterPayoutAsync(string authToken, long satoshis, string btcAddress, System.Threading.CancellationToken cancellationToken);
+    Task<GuidResult> RegisterPayoutAsync(string authToken, long satoshis, string btcAddress, string otp, System.Threading.CancellationToken cancellationToken);
     Task<InvoiceRecordResult> AddInvoiceAsync(string authToken, long satoshis, string memo, long expiry, System.Threading.CancellationToken cancellationToken);
     Task<InvoiceRecordResult> AddHodlInvoiceAsync(string authToken, long satoshis, string hash, string memo, long expiry, System.Threading.CancellationToken cancellationToken);
     Task<PaymentRequestRecordResult> DecodeInvoiceAsync(string authToken, string paymentRequest, System.Threading.CancellationToken cancellationToken);
     Task<RouteFeeRecordResult> EstimateRouteFeeAsync(string authToken, string paymentrequest, int timeout, CancellationToken cancellationToken);
-    Task<PaymentRecordResult> SendPaymentAsync(string authToken, string paymentrequest, int timeout, long feelimit, System.Threading.CancellationToken cancellationToken);
+    Task<PaymentRecordResult> SendPaymentAsync(string authToken, string paymentrequest, int timeout, long feelimit, string otp, System.Threading.CancellationToken cancellationToken);
     Task<Result> SettleInvoiceAsync(string authToken, string preimage, System.Threading.CancellationToken cancellationToken);
     Task<Result> CancelInvoiceAsync(string authToken, string paymenthash, System.Threading.CancellationToken cancellationToken);
     Task<InvoiceRecordResult> GetInvoiceAsync(string authToken, string paymenthash, System.Threading.CancellationToken cancellationToken);
@@ -102,6 +108,36 @@ public class WalletAPIRetryWrapper : IWalletAPI
         return api.CreatePayoutStateUpdatesClient();
     }
 
+    public async Task<Result> ValidateAsync(string authToken, CancellationToken cancellationToken)
+    {
+        return await RetryPolicy.WithRetryPolicy(() => api.ValidateAsync(authToken, cancellationToken));
+    }
+
+    public async Task<BooleanResult> IsTwoFactorEnabledAsync(string authToken, CancellationToken cancellationToken)
+    {
+        return await RetryPolicy.WithRetryPolicy(() => api.IsTwoFactorEnabledAsync(authToken, cancellationToken));
+    }
+
+    public async Task<TwoFactorAuthSetupResult> EnableTwoFactorAsync(string authToken, string issuer, CancellationToken cancellationToken)
+    {
+        return await RetryPolicy.WithRetryPolicy(() => api.EnableTwoFactorAsync(authToken, issuer, cancellationToken));
+    }
+
+    public async Task<Result> DisableTwoFactorAsync(string authToken, string code, CancellationToken cancellationToken)
+    {
+        return await RetryPolicy.WithRetryPolicy(() => api.DisableTwoFactorAsync(authToken, code, cancellationToken));
+    }
+
+    public async Task<StringArrayResult> RegenerateSingleUseCodesAsync(string authToken, string code, CancellationToken cancellationToken)
+    {
+        return await RetryPolicy.WithRetryPolicy(() => api.RegenerateSingleUseCodesAsync(authToken, code, cancellationToken));
+    }
+
+    public async Task<TwoFactorAuthSetupResult> ResetTwoFactorAsync(string authToken, string code, string issuer, CancellationToken cancellationToken)
+    {
+        return await RetryPolicy.WithRetryPolicy(() => api.ResetTwoFactorAsync(authToken, code, issuer, cancellationToken));
+    }
+
     public async Task<InvoiceRecordResult> AddHodlInvoiceAsync(string authToken, long satoshis, string hash, string memo, long expiry, CancellationToken cancellationToken)
     {
         return await RetryPolicy.WithRetryPolicy(() => api.AddHodlInvoiceAsync(authToken, satoshis, hash, memo, expiry, cancellationToken));
@@ -117,9 +153,9 @@ public class WalletAPIRetryWrapper : IWalletAPI
         return await RetryPolicy.WithRetryPolicy(() => api.CancelInvoiceAsync(authToken, paymenthash, cancellationToken));
     }
 
-    public async Task<Result> CloseReserveAsync(string authToken, System.Guid reserveId, CancellationToken cancellationToken)
+    public async Task<Result> CloseReserveAsync(string authToken, System.Guid reserveId, string otp, CancellationToken cancellationToken)
     {
-        return await RetryPolicy.WithRetryPolicy(() => api.CloseReserveAsync(authToken, reserveId, cancellationToken));
+        return await RetryPolicy.WithRetryPolicy(() => api.CloseReserveAsync(authToken, reserveId, otp, cancellationToken));
     }
 
     public async Task<PaymentRequestRecordResult> DecodeInvoiceAsync(string authToken, string paymentRequest, CancellationToken cancellationToken)
@@ -178,24 +214,24 @@ public class WalletAPIRetryWrapper : IWalletAPI
         return await RetryPolicy.WithRetryPolicy(() => api.NewBitcoinAddressAsync(authToken, cancellationToken));
     }
 
-    public async Task<GuidResult> OpenReserveAsync(string authToken, long satoshis, CancellationToken cancellationToken)
+    public async Task<GuidResult> OpenReserveAsync(string authToken, long satoshis, string otp, CancellationToken cancellationToken)
     {
-        return await RetryPolicy.WithRetryPolicy(() => api.OpenReserveAsync(authToken, satoshis, cancellationToken));
+        return await RetryPolicy.WithRetryPolicy(() => api.OpenReserveAsync(authToken, satoshis, otp, cancellationToken));
     }
 
-    public async Task<GuidResult> RegisterPayoutAsync(string authToken, long satoshis, string btcAddress, CancellationToken cancellationToken)
+    public async Task<GuidResult> RegisterPayoutAsync(string authToken, long satoshis, string btcAddress, string otp, CancellationToken cancellationToken)
     {
-        return await RetryPolicy.WithRetryPolicy(() => api.RegisterPayoutAsync(authToken, satoshis, btcAddress, cancellationToken));
+        return await RetryPolicy.WithRetryPolicy(() => api.RegisterPayoutAsync(authToken, satoshis, btcAddress, otp, cancellationToken));
     }
 
-    public async Task<PaymentRecordResult> SendPaymentAsync(string authToken, string paymentrequest, int timeout, long feelimit, CancellationToken cancellationToken)
+    public async Task<PaymentRecordResult> SendPaymentAsync(string authToken, string paymentrequest, int timeout, long feelimit, string otp, CancellationToken cancellationToken)
     {
-        return await RetryPolicy.WithRetryPolicy(() => api.SendPaymentAsync(authToken, paymentrequest, timeout, feelimit, cancellationToken));
+        return await RetryPolicy.WithRetryPolicy(() => api.SendPaymentAsync(authToken, paymentrequest, timeout, feelimit, otp, cancellationToken));
     }
 
-    public async Task<Result> SendToAddressAsync(string authToken, string bitcoinAddr, long satoshis, CancellationToken cancellationToken)
+    public async Task<Result> SendToAddressAsync(string authToken, string bitcoinAddr, long satoshis, string otp, CancellationToken cancellationToken)
     {
-        return await RetryPolicy.WithRetryPolicy(() => api.SendToAddressAsync(authToken, bitcoinAddr, satoshis, cancellationToken));
+        return await RetryPolicy.WithRetryPolicy(() => api.SendToAddressAsync(authToken, bitcoinAddr, satoshis, otp, cancellationToken));
     }
 
     public async Task<Result> SettleInvoiceAsync(string authToken, string preimage, CancellationToken cancellationToken)
@@ -220,7 +256,7 @@ public class WalletAPIRetryWrapper : IWalletAPI
 
     public async Task<RouteFeeRecordResult> EstimateRouteFeeAsync(string authToken, string paymentrequest, int timeout, CancellationToken cancellationToken)
     {
-        return await RetryPolicy.WithRetryPolicy(() => api.EstimateRouteFeeAsync(authToken, paymentrequest,timeout, cancellationToken));
+        return await RetryPolicy.WithRetryPolicy(() => api.EstimateRouteFeeAsync(authToken, paymentrequest, timeout, cancellationToken));
     }
 
     public async Task<PayoutRecordArrayResult> ListPayoutsAsync(string authToken, System.Threading.CancellationToken cancellationToken)

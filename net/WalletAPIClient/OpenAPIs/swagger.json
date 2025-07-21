@@ -38,6 +38,249 @@
         }
       }
     },
+    "/validate": {
+      "get": {
+        "tags": [
+          "WalletAPI"
+        ],
+        "summary": "Validate Authorization Token",
+        "description": "Validates the provided authorization token for authentication and access control. Returns a success result if the token is valid, or an error result if the token is invalid or expired.",
+        "operationId": "Validate",
+        "parameters": [
+          {
+            "name": "authToken",
+            "in": "query",
+            "description": "Authorization token for authentication and access control. This token is generated using Schnorr Signatures for secp256k1 and encodes the user's public key along with the session identifier obtained from the GetToken function.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Result"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/enabletwofactor": {
+      "get": {
+        "tags": [
+          "WalletAPI"
+        ],
+        "summary": "Enable Two-Factor Authentication",
+        "description": "Enables Two-Factor Authentication (2FA) for the user. This function generates a setup object containing a secret key that the user can use to configure their TOTP application. The user must scan the QR code with their 2FA app to complete the setup process. This endpoint is available only to users who have not yet enabled 2FA.",
+        "operationId": "EnableTwoFactor",
+        "parameters": [
+          {
+            "name": "authToken",
+            "in": "query",
+            "description": "Authorization token for authentication and access control. This token is generated using Schnorr Signatures for secp256k1 and encodes the user's public key along with the session identifier obtained from the GetToken function.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "issuer",
+            "in": "query",
+            "description": "The issuer name for the TOTP application. This is typically the name of the application or service that the user is setting up 2FA for.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TwoFactorAuthSetupResult"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/istwofactorenabled": {
+      "get": {
+        "tags": [
+          "WalletAPI"
+        ],
+        "summary": "Check if Two-Factor Authentication is enabled",
+        "description": "Checks if Two-Factor Authentication (2FA) is enabled for the user. This function returns a boolean value indicating whether 2FA is currently active for the user's account. It is useful for determining if the user needs to set up or disable 2FA.",
+        "operationId": "IsTwoFactorEnabled",
+        "parameters": [
+          {
+            "name": "authToken",
+            "in": "query",
+            "description": "Authorization token for authentication and access control. This token is generated using Schnorr Signatures for secp256k1 and encodes the user's public key along with the session identifier obtained from the GetToken function.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BooleanResult"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/disabletwofactor": {
+      "get": {
+        "tags": [
+          "WalletAPI"
+        ],
+        "summary": "Disable Two-Factor Authentication",
+        "description": "Disables Two-Factor Authentication (2FA) for the user. This function requires a valid single-use code for authentication. Once 2FA is disabled, the user will no longer need to provide a TOTP code for authentication.",
+        "operationId": "DisableTwoFactor",
+        "parameters": [
+          {
+            "name": "authToken",
+            "in": "query",
+            "description": "Authorization token for authentication and access control. This token is generated using Schnorr Signatures for secp256k1 and encodes the user's public key along with the session identifier obtained from the GetToken function.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "code",
+            "in": "query",
+            "description": "A valid single-use code to authenticate the disable request.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Result"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/regeneratesingleusecodes": {
+      "get": {
+        "tags": [
+          "WalletAPI"
+        ],
+        "summary": "Regenerate Single-Use Codes",
+        "description": "Regenerates a set of single-use codes for Two-Factor Authentication (2FA). This function is useful if the user needs to generate new ones. The old codes are invalidated. The endpoint returns an array of new single-use codes.",
+        "operationId": "RegenerateSingleUseCodes",
+        "parameters": [
+          {
+            "name": "authToken",
+            "in": "query",
+            "description": "Authorization token for authentication and access control. This token is generated using Schnorr Signatures for secp256k1 and encodes the user's public key along with the session identifier obtained from the GetToken function.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "code",
+            "in": "query",
+            "description": "The old and not yet used single-use code to regenerate single-use codes for.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/StringArrayResult"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/resettwofactor": {
+      "get": {
+        "tags": [
+          "WalletAPI"
+        ],
+        "summary": "Reset Two-Factor Authentication",
+        "description": "Resets Two-Factor Authentication TOTP for the user. This function is used to generate a new secret key that the user can use to configure their TOTP application. The endpoint requires a valid single-use code for authentication.",
+        "operationId": "ResetTwoFactor",
+        "parameters": [
+          {
+            "name": "authToken",
+            "in": "query",
+            "description": "Authorization token for authentication and access control. This token is generated using Schnorr Signatures for secp256k1 and encodes the user's public key along with the session identifier obtained from the GetToken function.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "code",
+            "in": "query",
+            "description": "A valid single-use code to authenticate the reset request.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "issuer",
+            "in": "query",
+            "description": "The issuer name for the TOTP application. This is typically the name of the application or service that the user is setting up 2FA for.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TwoFactorAuthSetupResult"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/topupandmine6blocks": {
       "get": {
         "tags": [
@@ -111,7 +354,7 @@
           {
             "name": "bitcoinAddr",
             "in": "query",
-            "description": "bitcoin address",
+            "description": "Bitcoin address",
             "required": true,
             "schema": {
               "type": "string"
@@ -120,11 +363,20 @@
           {
             "name": "satoshis",
             "in": "query",
-            "description": "number of satoshis",
+            "description": "Number of satoshis",
             "required": true,
             "schema": {
               "type": "integer",
               "format": "int64"
+            }
+          },
+          {
+            "name": "otp",
+            "in": "query",
+            "description": "One-Time Password (OTP) for Two-Factor Authentication. This is a time-based code generated by the user's TOTP application, used to verify the user's identity before executing the transaction.",
+            "required": true,
+            "schema": {
+              "type": "string"
             }
           }
         ],
@@ -321,6 +573,15 @@
               "type": "integer",
               "format": "int64"
             }
+          },
+          {
+            "name": "otp",
+            "in": "query",
+            "description": "One-Time Password (OTP) for Two-Factor Authentication. This is a time-based code generated by the user's TOTP application, used to verify the user's identity before executing the reserve opening.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
           }
         ],
         "responses": {
@@ -363,6 +624,15 @@
             "schema": {
               "type": "string",
               "format": "uuid"
+            }
+          },
+          {
+            "name": "otp",
+            "in": "query",
+            "description": "One-Time Password (OTP) for Two-Factor Authentication. This is a time-based code generated by the user's TOTP application, used to verify the user's identity before executing the reserve closing.",
+            "required": true,
+            "schema": {
+              "type": "string"
             }
           }
         ],
@@ -675,6 +945,15 @@
             "schema": {
               "type": "string"
             }
+          },
+          {
+            "name": "otp",
+            "in": "query",
+            "description": "One-Time Password (OTP) for Two-Factor Authentication. This is a time-based code generated by the user's TOTP application, used to verify the user's identity before executing the payout registration.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
           }
         ],
         "responses": {
@@ -779,7 +1058,7 @@
           {
             "name": "authToken",
             "in": "query",
-            "description": "Authorization token for authentication and access control. This token, generated using Schnorr Signatures for secp256k1, encodes the user's public key and session identifier from the GetToken function.",
+            "description": "Authorization token for authentication and access control. This token, generated using Schnorr Signatures for secp256k1, encodes the user's public key and session identifier from the GetToken function. This call supports long living tokens.",
             "required": true,
             "schema": {
               "type": "string"
@@ -841,7 +1120,7 @@
           {
             "name": "authToken",
             "in": "query",
-            "description": "Authorization token for authentication and access control. This token, generated using Schnorr Signatures for secp256k1, encodes the user's public key and session identifier from the GetToken function.",
+            "description": "Authorization token for authentication and access control. This token, generated using Schnorr Signatures for secp256k1, encodes the user's public key and session identifier from the GetToken function. This call supports long living tokens.",
             "required": true,
             "schema": {
               "type": "string"
@@ -912,7 +1191,7 @@
           {
             "name": "authToken",
             "in": "query",
-            "description": "Authorization token for authentication and access control. This token, generated using Schnorr Signatures for secp256k1, encodes the user's public key and session identifier from the GetToken function.",
+            "description": "Authorization token for authentication and access control. This token, generated using Schnorr Signatures for secp256k1, encodes the user's public key and session identifier from the GetToken function. This call supports long living tokens.",
             "required": true,
             "schema": {
               "type": "string"
@@ -988,6 +1267,15 @@
               "type": "integer",
               "format": "int64"
             }
+          },
+          {
+            "name": "otp",
+            "in": "query",
+            "description": "One-Time Password (OTP) for Two-Factor Authentication. This is a time-based code generated by the user's TOTP application, used to verify the user's identity before executing the payment.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
           }
         ],
         "responses": {
@@ -1016,7 +1304,7 @@
           {
             "name": "authToken",
             "in": "query",
-            "description": "Authorization token for authentication and access control. This token, generated using Schnorr Signatures for secp256k1, encodes the user's public key and session identifier from the GetToken function.",
+            "description": "Authorization token for authentication and access control. This token, generated using Schnorr Signatures for secp256k1, encodes the user's public key and session identifier from the GetToken function. This call supports long living tokens.",
             "required": true,
             "schema": {
               "type": "string"
@@ -1068,7 +1356,7 @@
           {
             "name": "authToken",
             "in": "query",
-            "description": "Authorization token for authentication and access control. This token, generated using Schnorr Signatures for secp256k1, encodes the user's public key and session identifier from the GetToken function.",
+            "description": "Authorization token for authentication and access control. This token, generated using Schnorr Signatures for secp256k1, encodes the user's public key and session identifier from the GetToken function. This call supports long living tokens.",
             "required": true,
             "schema": {
               "type": "string"
@@ -1110,7 +1398,7 @@
           {
             "name": "authToken",
             "in": "query",
-            "description": "Authorization token for authentication and access control. This token, generated using Schnorr Signatures for secp256k1, encodes the user's public key and session identifier from the GetToken function.",
+            "description": "Authorization token for authentication and access control. This token, generated using Schnorr Signatures for secp256k1, encodes the user's public key and session identifier from the GetToken function. This call supports long living tokens.",
             "required": true,
             "schema": {
               "type": "string"
@@ -1152,7 +1440,7 @@
           {
             "name": "authToken",
             "in": "query",
-            "description": "Authorization token for authentication and access control. This token, generated using Schnorr Signatures for secp256k1, encodes the user's public key and session identifier from the GetToken function.",
+            "description": "Authorization token for authentication and access control. This token, generated using Schnorr Signatures for secp256k1, encodes the user's public key and session identifier from the GetToken function. This call supports long living tokens.",
             "required": true,
             "schema": {
               "type": "string"
@@ -1304,6 +1592,57 @@
           }
         }
       }
+    },
+    "/setinvoicestatewebhook": {
+      "get": {
+        "tags": [
+          "WalletAPI"
+        ],
+        "summary": "Set webhook for invoice state changes",
+        "description": "This endpoint allows setting a webhook URL to receive real-time updates about the state changes of a specific invoice. The webhook will be triggered whenever the state of the invoice changes, such as when it is paid, expired, or canceled.",
+        "operationId": "SetInvoiceStateWebhook",
+        "parameters": [
+          {
+            "name": "authToken",
+            "in": "query",
+            "description": "Authorization token for authentication and access control. This token, generated using Schnorr Signatures for secp256k1, encodes the user's public key and session identifier from the GetToken function.This call supports long living tokens.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "paymenthash",
+            "in": "query",
+            "description": "The payment hash of the invoice for which the webhook is being set. This unique identifier is used to locate the specific invoice in the system.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "webhook",
+            "in": "query",
+            "description": "The webhook URL to be called when the state of the invoice changes. This URL should be accessible and capable of handling POST requests with the state change details.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Result"
+                }
+              }
+            }
+          }
+        }
+      }
     }
   },
   "components": {
@@ -1428,7 +1767,11 @@
               "PayoutAlreadySent",
               "OperationFailed",
               "AccessDenied",
-              "FeeLimitTooSmall"
+              "FeeLimitTooSmall",
+              "TwoFactorAlreadyEnabled",
+              "InvalidSingleUseToken",
+              "TwoFactorNotEnabled",
+              "InvalidTwoFactorCode"
             ],
             "x-ms-enum": {
               "name": "LNDWalletErrorCode",
@@ -1493,6 +1836,145 @@
                 {
                   "value": 14,
                   "name": "FeeLimitTooSmall"
+                },
+                {
+                  "value": 15,
+                  "name": "TwoFactorAlreadyEnabled"
+                },
+                {
+                  "value": 16,
+                  "name": "InvalidSingleUseToken"
+                },
+                {
+                  "value": 17,
+                  "name": "TwoFactorNotEnabled"
+                },
+                {
+                  "value": 18,
+                  "name": "InvalidTwoFactorCode"
+                }
+              ]
+            }
+          },
+          "errorMessage": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "BooleanResult": {
+        "type": "object",
+        "properties": {
+          "value": {
+            "type": "boolean"
+          },
+          "errorCode": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/LNDWalletErrorCode"
+              }
+            ],
+            "x-enumNames": [
+              "Ok",
+              "InvalidToken",
+              "NotEnoughFunds",
+              "UnknownPayment",
+              "UnknownInvoice",
+              "InvoiceAlreadyCancelled",
+              "InvoiceAlreadyAccepted",
+              "InvoiceAlreadySettled",
+              "InvoiceNotAccepted",
+              "AlreadyPayed",
+              "PayoutNotOpened",
+              "PayoutAlreadySent",
+              "OperationFailed",
+              "AccessDenied",
+              "FeeLimitTooSmall",
+              "TwoFactorAlreadyEnabled",
+              "InvalidSingleUseToken",
+              "TwoFactorNotEnabled",
+              "InvalidTwoFactorCode"
+            ],
+            "x-ms-enum": {
+              "name": "LNDWalletErrorCode",
+              "modelAsString": false,
+              "values": [
+                {
+                  "value": 0,
+                  "name": "Ok"
+                },
+                {
+                  "value": 1,
+                  "name": "InvalidToken"
+                },
+                {
+                  "value": 2,
+                  "name": "NotEnoughFunds"
+                },
+                {
+                  "value": 3,
+                  "name": "UnknownPayment"
+                },
+                {
+                  "value": 4,
+                  "name": "UnknownInvoice"
+                },
+                {
+                  "value": 5,
+                  "name": "InvoiceAlreadyCancelled"
+                },
+                {
+                  "value": 6,
+                  "name": "InvoiceAlreadyAccepted"
+                },
+                {
+                  "value": 7,
+                  "name": "InvoiceAlreadySettled"
+                },
+                {
+                  "value": 8,
+                  "name": "InvoiceNotAccepted"
+                },
+                {
+                  "value": 9,
+                  "name": "AlreadyPayed"
+                },
+                {
+                  "value": 10,
+                  "name": "PayoutNotOpened"
+                },
+                {
+                  "value": 11,
+                  "name": "PayoutAlreadySent"
+                },
+                {
+                  "value": 12,
+                  "name": "OperationFailed"
+                },
+                {
+                  "value": 13,
+                  "name": "AccessDenied"
+                },
+                {
+                  "value": 14,
+                  "name": "FeeLimitTooSmall"
+                },
+                {
+                  "value": 15,
+                  "name": "TwoFactorAlreadyEnabled"
+                },
+                {
+                  "value": 16,
+                  "name": "InvalidSingleUseToken"
+                },
+                {
+                  "value": 17,
+                  "name": "TwoFactorNotEnabled"
+                },
+                {
+                  "value": 18,
+                  "name": "InvalidTwoFactorCode"
                 }
               ]
             }
@@ -1742,7 +2224,11 @@
               "PayoutAlreadySent",
               "OperationFailed",
               "AccessDenied",
-              "FeeLimitTooSmall"
+              "FeeLimitTooSmall",
+              "TwoFactorAlreadyEnabled",
+              "InvalidSingleUseToken",
+              "TwoFactorNotEnabled",
+              "InvalidTwoFactorCode"
             ],
             "x-ms-enum": {
               "name": "LNDWalletErrorCode",
@@ -1807,6 +2293,22 @@
                 {
                   "value": 14,
                   "name": "FeeLimitTooSmall"
+                },
+                {
+                  "value": 15,
+                  "name": "TwoFactorAlreadyEnabled"
+                },
+                {
+                  "value": 16,
+                  "name": "InvalidSingleUseToken"
+                },
+                {
+                  "value": 17,
+                  "name": "TwoFactorNotEnabled"
+                },
+                {
+                  "value": 18,
+                  "name": "InvalidTwoFactorCode"
                 }
               ]
             }
@@ -2027,7 +2529,11 @@
               "PayoutAlreadySent",
               "OperationFailed",
               "AccessDenied",
-              "FeeLimitTooSmall"
+              "FeeLimitTooSmall",
+              "TwoFactorAlreadyEnabled",
+              "InvalidSingleUseToken",
+              "TwoFactorNotEnabled",
+              "InvalidTwoFactorCode"
             ],
             "x-ms-enum": {
               "name": "LNDWalletErrorCode",
@@ -2092,6 +2598,22 @@
                 {
                   "value": 14,
                   "name": "FeeLimitTooSmall"
+                },
+                {
+                  "value": 15,
+                  "name": "TwoFactorAlreadyEnabled"
+                },
+                {
+                  "value": 16,
+                  "name": "InvalidSingleUseToken"
+                },
+                {
+                  "value": 17,
+                  "name": "TwoFactorNotEnabled"
+                },
+                {
+                  "value": 18,
+                  "name": "InvalidTwoFactorCode"
                 }
               ]
             }
@@ -2282,7 +2804,11 @@
               "PayoutAlreadySent",
               "OperationFailed",
               "AccessDenied",
-              "FeeLimitTooSmall"
+              "FeeLimitTooSmall",
+              "TwoFactorAlreadyEnabled",
+              "InvalidSingleUseToken",
+              "TwoFactorNotEnabled",
+              "InvalidTwoFactorCode"
             ],
             "x-ms-enum": {
               "name": "LNDWalletErrorCode",
@@ -2347,6 +2873,22 @@
                 {
                   "value": 14,
                   "name": "FeeLimitTooSmall"
+                },
+                {
+                  "value": 15,
+                  "name": "TwoFactorAlreadyEnabled"
+                },
+                {
+                  "value": 16,
+                  "name": "InvalidSingleUseToken"
+                },
+                {
+                  "value": 17,
+                  "name": "TwoFactorNotEnabled"
+                },
+                {
+                  "value": 18,
+                  "name": "InvalidTwoFactorCode"
                 }
               ]
             }
@@ -2390,7 +2932,11 @@
               "PayoutAlreadySent",
               "OperationFailed",
               "AccessDenied",
-              "FeeLimitTooSmall"
+              "FeeLimitTooSmall",
+              "TwoFactorAlreadyEnabled",
+              "InvalidSingleUseToken",
+              "TwoFactorNotEnabled",
+              "InvalidTwoFactorCode"
             ],
             "x-ms-enum": {
               "name": "LNDWalletErrorCode",
@@ -2455,6 +3001,22 @@
                 {
                   "value": 14,
                   "name": "FeeLimitTooSmall"
+                },
+                {
+                  "value": 15,
+                  "name": "TwoFactorAlreadyEnabled"
+                },
+                {
+                  "value": 16,
+                  "name": "InvalidSingleUseToken"
+                },
+                {
+                  "value": 17,
+                  "name": "TwoFactorNotEnabled"
+                },
+                {
+                  "value": 18,
+                  "name": "InvalidTwoFactorCode"
                 }
               ]
             }
@@ -2494,7 +3056,11 @@
               "PayoutAlreadySent",
               "OperationFailed",
               "AccessDenied",
-              "FeeLimitTooSmall"
+              "FeeLimitTooSmall",
+              "TwoFactorAlreadyEnabled",
+              "InvalidSingleUseToken",
+              "TwoFactorNotEnabled",
+              "InvalidTwoFactorCode"
             ],
             "x-ms-enum": {
               "name": "LNDWalletErrorCode",
@@ -2559,6 +3125,22 @@
                 {
                   "value": 14,
                   "name": "FeeLimitTooSmall"
+                },
+                {
+                  "value": 15,
+                  "name": "TwoFactorAlreadyEnabled"
+                },
+                {
+                  "value": 16,
+                  "name": "InvalidSingleUseToken"
+                },
+                {
+                  "value": 17,
+                  "name": "TwoFactorNotEnabled"
+                },
+                {
+                  "value": 18,
+                  "name": "InvalidTwoFactorCode"
                 }
               ]
             }
@@ -2673,7 +3255,11 @@
               "PayoutAlreadySent",
               "OperationFailed",
               "AccessDenied",
-              "FeeLimitTooSmall"
+              "FeeLimitTooSmall",
+              "TwoFactorAlreadyEnabled",
+              "InvalidSingleUseToken",
+              "TwoFactorNotEnabled",
+              "InvalidTwoFactorCode"
             ],
             "x-ms-enum": {
               "name": "LNDWalletErrorCode",
@@ -2738,6 +3324,22 @@
                 {
                   "value": 14,
                   "name": "FeeLimitTooSmall"
+                },
+                {
+                  "value": 15,
+                  "name": "TwoFactorAlreadyEnabled"
+                },
+                {
+                  "value": 16,
+                  "name": "InvalidSingleUseToken"
+                },
+                {
+                  "value": 17,
+                  "name": "TwoFactorNotEnabled"
+                },
+                {
+                  "value": 18,
+                  "name": "InvalidTwoFactorCode"
                 }
               ]
             }
@@ -2868,7 +3470,11 @@
               "PayoutAlreadySent",
               "OperationFailed",
               "AccessDenied",
-              "FeeLimitTooSmall"
+              "FeeLimitTooSmall",
+              "TwoFactorAlreadyEnabled",
+              "InvalidSingleUseToken",
+              "TwoFactorNotEnabled",
+              "InvalidTwoFactorCode"
             ],
             "x-ms-enum": {
               "name": "LNDWalletErrorCode",
@@ -2933,6 +3539,22 @@
                 {
                   "value": 14,
                   "name": "FeeLimitTooSmall"
+                },
+                {
+                  "value": 15,
+                  "name": "TwoFactorAlreadyEnabled"
+                },
+                {
+                  "value": 16,
+                  "name": "InvalidSingleUseToken"
+                },
+                {
+                  "value": 17,
+                  "name": "TwoFactorNotEnabled"
+                },
+                {
+                  "value": 18,
+                  "name": "InvalidTwoFactorCode"
                 }
               ]
             }
@@ -2976,7 +3598,11 @@
               "PayoutAlreadySent",
               "OperationFailed",
               "AccessDenied",
-              "FeeLimitTooSmall"
+              "FeeLimitTooSmall",
+              "TwoFactorAlreadyEnabled",
+              "InvalidSingleUseToken",
+              "TwoFactorNotEnabled",
+              "InvalidTwoFactorCode"
             ],
             "x-ms-enum": {
               "name": "LNDWalletErrorCode",
@@ -3041,6 +3667,22 @@
                 {
                   "value": 14,
                   "name": "FeeLimitTooSmall"
+                },
+                {
+                  "value": 15,
+                  "name": "TwoFactorAlreadyEnabled"
+                },
+                {
+                  "value": 16,
+                  "name": "InvalidSingleUseToken"
+                },
+                {
+                  "value": 17,
+                  "name": "TwoFactorNotEnabled"
+                },
+                {
+                  "value": 18,
+                  "name": "InvalidTwoFactorCode"
                 }
               ]
             }
@@ -3155,7 +3797,11 @@
           11,
           12,
           13,
-          14
+          14,
+          15,
+          16,
+          17,
+          18
         ],
         "type": "integer",
         "format": "int32",
@@ -3174,7 +3820,11 @@
           "PayoutAlreadySent",
           "OperationFailed",
           "AccessDenied",
-          "FeeLimitTooSmall"
+          "FeeLimitTooSmall",
+          "TwoFactorAlreadyEnabled",
+          "InvalidSingleUseToken",
+          "TwoFactorNotEnabled",
+          "InvalidTwoFactorCode"
         ],
         "x-ms-enum": {
           "name": "LNDWalletErrorCode",
@@ -3239,6 +3889,22 @@
             {
               "value": 14,
               "name": "FeeLimitTooSmall"
+            },
+            {
+              "value": 15,
+              "name": "TwoFactorAlreadyEnabled"
+            },
+            {
+              "value": 16,
+              "name": "InvalidSingleUseToken"
+            },
+            {
+              "value": 17,
+              "name": "TwoFactorNotEnabled"
+            },
+            {
+              "value": 18,
+              "name": "InvalidTwoFactorCode"
             }
           ]
         }
@@ -3300,7 +3966,11 @@
               "PayoutAlreadySent",
               "OperationFailed",
               "AccessDenied",
-              "FeeLimitTooSmall"
+              "FeeLimitTooSmall",
+              "TwoFactorAlreadyEnabled",
+              "InvalidSingleUseToken",
+              "TwoFactorNotEnabled",
+              "InvalidTwoFactorCode"
             ],
             "x-ms-enum": {
               "name": "LNDWalletErrorCode",
@@ -3365,6 +4035,22 @@
                 {
                   "value": 14,
                   "name": "FeeLimitTooSmall"
+                },
+                {
+                  "value": 15,
+                  "name": "TwoFactorAlreadyEnabled"
+                },
+                {
+                  "value": 16,
+                  "name": "InvalidSingleUseToken"
+                },
+                {
+                  "value": 17,
+                  "name": "TwoFactorNotEnabled"
+                },
+                {
+                  "value": 18,
+                  "name": "InvalidTwoFactorCode"
                 }
               ]
             }
@@ -3683,7 +4369,11 @@
               "PayoutAlreadySent",
               "OperationFailed",
               "AccessDenied",
-              "FeeLimitTooSmall"
+              "FeeLimitTooSmall",
+              "TwoFactorAlreadyEnabled",
+              "InvalidSingleUseToken",
+              "TwoFactorNotEnabled",
+              "InvalidTwoFactorCode"
             ],
             "x-ms-enum": {
               "name": "LNDWalletErrorCode",
@@ -3748,6 +4438,22 @@
                 {
                   "value": 14,
                   "name": "FeeLimitTooSmall"
+                },
+                {
+                  "value": 15,
+                  "name": "TwoFactorAlreadyEnabled"
+                },
+                {
+                  "value": 16,
+                  "name": "InvalidSingleUseToken"
+                },
+                {
+                  "value": 17,
+                  "name": "TwoFactorNotEnabled"
+                },
+                {
+                  "value": 18,
+                  "name": "InvalidTwoFactorCode"
                 }
               ]
             }
@@ -3791,7 +4497,11 @@
               "PayoutAlreadySent",
               "OperationFailed",
               "AccessDenied",
-              "FeeLimitTooSmall"
+              "FeeLimitTooSmall",
+              "TwoFactorAlreadyEnabled",
+              "InvalidSingleUseToken",
+              "TwoFactorNotEnabled",
+              "InvalidTwoFactorCode"
             ],
             "x-ms-enum": {
               "name": "LNDWalletErrorCode",
@@ -3856,6 +4566,22 @@
                 {
                   "value": 14,
                   "name": "FeeLimitTooSmall"
+                },
+                {
+                  "value": 15,
+                  "name": "TwoFactorAlreadyEnabled"
+                },
+                {
+                  "value": 16,
+                  "name": "InvalidSingleUseToken"
+                },
+                {
+                  "value": 17,
+                  "name": "TwoFactorNotEnabled"
+                },
+                {
+                  "value": 18,
+                  "name": "InvalidTwoFactorCode"
                 }
               ]
             }
@@ -3937,7 +4663,11 @@
               "PayoutAlreadySent",
               "OperationFailed",
               "AccessDenied",
-              "FeeLimitTooSmall"
+              "FeeLimitTooSmall",
+              "TwoFactorAlreadyEnabled",
+              "InvalidSingleUseToken",
+              "TwoFactorNotEnabled",
+              "InvalidTwoFactorCode"
             ],
             "x-ms-enum": {
               "name": "LNDWalletErrorCode",
@@ -4002,6 +4732,22 @@
                 {
                   "value": 14,
                   "name": "FeeLimitTooSmall"
+                },
+                {
+                  "value": 15,
+                  "name": "TwoFactorAlreadyEnabled"
+                },
+                {
+                  "value": 16,
+                  "name": "InvalidSingleUseToken"
+                },
+                {
+                  "value": 17,
+                  "name": "TwoFactorNotEnabled"
+                },
+                {
+                  "value": 18,
+                  "name": "InvalidTwoFactorCode"
                 }
               ]
             }
@@ -4286,7 +5032,11 @@
               "PayoutAlreadySent",
               "OperationFailed",
               "AccessDenied",
-              "FeeLimitTooSmall"
+              "FeeLimitTooSmall",
+              "TwoFactorAlreadyEnabled",
+              "InvalidSingleUseToken",
+              "TwoFactorNotEnabled",
+              "InvalidTwoFactorCode"
             ],
             "x-ms-enum": {
               "name": "LNDWalletErrorCode",
@@ -4351,6 +5101,22 @@
                 {
                   "value": 14,
                   "name": "FeeLimitTooSmall"
+                },
+                {
+                  "value": 15,
+                  "name": "TwoFactorAlreadyEnabled"
+                },
+                {
+                  "value": 16,
+                  "name": "InvalidSingleUseToken"
+                },
+                {
+                  "value": 17,
+                  "name": "TwoFactorNotEnabled"
+                },
+                {
+                  "value": 18,
+                  "name": "InvalidTwoFactorCode"
                 }
               ]
             }
@@ -4394,7 +5160,11 @@
               "PayoutAlreadySent",
               "OperationFailed",
               "AccessDenied",
-              "FeeLimitTooSmall"
+              "FeeLimitTooSmall",
+              "TwoFactorAlreadyEnabled",
+              "InvalidSingleUseToken",
+              "TwoFactorNotEnabled",
+              "InvalidTwoFactorCode"
             ],
             "x-ms-enum": {
               "name": "LNDWalletErrorCode",
@@ -4459,6 +5229,22 @@
                 {
                   "value": 14,
                   "name": "FeeLimitTooSmall"
+                },
+                {
+                  "value": 15,
+                  "name": "TwoFactorAlreadyEnabled"
+                },
+                {
+                  "value": 16,
+                  "name": "InvalidSingleUseToken"
+                },
+                {
+                  "value": 17,
+                  "name": "TwoFactorNotEnabled"
+                },
+                {
+                  "value": 18,
+                  "name": "InvalidTwoFactorCode"
                 }
               ]
             }
@@ -4791,7 +5577,11 @@
               "PayoutAlreadySent",
               "OperationFailed",
               "AccessDenied",
-              "FeeLimitTooSmall"
+              "FeeLimitTooSmall",
+              "TwoFactorAlreadyEnabled",
+              "InvalidSingleUseToken",
+              "TwoFactorNotEnabled",
+              "InvalidTwoFactorCode"
             ],
             "x-ms-enum": {
               "name": "LNDWalletErrorCode",
@@ -4856,6 +5646,22 @@
                 {
                   "value": 14,
                   "name": "FeeLimitTooSmall"
+                },
+                {
+                  "value": 15,
+                  "name": "TwoFactorAlreadyEnabled"
+                },
+                {
+                  "value": 16,
+                  "name": "InvalidSingleUseToken"
+                },
+                {
+                  "value": 17,
+                  "name": "TwoFactorNotEnabled"
+                },
+                {
+                  "value": 18,
+                  "name": "InvalidTwoFactorCode"
                 }
               ]
             }
@@ -4993,7 +5799,11 @@
               "PayoutAlreadySent",
               "OperationFailed",
               "AccessDenied",
-              "FeeLimitTooSmall"
+              "FeeLimitTooSmall",
+              "TwoFactorAlreadyEnabled",
+              "InvalidSingleUseToken",
+              "TwoFactorNotEnabled",
+              "InvalidTwoFactorCode"
             ],
             "x-ms-enum": {
               "name": "LNDWalletErrorCode",
@@ -5058,6 +5868,149 @@
                 {
                   "value": 14,
                   "name": "FeeLimitTooSmall"
+                },
+                {
+                  "value": 15,
+                  "name": "TwoFactorAlreadyEnabled"
+                },
+                {
+                  "value": 16,
+                  "name": "InvalidSingleUseToken"
+                },
+                {
+                  "value": 17,
+                  "name": "TwoFactorNotEnabled"
+                },
+                {
+                  "value": 18,
+                  "name": "InvalidTwoFactorCode"
+                }
+              ]
+            }
+          },
+          "errorMessage": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "StringArrayResult": {
+        "type": "object",
+        "properties": {
+          "value": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "nullable": true
+          },
+          "errorCode": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/LNDWalletErrorCode"
+              }
+            ],
+            "x-enumNames": [
+              "Ok",
+              "InvalidToken",
+              "NotEnoughFunds",
+              "UnknownPayment",
+              "UnknownInvoice",
+              "InvoiceAlreadyCancelled",
+              "InvoiceAlreadyAccepted",
+              "InvoiceAlreadySettled",
+              "InvoiceNotAccepted",
+              "AlreadyPayed",
+              "PayoutNotOpened",
+              "PayoutAlreadySent",
+              "OperationFailed",
+              "AccessDenied",
+              "FeeLimitTooSmall",
+              "TwoFactorAlreadyEnabled",
+              "InvalidSingleUseToken",
+              "TwoFactorNotEnabled",
+              "InvalidTwoFactorCode"
+            ],
+            "x-ms-enum": {
+              "name": "LNDWalletErrorCode",
+              "modelAsString": false,
+              "values": [
+                {
+                  "value": 0,
+                  "name": "Ok"
+                },
+                {
+                  "value": 1,
+                  "name": "InvalidToken"
+                },
+                {
+                  "value": 2,
+                  "name": "NotEnoughFunds"
+                },
+                {
+                  "value": 3,
+                  "name": "UnknownPayment"
+                },
+                {
+                  "value": 4,
+                  "name": "UnknownInvoice"
+                },
+                {
+                  "value": 5,
+                  "name": "InvoiceAlreadyCancelled"
+                },
+                {
+                  "value": 6,
+                  "name": "InvoiceAlreadyAccepted"
+                },
+                {
+                  "value": 7,
+                  "name": "InvoiceAlreadySettled"
+                },
+                {
+                  "value": 8,
+                  "name": "InvoiceNotAccepted"
+                },
+                {
+                  "value": 9,
+                  "name": "AlreadyPayed"
+                },
+                {
+                  "value": 10,
+                  "name": "PayoutNotOpened"
+                },
+                {
+                  "value": 11,
+                  "name": "PayoutAlreadySent"
+                },
+                {
+                  "value": 12,
+                  "name": "OperationFailed"
+                },
+                {
+                  "value": 13,
+                  "name": "AccessDenied"
+                },
+                {
+                  "value": 14,
+                  "name": "FeeLimitTooSmall"
+                },
+                {
+                  "value": 15,
+                  "name": "TwoFactorAlreadyEnabled"
+                },
+                {
+                  "value": 16,
+                  "name": "InvalidSingleUseToken"
+                },
+                {
+                  "value": 17,
+                  "name": "TwoFactorNotEnabled"
+                },
+                {
+                  "value": 18,
+                  "name": "InvalidTwoFactorCode"
                 }
               ]
             }
@@ -5097,7 +6050,11 @@
               "PayoutAlreadySent",
               "OperationFailed",
               "AccessDenied",
-              "FeeLimitTooSmall"
+              "FeeLimitTooSmall",
+              "TwoFactorAlreadyEnabled",
+              "InvalidSingleUseToken",
+              "TwoFactorNotEnabled",
+              "InvalidTwoFactorCode"
             ],
             "x-ms-enum": {
               "name": "LNDWalletErrorCode",
@@ -5162,6 +6119,22 @@
                 {
                   "value": 14,
                   "name": "FeeLimitTooSmall"
+                },
+                {
+                  "value": 15,
+                  "name": "TwoFactorAlreadyEnabled"
+                },
+                {
+                  "value": 16,
+                  "name": "InvalidSingleUseToken"
+                },
+                {
+                  "value": 17,
+                  "name": "TwoFactorNotEnabled"
+                },
+                {
+                  "value": 18,
+                  "name": "InvalidTwoFactorCode"
                 }
               ]
             }
@@ -5237,7 +6210,11 @@
               "PayoutAlreadySent",
               "OperationFailed",
               "AccessDenied",
-              "FeeLimitTooSmall"
+              "FeeLimitTooSmall",
+              "TwoFactorAlreadyEnabled",
+              "InvalidSingleUseToken",
+              "TwoFactorNotEnabled",
+              "InvalidTwoFactorCode"
             ],
             "x-ms-enum": {
               "name": "LNDWalletErrorCode",
@@ -5302,6 +6279,175 @@
                 {
                   "value": 14,
                   "name": "FeeLimitTooSmall"
+                },
+                {
+                  "value": 15,
+                  "name": "TwoFactorAlreadyEnabled"
+                },
+                {
+                  "value": 16,
+                  "name": "InvalidSingleUseToken"
+                },
+                {
+                  "value": 17,
+                  "name": "TwoFactorNotEnabled"
+                },
+                {
+                  "value": 18,
+                  "name": "InvalidTwoFactorCode"
+                }
+              ]
+            }
+          },
+          "errorMessage": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "TwoFactorAuthSetup": {
+        "required": [
+          "secretKey",
+          "twoFactorAuthUri"
+        ],
+        "type": "object",
+        "properties": {
+          "secretKey": {
+            "type": "string",
+            "nullable": true
+          },
+          "twoFactorAuthUri": {
+            "type": "string",
+            "nullable": true
+          },
+          "singleUseCodes": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "TwoFactorAuthSetupResult": {
+        "type": "object",
+        "properties": {
+          "value": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/TwoFactorAuthSetup"
+              }
+            ],
+            "nullable": true
+          },
+          "errorCode": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/LNDWalletErrorCode"
+              }
+            ],
+            "x-enumNames": [
+              "Ok",
+              "InvalidToken",
+              "NotEnoughFunds",
+              "UnknownPayment",
+              "UnknownInvoice",
+              "InvoiceAlreadyCancelled",
+              "InvoiceAlreadyAccepted",
+              "InvoiceAlreadySettled",
+              "InvoiceNotAccepted",
+              "AlreadyPayed",
+              "PayoutNotOpened",
+              "PayoutAlreadySent",
+              "OperationFailed",
+              "AccessDenied",
+              "FeeLimitTooSmall",
+              "TwoFactorAlreadyEnabled",
+              "InvalidSingleUseToken",
+              "TwoFactorNotEnabled",
+              "InvalidTwoFactorCode"
+            ],
+            "x-ms-enum": {
+              "name": "LNDWalletErrorCode",
+              "modelAsString": false,
+              "values": [
+                {
+                  "value": 0,
+                  "name": "Ok"
+                },
+                {
+                  "value": 1,
+                  "name": "InvalidToken"
+                },
+                {
+                  "value": 2,
+                  "name": "NotEnoughFunds"
+                },
+                {
+                  "value": 3,
+                  "name": "UnknownPayment"
+                },
+                {
+                  "value": 4,
+                  "name": "UnknownInvoice"
+                },
+                {
+                  "value": 5,
+                  "name": "InvoiceAlreadyCancelled"
+                },
+                {
+                  "value": 6,
+                  "name": "InvoiceAlreadyAccepted"
+                },
+                {
+                  "value": 7,
+                  "name": "InvoiceAlreadySettled"
+                },
+                {
+                  "value": 8,
+                  "name": "InvoiceNotAccepted"
+                },
+                {
+                  "value": 9,
+                  "name": "AlreadyPayed"
+                },
+                {
+                  "value": 10,
+                  "name": "PayoutNotOpened"
+                },
+                {
+                  "value": 11,
+                  "name": "PayoutAlreadySent"
+                },
+                {
+                  "value": 12,
+                  "name": "OperationFailed"
+                },
+                {
+                  "value": 13,
+                  "name": "AccessDenied"
+                },
+                {
+                  "value": 14,
+                  "name": "FeeLimitTooSmall"
+                },
+                {
+                  "value": 15,
+                  "name": "TwoFactorAlreadyEnabled"
+                },
+                {
+                  "value": 16,
+                  "name": "InvalidSingleUseToken"
+                },
+                {
+                  "value": 17,
+                  "name": "TwoFactorNotEnabled"
+                },
+                {
+                  "value": 18,
+                  "name": "InvalidTwoFactorCode"
                 }
               ]
             }

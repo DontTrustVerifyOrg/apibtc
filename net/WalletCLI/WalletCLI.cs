@@ -265,7 +265,7 @@ public class GigLNDWalletCLI
                     {
                         var bitcoinAddressOfCustomer = Prompt.Input<string>("Bitcoin Address", FromClipboard(ClipType.BitcoinAddr));
                         AnsiConsole.WriteLine(bitcoinAddressOfCustomer);
-                        WalletAPIResult.Check(await walletClient.SendToAddressAsync(await MakeToken(), bitcoinAddressOfCustomer, satoshis, CancellationToken.None));
+                        WalletAPIResult.Check(await walletClient.SendToAddressAsync(await MakeToken(), bitcoinAddressOfCustomer, satoshis, "000000", CancellationToken.None));
                     }
                 }
                 else if (cmd == CommandEnum.GenerateBlocks)
@@ -302,7 +302,7 @@ public class GigLNDWalletCLI
                     var payoutAmount = Prompt.Input<int>("How much to payout");
                     if (payoutAmount > 0)
                     {
-                        var payoutId = WalletAPIResult.Get<Guid>(await walletClient.RegisterPayoutAsync(await MakeToken(), payoutAmount, FromClipboard(ClipType.BitcoinAddr),  CancellationToken.None));
+                        var payoutId = WalletAPIResult.Get<Guid>(await walletClient.RegisterPayoutAsync(await MakeToken(), payoutAmount, FromClipboard(ClipType.BitcoinAddr), "000000", CancellationToken.None));
                         AnsiConsole.WriteLine(payoutId.ToString());
                     }
                 }
@@ -311,7 +311,7 @@ public class GigLNDWalletCLI
                     var satoshis = Prompt.Input<int>("How much satoshis to reserve", 100000);
                     if (satoshis > 0)
                     {
-                        var reserveId = WalletAPIResult.Get<Guid>(await walletClient.OpenReserveAsync(await MakeToken(), satoshis, CancellationToken.None));
+                        var reserveId = WalletAPIResult.Get<Guid>(await walletClient.OpenReserveAsync(await MakeToken(), satoshis, "000000", CancellationToken.None));
                         ToClipboard(ClipType.ReserveId, reserveId.ToString());
                         AnsiConsole.WriteLine(reserveId.ToString());
                     }
@@ -319,7 +319,7 @@ public class GigLNDWalletCLI
                 else if (cmd == CommandEnum.CloseReserve)
                 {
                     var reserveId = Prompt.Input<Guid>("ReserveId", FromClipboard(ClipType.ReserveId));
-                    WalletAPIResult.Check(await walletClient.CloseReserveAsync(await MakeToken(), reserveId, CancellationToken.None));
+                    WalletAPIResult.Check(await walletClient.CloseReserveAsync(await MakeToken(), reserveId,"000000", CancellationToken.None));
                 }
                 else if (cmd == CommandEnum.AddInvoice)
                 {
@@ -358,7 +358,7 @@ public class GigLNDWalletCLI
                     ToClipboard(ClipType.PaymentHash, pay.PaymentHash);
                     var timeout = Prompt.Input<int>("Timeout", 1000);
                     var feeLimit = Prompt.Input<int>("FeeLimit", 10000);
-                    var payment = WalletAPIResult.Get<PaymentRecord>(await walletClient.SendPaymentAsync(await MakeToken(), paymentreq, timeout, feeLimit, CancellationToken.None));
+                    var payment = WalletAPIResult.Get<PaymentRecord>(await walletClient.SendPaymentAsync(await MakeToken(), paymentreq, timeout, feeLimit, "000000", CancellationToken.None));
                     PrintObjectAsTree(payment);
                 }
                 else if (cmd == CommandEnum.CancelInvoice)
