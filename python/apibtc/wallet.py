@@ -181,18 +181,18 @@ class Wallet:
         response.raise_for_status()
         return self.parse_response(response.json())
 
-    def enabletwofactor(self, code) -> Any:
+    def enabletwofactor(self, otp) -> Any:
         """
         Enables two-factor authentication (2FA) for the user. This endpoint requires the user to provide a valid 2FA code to complete the setup.
 
         Args:
-            code: The two-factor authentication code provided by the user.
+            otp: The two-factor authentication code provided by the user.
 
         Returns:
             Result object indicating success or failure
         """
         api_url = f"{self.base_url}/enabletwofactor"
-        response = requests.get(url=api_url, params={"authToken": self._create_authtoken(), "code": code})
+        response = requests.get(url=api_url, params={"authToken": self._create_authtoken(), "otp": otp})
         response.raise_for_status()
         return self.parse_response(response.json())
     
@@ -211,18 +211,18 @@ class Wallet:
         response.raise_for_status()
         return self.parse_response(response.json())
     
-    def regeneratesingleusecodes(self, code) -> Any:
+    def regeneratesingleusecodes(self, otp) -> Any:
         """
         Regenerates single-use codes for two-factor authentication (2FA). This endpoint allows users to obtain new single-use codes, which can be used for secure authentication in scenarios where the original codes have been compromised or lost.
 
         Args:
-            code: The two-factor authentication code provided by the user.
+            otp: The two-factor authentication code provided by the user.
 
         Returns:
             Result object indicating success or failure
         """
         api_url = f"{self.base_url}/regeneratesingleusecodes"
-        response = requests.get(url=api_url, params={"authToken": self._create_authtoken(), "code": code})
+        response = requests.get(url=api_url, params={"authToken": self._create_authtoken(), "otp": otp})
         response.raise_for_status()
         return self.parse_response(response.json())
 
