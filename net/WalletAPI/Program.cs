@@ -306,11 +306,11 @@ app.MapGet("/preparetwofactor", (string authToken, string issuer) =>
 })
 .DisableAntiforgery();
 
-app.MapGet("/enabletwofactor", (string authToken, string code) =>
+app.MapGet("/enabletwofactor", (string authToken, string otp) =>
 {
     try
     {
-        Singlethon.LNDWalletManager.ValidateAuthTokenAndGetAccount(authToken).EnableTwoFactor(code);
+        Singlethon.LNDWalletManager.ValidateAuthTokenAndGetAccount(authToken).EnableTwoFactor(otp);
         return new Result();
     }
     catch (Exception ex)
@@ -321,11 +321,11 @@ app.MapGet("/enabletwofactor", (string authToken, string code) =>
 })
 .WithName("EnableTwoFactor")
 .WithSummary("Enable Two-Factor Authentication")
-.WithDescription("Enables Two-Factor Authentication (2FA) for the user. This function requires a valid single-use code for authentication. Once 2FA is enabled, the user will need to provide a TOTP code for authentication in addition to their regular credentials.")
+.WithDescription("Enables Two-Factor Authentication (2FA) for the user. This function requires a valid otp code for authentication. Once 2FA is enabled, the user will need to provide a TOTP code for authentication in addition to their regular credentials.")
 .WithOpenApi(g =>
 {
     g.Parameters[0].Description = "Authorization token for authentication and access control. This token is generated using Schnorr Signatures for secp256k1 and encodes the user's public key along with the session identifier obtained from the GetToken function.";
-    g.Parameters[1].Description = "A valid TOTP code to authenticate the enable request.";
+    g.Parameters[1].Description = "A valid OTP code to authenticate the enable request.";
     return g;
 })
 .DisableAntiforgery();
@@ -378,11 +378,11 @@ app.MapGet("/disabletwofactor", (string authToken, string code) =>
 .DisableAntiforgery();
 
 
-app.MapGet("/regeneratesingleusecodes", (string authToken, string code) =>
+app.MapGet("/regeneratesingleusecodes", (string authToken, string otp) =>
 {
     try
     {
-        return new Result<string[]>(Singlethon.LNDWalletManager.ValidateAuthTokenAndGetAccount(authToken).RegenerateSingleUseCodes(code));
+        return new Result<string[]>(Singlethon.LNDWalletManager.ValidateAuthTokenAndGetAccount(authToken).RegenerateSingleUseCodes(otp));
     }
     catch (Exception ex)
     {
@@ -396,7 +396,7 @@ app.MapGet("/regeneratesingleusecodes", (string authToken, string code) =>
 .WithOpenApi(g =>
 {
     g.Parameters[0].Description = "Authorization token for authentication and access control. This token is generated using Schnorr Signatures for secp256k1 and encodes the user's public key along with the session identifier obtained from the GetToken function.";
-    g.Parameters[1].Description = "A valid TOTP code to authenticate the enable request.";
+    g.Parameters[1].Description = "A valid OTP code to authenticate the enable request.";
     return g;
 })
 .DisableAntiforgery();
